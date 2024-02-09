@@ -10,9 +10,42 @@
 \addbibresource{thesis.bib}
 
 \input{glossary.tex} % add glossary and acronym lists before document
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{siunitx}
+%%
+%% Julia definition (c) 2014 Jubobs
+%%
+\lstdefinelanguage{Julia}
+  {morekeywords={abstract,break,case,catch,const,continue,do,else,elseif,
+      end,export,false,for,function,immutable,import,importall,if,in,
+      macro,module,mutable,otherwise,quote,return,switch,true,try,type,typealias,using,while,@btime},
+   otherkeywords={
+        <, >, ->, <=, >=, ==, ===, !==, !=
+   },
+   numbers=left,
+   numberstyle=\scriptsize,
+   sensitive=true,
+   alsoother={\$},
+   morecomment=[l]\#,
+   morecomment=[n]{\#=}{=\#},
+   morestring=[s]{"}{"},
+   morestring=[m]{'}{'},
+}[keywords,comments,strings]
+
+\lstset{
+    language         = Julia,
+    basicstyle       = \ttfamily,
+    keywordstyle     = \bfseries\color{blue},
+    stringstyle      = \color{magenta},
+    commentstyle     = \color{teal},
+    showstringspaces = false,
+}
+
+
 
 \begin{document}
 
+\input{chapters/0c-foward.tex}
 \input{chapters/0a-abstract.tex}
 \input{chapters/0b-sammendrag.tex}
 
@@ -25,6 +58,11 @@
 \printglossary                    % Print glossary
 
 \input{chapters/1-introduction}
+\input{chapters/2-background}
+\input{chapters/3-method}
+\input{chapters/4-results}
+\input{chapters/5-discussion}
+\input{chapters/6-conclusion}
 
 \chapter*{\bibname}
 \printbibliography[heading=none]
