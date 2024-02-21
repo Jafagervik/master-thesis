@@ -1,2 +1,26 @@
-\chapter{Method}
-\label{chap:method}
+\chapter{Background}
+\label{chap:back}
+
+\section{Digital Signal Processing}
+
+The field of \acrfull{dsp} has been researched since the dawn of time. Signals are all around us, and we do have the means to gather and store the data, but how do we process it more efficiently to be able to analyze and interpret the data in a fast and efficient manner.
+
+When working with \acrshort{das} data in particular, we want to filter the data to remove distortion, and get cleaner outputs to work with. A common way to remove signals outside of a range are called High-pass filters and Low-pass filters. 
+
+A high-pass filter is a function that only allows frequencies above a certain threshold to be accepted, while a low-pass filter only accepts frequencies lower than a threshold $T$. A bandpass filter on the other hand, only allows frequencies within a certain range to be accepted. 
+
+\subsection{Tukey}
+
+Window functions are function often used in \acrshort{dsp} and are zero-valued outside of an interval. The tukey window is one of the more popular window methods, and its mathematical function is described as such: 
+
+\[
+    w(x)= 
+\begin{cases}
+    \frac{1 + \cos{2 \pi \alpha (x + \frac{1-\alpha}{2})}}{2}, & \text{if } x \leq \frac{1-\alpha}{2}\\
+    1,              & \text{if } \frac{\alpha}{2} < x \leq \frac{\alpha}{2}\\
+    \frac{1 + \cos{2 \pi \alpha (x - \frac{1-\alpha}{2})}}{2}, & \text{if } x > \frac{1-\alpha}{2}
+\end{cases}
+\]
+
+By using 
+\subsection{Fourier Transforms}

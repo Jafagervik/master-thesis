@@ -1,0 +1,17 @@
+
+\chapter{CUDA in Julia vs C}
+\label{app:jlscicomp}
+
+\begin{figure}[h]
+    \centering
+    \lstinputlisting{"code/jlcuda.jl"}
+    \caption{Launching CUDA kernel in Julia. This can be run directly with the Julia compiler}
+    \label{fig:jlcuda}
+\end{figure}
+ 
+\begin{figure}[h]
+    \centering
+    \lstinputlisting{"code/ccuda.c"}
+    \caption{Launching CUDA kernel in C. This code can't be compiled without the NVIDIA compiler, and needs to be stored as a .cu file}
+    \label{fig:ccuda}
+\end{figure}

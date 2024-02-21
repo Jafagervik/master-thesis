@@ -1,0 +1,29 @@
+\chapter*{Reflections on Julia}
+\label{chap:juliaref}
+
+Intro
+
+Since the very first day of this project, we've been using Julia quite rigorously. Some may argue that C and Python would be more efficient due to their extensive ecosystems and documentations. They are also more or less the \textit{de-facto standard} programming languages for their respective fields, \acrshort{hpc} and \acrshort{ai}. Additionally, members of \acrshort{cgf} are more accustomed to these languages, so why Julia? \\
+
+Besides what's already been mentioned, we wanted to give our thoughts on developing in Julia. Before getting started with Julia as the target language of our program, we made sure it had all the different packages we would need. For \acrshort{ai} and \acrshort{ml} packages, we were pleasantly surprised to find multiple options that all perform well. Bindings to similar packages in Python could also easily be found. We opted for Flux, and with its native integration with CUDA, no extra work had to be done to make use of \acrshort{gpu}s to speed up the computation of our models.
+
+One of the best \\ 
+Next to this comes the builtin \texttt{@inbounds} macro, which turns of the boundary checker when accessing memory, speeding up computations in a short matter of time. Not only this, but all the different macros in Julia were pleasant to work with. \texttt{time}, \texttt{btime}, \texttt{profile}, \texttt{cuda}, \texttt{btime}, \texttt{simd} all help imensly when creating programs, without the need for writing loops or custom instructions. Just simply knowing how and where to place macros cleans up the code, and not only increases the developer experience, but also standardizes code between codebases without having to rewrite all from scratch. Just simply running and launcing cudakernels as in \ref{app:jlvsc} shows how easy it is to setup and run CUDA kernels as long as the \texttt{CUDA.jl} package is installed. \\
+
+Version control
+A majority of new languages and compilers comes with a version multiplexer, examples being \texttt{rustup}, \texttt{}. These are not built retrospectively, as is the case for \texttt{sdkman} for Java, but before. Managing dependencies and packages, maintaining larger programs and so on becomes a lot easier with both a version multiplexer and a productive package manager. C has never had a standard way of dealing with packages, and this has inspired future languages to extend their ecosystems to include this alongside the compiler and standard library. Python has \texttt{PyPI}, but with many different programs to deal with versioning and packages. Some of these are venv, \texttt{Anaconda} and \texttt{Poetry}. Just simply installing and setting up projects in these languages seem to be harder than it actually have to be, and Julia proves this. \\ 
+
+Enabling multiple processors or threads comes down to simply specifying a flag when running \texttt{-p} or \texttt{-t} respectively. The language has these kinds of computing built into the standard library, no need to install third party dependencies. 
+
+Julia excels when it comes to scientific computations. Not only does the suppport of unicode symbols make it easier to translate whitepapers to code, but Julias synax and its compilation makes . In the appendix, one can see an example of plottin 
+
+
+
+Cons
+Although Julia has shown to have many strengths, there is no thing such as a perfect programming language. Julias' main weaknesses besides a far younger ecosystem compared to its alternatives, is its lack of documentation. 
+
+
+
+Conclusions on personal use 
+
+
