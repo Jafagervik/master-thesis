@@ -1,2 +1,10 @@
 \chapter{Discussion}
 \label{chap:discussion}
+
+\section{Modularity in Data Science}
+
+api design for data science has for far long enough been overlooked. Full AI models are regularly being comprised in a single file, with only a argument parser to make sure python can run the script. We instead wanted to seperate between the different aspects of the AI part of the code. The models, engine and hyperparameters can all easily be split into multiple files, but yet this is not common. The advantage we gain by splitting up this module, is easier ways of debugging, as well as to more easily reuse only the sections of the code that we're interested in. Training and Inference are by default split in their own files, since we don't actually want those two run after each other. The training of the neural net should only happen when needed, inference is the mode we'd actually like to test against and return the answers about loss and so on 
+
+
+\section{Interpretibility}
+One major question we wanted to tackle is regarding interpretibility. Is this achieved, or do we still have a long way to go?
