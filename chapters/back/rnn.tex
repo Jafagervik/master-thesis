@@ -1,0 +1,21 @@
+\section{Recurrent Neural Networks}
+
+\acrfull{rnn}
+
+The main advantage of \acrshort{rnn} 
+
+The building blocks of an \acrshort{rnn} is the recurrant neuron. They take an input $x_t$ at time $t$, with the state at previous time step $h_{t-1}$ and produces the next time step. 
+
+\begin{equation}
+    h_t = f(W_hh_{t-1}+W_xx_t)
+\end{equation}
+
+RNN have been used witihn geophysical applications before \cite{maulik2020recurrent}. 
+
+Typically, \acrshort{relu} is used as the activation function in these networks, as it is cheap to perform and we don't need more expressive activation functions. Other common activation functions are sigmoid and tanh. 
+
+$$g(z) = max(0, z)$$
+$$g(z) = \frac{1}{1 + e^{-z}}$$
+$$g(z) = \frac{e^z - e^{-z}}{e^z + e^{-z}}$$
+
+Although RNN has several advantages, they are highly prone to both vanishing gradients as well as exploding gradients. 
