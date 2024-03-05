@@ -5,7 +5,9 @@ We start of at the same spot we left of after the thesis. Before we go on to exp
 
 We started off by just getting a drive with lots of \acrshort{das} data, and a script from \acrfull{asn} which set up us perfectly. We chose to rewrite python code to a language similar to that of MAtlab and Python. We landed on Julia, and with its broad ecosytstem it has support for all kinds of development we'd ever need. \\
 
-We first wrote a 1:1 copy of the script, and then parallellized parts of the code until we had a version that could handle large amounts of data in parallel. We also wrote methods for being able to run a window over and 
+We first wrote a 1:1 copy of the script, and then parallellized parts of the code until we had a version that could handle large amounts of data in parallel. We also wrote methods for being able to run a window over and \\ 
+
+
 
 
 \section{Overview}
@@ -38,3 +40,11 @@ The main aspects of this code lies within the module \texttt{AI.jl}.
 
 
 \include{chapters/meth/judasnet}
+
+
+
+We're using \acrfull{adam} as the choice of our optimizer
+
+\begin{equation}
+    \omega - \alpha \frac{v_{dw}}  {\sqrt{s_{dw}} + \epsilon}
+\end{equation}
