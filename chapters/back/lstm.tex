@@ -1,9 +1,43 @@
 \subsubsection{LSTM}
 
-\acrfull{lstm} is an improved version of \acrshort{rnn}
+\acrfull{lstm} is an improved version of \acrshort{rnn} nd have regained more popularity due to its successful applications with sequential data \cite{karpathy2015visualizing}. As we've mentioned, regular \acrshort{rnn}s struggle with long term memory, something the \acrshort{lstm} cells solves. \\ 
 
-An \acrshort{lstm} cell is built by 
 
+An \acrshort{lstm} cell is built up by the following components: an input gate $i$, a forget gate $f$, a candidate state $g$, an output gate $g$ .
+These cells traditionally make use of the sigmoid non-linearity function $\sigma()$
+
+\begin{figure}[h]
+    \centering
+    \includegraphics{figures/lstmcell.png}
+    \caption{Example of an LSTM cell}
+    \label{fig:lstmcell}
+\end{figure}
+
+Compared to the equation for forward pass 
+
+\begin{equation} \label{eq:cnn}
+    Y_t = W_xx_t + b
+\end{equation}
+
+the LSTM keeps the previous state in mind, thus giving us the equation
+
+
+\begin{equation} \label{eq:lstm}
+    Y_t = W_hh_{t-1} + W_xx_t + b
+\end{equation}
+
+Adding batch normalization to this equation and we end up with the following equation \cite{cooijmans2017recurrent}: 
+
+\begin{equation} \label{eq:bnlstm}
+
+c_t = \sigma(\Tilde{\textbf{f}_t} \cdot c_{t-1} + \sigma(\textbf{\Tilde{i}}_t) \cdot tanh(\Tilde{g}_t)
+h_t = \sigma(\Tilde{o}_t) \cdot tanh(BN(\textbf{c_t}; \gamma_c, \beta_c))
+    
+\end{equation}
+
+By applying batch normalization to \acrshort{lstm}s, not only did the models converge faster, the performance was up to par with the unnormalized \acrshort{lstm} \cite{cooijmans2017recurrent}.
 
 Whereas \acrshort{rnn}s shines at \acrshort{nlp}, speech recognition, and media processing, \acrshort{lstm}s is vastly better for time series forecasting due to the memory gates. This makes \acrshort{lstm}s a suitable option for us when working with anomaly detection on sensor data, which in its essence is nothing more than more complex time series data across multiple columns or channels. 
+
+The alternative to using \acrshort{lstm} nodes for our network would be \acrfull{gru}s.
 

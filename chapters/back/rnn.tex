@@ -19,3 +19,12 @@ $$g(z) = \frac{1}{1 + e^{-z}}$$
 $$g(z) = \frac{e^z - e^{-z}}{e^z + e^{-z}}$$
 
 Although RNN has several advantages, they are highly prone to both vanishing gradients as well as exploding gradients. 
+
+Recurrent Batch Normalization
+\begin{equation} \label{eq:bnrnn}
+    BN(\textbf{h}; \gamma, \beta) = \beta + \gamma \circ \frac{
+    \textbf{h} - \hat{E}[\textbf{h}]
+    }{
+    \sqrt{\hat{Var} [\textbf{h}] + \epsilon}
+    }
+\end{equation}

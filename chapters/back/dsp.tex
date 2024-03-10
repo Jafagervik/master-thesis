@@ -7,6 +7,7 @@ When working with \acrshort{das} data in particular, we want to filter the data 
 A high-pass filter is a function that only allows frequencies above a certain threshold to be accepted, while a low-pass filter only accepts frequencies lower than a threshold $T$. A bandpass filter on the other hand, only allows frequencies within a certain range to be accepted. 
 
 \subsection{Tukey}
+\label{dsp:tukey}
 
 Window functions are function often used in \acrshort{dsp} and are zero-valued outside of an interval. The tukey window is one of the more popular window methods, and its mathematical function is described as such: 
 
@@ -18,6 +19,10 @@ Window functions are function often used in \acrshort{dsp} and are zero-valued o
     \frac{1 + \cos{2 \pi \alpha (x - \frac{1-\alpha}{2})}}{2}, & \text{if } x > \frac{1-\alpha}{2}
 \end{cases}
 \]
-
 By using 
+
+\subsection{Butterworth}
+
 \subsection{Fourier Transforms}
+
+"The fourier transform is a mathematical transformation that maps a function from its temporal domain over to its frequency domain". As previously discussed \cite{projthesis}, Julia allows

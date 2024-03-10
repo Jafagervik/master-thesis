@@ -12,9 +12,46 @@ Talk about the input
 \multicolumn{1}{|c|}{...} & \multicolumn{1}{c|}{...} & \multicolumn{1}{c|}{...}          & \multicolumn{1}{c|}{...} & \multicolumn{1}{c|}{...} \\ \hline
 4f-2                      & 3f-1                     & 3f-1                              & 3f-1                     & 3f-1                     \\ \hline
 \end{tabular}
-\caption{Table explaining how the table lookslike}
+\caption{Table explaining how the table looks like}
 \label{fig:datatable}
 \end{table}
 
 
 As opposed to previous versions that stored the data in \texttt{Pandas} dataframe where 
+
+
+TODO: Figure over dataflow  
+
+\subsection{Pre processing}
+
+After the data has been loaded \cite{projthesis}, it's still not ready for processing. 
+
+The function \lstinline|process_DAS_data| takes in the signal data, perform a tukey \ref{dsp:tukey} window algorithm over it. We then run a bandpass filter algorithm with Butterworth over it to extract the and 
+
+\begin{figure}
+    \centering
+    \lstinputlisting{code/procdasdata.jl}
+    \caption{Process DAS data function}
+    \label{fig:procdasdata}
+\end{figure}
+
+
+After applying a window function and a filter function to combat oscilleration, we're now ready to run an fft over this data. 
+
+
+The 
+
+\begin{figure}[h]
+    \centering
+    \includegraphics{figures/banenor_20210831.png}
+    \caption{Heatmap of the processed train data during the 31st of august 2021 from Trondheim to Storen}
+    \label{fig:trdstrdas}
+\end{figure}
+
+\subsection{Data preparation before } 
+
+Now that the data has been successfully pre-processed, we still need to 
+
+
+
+\subsubsection{Data augmentation}

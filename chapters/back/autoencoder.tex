@@ -17,3 +17,7 @@ Typical usecases for autoencoders are signal analysis, anomaly detection, recons
 One of the more well known usages for autoencoders
 
 \subsubsection{LSTM Auto Encoder}
+
+As we've discussed in \ref{ai:lstm} and \ref{ai:rnn}, these types of networks are well suited for . The issues found with \acrshort{rnn}s, such as long term dependencies, are solved with using \acrshort{lstm}s, and also initializing the weights in a more intelligent way. We are not going to make use of transfer learning for our network, thus we solely rely on \acrshort{lstm}s to solve these issues.
+
+Combining the \acrshort{lstm} with an autoencoder approach, we'll be able to create a network well suited for anomaly detection on variable time series data.
