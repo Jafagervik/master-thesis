@@ -1,9 +1,11 @@
 \section{Data}
 
-Talk about the input
+For this project, we will be working with data recorded from BANE-NOR, where a train is travelling between Trondheim and Storen the 31st of august 2021. Data is split between 5000 sensor channels, lasting us a day.
+The data is recorded in \acrshort{hdf5} files, with each file containing 20000 samples for 10 seconds, giving us a sample rate of $2000Hz$. The
 
 
 \begin{table}[h]
+\centering
 \begin{tabular}{|r|r|r|r|r|}
 \hline
 \textbf{1}                & \textbf{2}               & \multicolumn{1}{c|}{\textbf{...}} & \textbf{n-1}             & \textbf{n}               \\ \hline
@@ -16,8 +18,6 @@ Talk about the input
 \label{fig:datatable}
 \end{table}
 
-
-As opposed to previous versions that stored the data in \texttt{Pandas} dataframe where 
 
 
 TODO: Figure over dataflow  

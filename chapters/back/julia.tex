@@ -1,10 +1,21 @@
 \section{Julia}
 
-Julia is a high performance, dynamically typed programming language created by MIT in 2012, officially released in 2014. It has developed itself into a real alternative to Python, R and MatLab, while outperforming all on them on general benchmarks. As mentioned in \cite{projthesis}, this is mainly due to how Julia is a "Just ahead of time" compiled language. \\ 
+Created in 2009, first released in 2012, Julia is a high performance, dynamically typed programming language with the goal of being a fast and performant language like C, the simplicity of Python, linear algebra extensions like matlab, and statistics like R \cite{julia}. \\ 
 
-Julias fluent type system, accompanied by easy syntax, high performance, \acrshort{repl} tools makes it a great contender for data analysis. We've previously proven how Julia effectively deals with I/O operations, .
+Like Python, Julia can be used in a script-like fashion through its \acrfull{repl}. Notebook style programming has been a standard way for data analysts to write their code, and Jupyter notebooks support Julia as well through the \texttt{IJulia.jl} package. 
+
+Julias fluent type system, accompanied by easy syntax, high performance, \acrshort{repl} tools makes it a great contender for data analysis. We've previously proven how Julia effectively deals with I/O operations, \cite{projthesis}.
 
 
 DOI \cite{doi:10.1137/141000671}
 
-FLUXXERT
+\subsection{AI in Julia using Flux.jl}
+\label{back:flux}
+
+Flux is a machine learning library written entirely in Julia released and published in 2018 \cite{Innes2018}. It allows the user to create all. \acrshort{gpu} support is also native, through the inclusion of \texttt{CUDA.jl}
+
+Other alternatives to \texttt{Flux.jl} are \texttt{MLJ.jl} and \texttt{Tensorflow.jl}, which is essentially a Julia wrapper for Tensorflow functionality. 
+
+
+
+

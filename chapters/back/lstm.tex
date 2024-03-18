@@ -1,6 +1,8 @@
-\subsubsection{LSTM}
+\subsubsection{LSTM - Long Short Term Memory}
 
-\acrfull{lstm} is an improved version of \acrshort{rnn} nd have regained more popularity due to its successful applications with sequential data \cite{karpathy2015visualizing}. As we've mentioned, regular \acrshort{rnn}s struggle with long term memory, something the \acrshort{lstm} cells solves. \\ 
+One of two more common solutions to avoid the pitfalls \acrshort{rnn}s give us, is to use \acrshort{lstm} cells. 
+
+ As we've mentioned, regular \acrshort{rnn}s struggle with long term memory, something the \acrshort{lstm} cells solves. \\ 
 
 
 An \acrshort{lstm} cell is built up by the following components: an input gate $i$, a forget gate $f$, a candidate state $g$, an output gate $g$ .
@@ -9,7 +11,7 @@ These cells traditionally make use of the sigmoid non-linearity function $\sigma
 \begin{figure}[h]
     \centering
     \includegraphics{figures/lstmcell.png}
-    \caption{Example of an LSTM cell}
+    \caption[scale=0.4]{Example of an LSTM cell}
     \label{fig:lstmcell}
 \end{figure}
 
@@ -19,7 +21,7 @@ Compared to the equation for forward pass
     Y_t = W_xx_t + b
 \end{equation}
 
-the LSTM keeps the previous state in mind, thus giving us the equation
+the \acrshort{lstm} keeps the previous state in mind, thus giving us the equation
 
 
 \begin{equation} \label{eq:lstm}

@@ -1,5 +1,31 @@
 \section{Anomaly Detection}
 
-Anomaly detection is the study of detecting anomalies in datasets. It is widely used in a plethora of fields, such as networking, medical informatics and more. 
+Anomaly detection is all about finding outliers in datasets, often referred to as standard deviations. 
+
+Given the set $X = \{x_1, x_2, ..., x_n\}$, we define an anomaly as any value $\theta$ in set $X$ such that , where $\epsilon$ is based on a heuristic.
+
+
+Anomaly detection is used in a plethora of fields, such as networking, medical informatics and more. 
 
 For \acrshort{das} data specifically, anomaly detection can be used for detecting clusters of signals that don't correspond to the predispused target feature. Registering these outlier signals and receiving real time information about these could prove vital in some cases,  and in best case scenario save lives.
+
+\subsection{Multivariate Anomaly detection}
+
+In a one-dimensional time series, finding anomalies tend to be rather trivial. After taking neighbor values into account, look for sever outliers, .
+
+Multivariate data analysis refers to statistical lookings from two or more variabels. In the case of sensor data, one often look at multiple sensors. 
+
+Given a matrix $a$ of data:
+
+\begin{equation}
+\centering
+\begin{matrix}
+a_{11} &  0      & \ldots & a_{1n}    \\
+0      &  a_{22} & \ldots & a_{2n}    \\
+\vdots & \vdots  & \ddots & \vdots \\
+a_{m1} &  0      &\ldots & a_{mn}
+\end{matrix}
+\caption{Matrix of data}
+\end{equation}
+
+We are interested in finding a region $a_{ij} to a_{kl}$ where $i < k \And j < l$ st. the values within these regions falls outisde of the general range

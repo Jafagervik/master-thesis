@@ -1,0 +1,74 @@
+\section{Results Setup}
+
+\begin{equation}
+    TPR(TruePositiveRate/Recall) = \frac{TP}{TP + FN}
+\end{equation}
+
+\begin{equation}
+    FPR(FalsePositiveRate/Recall) = \frac{FP}{FP + TN}
+\end{equation}
+
+\begin{equation}
+    Precision = \frac{TP}{TP + FP}
+\end{equation}
+
+\begin{equation}
+    F1 - score = 2 x (\frac{Precision \cdot Recall}{Precision + Recall})
+\end{equation}
+
+\begin{equation}
+    Accuracy = \frac{TP + TN}{TP + TN + FP + FN}
+\end{equation}
+
+\begin{equation}
+    MAE(Mean Absolute Error) = \dfrac{1}{n}  \sum_{i=1}^{n}|x_i-\hat{x}_i|
+\end{equation}
+
+\begin{equation}
+    MSE(Mean Squared Error) = \dfrac{1}{n}  \sum_{i=1}^{n}(x_i-\hat{x}_i)^2
+\end{equation}
+
+\begin{equation}
+    ReLU(z) = max(0, z)
+\end{equation}
+
+\begin{tikzpicture}[h]
+\centering
+  \begin{axis}[ 
+    xlabel=$x$,
+    ylabel={$relu$},
+    xmin=-3, ymax=3,
+    ymin=-2, ymax=3,
+    grid=both,
+  ] 
+    \addplot[red, domain=-3:3] {max(0, x)}; 
+    
+  \end{axis}
+\end{tikzpicture}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|ll|ll|}
+\hline
+\multicolumn{2}{|c|}{\multirow{2}{*}{\textbf{Total Population}}} & \multicolumn{2}{c|}{Predictions}      \\ \cline{3-4} 
+\multicolumn{2}{|c|}{}                                           & \multicolumn{1}{l|}{Normal} & Anomaly \\ \hline
+\multicolumn{1}{|l|}{\multirow{2}{*}{Actual}}      & Normal      & \multicolumn{1}{l|}{TN}     & FP      \\ \cline{2-4} 
+\multicolumn{1}{|l|}{}                             & Anomaly     & \multicolumn{1}{l|}{FN}     & TP      \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Unit} & \textbf{Desc}         \\ \hline
+Os            & Ubuntu Linux          \\ \hline
+Processor     & Intel i9-9940X @ 4GHz \\ \hline
+Ram           & 126GB                 \\ \hline
+GPU           & NVIDIA RTX 2080TI     \\ \hline
+VRAM          & 11GB                  \\ \hline
+Gpu Cores     & 4352                  \\ \hline
+Packages      & Flux 2.1., CUDA       \\ \hline
+\end{tabular}
+\label{tab:specs}
+\end{table}
