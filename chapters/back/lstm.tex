@@ -1,4 +1,4 @@
-\subsubsection{LSTM - Long Short Term Memory}
+\subsection{LSTM - Long Short Term Memory}
 
 One of two more common solutions to avoid the pitfalls \acrshort{rnn}s give us, is to use \acrshort{lstm} cells. 
 
@@ -43,3 +43,42 @@ Whereas \acrshort{rnn}s shines at \acrshort{nlp}, speech recognition, and media 
 
 The alternative to using \acrshort{lstm} nodes for our network would be \acrfull{gru}s.
 
+
+\subsubsection{Loss functions}
+
+In typical LSTM 
+
+\acrfull{mae} is the most common algorithm when it 
+
+\subsubsection{Activation fun
+
+
+\subsubsection{Optimizers for Unsupervised Learning }
+
+Diffre
+
+
+
+JudasNET uses \Gls{adam} as its optimizer, which is defined as follows: 
+
+
+\begin{align}
+    m_t &= \beta_1 m_{t-1} + (1 - \beta_1) g_t \\
+    v_t &= \beta_2 v_{t-1} + (1 - \beta_2) g_t^2 \\
+    \hat{m}_t &= \frac{m_t}{1 - \beta_1^t} \\
+    \hat{v}_t &= \frac{v_t}{1 - \beta_2^t} \\
+    \theta_{t+1} &= \theta_t - \frac{\alpha}{\sqrt{\hat{v}_t} + \epsilon} \hat{m}_t
+\end{align}
+
+where:
+\begin{align*}
+    \theta_t & \text{ - parameters at time step } t \\
+    g_t & \text{ - gradient of the loss function at time step } t \\
+    \alpha & \text{ - learning rate} \\
+    \beta_1, \beta_2 & \text{ - exponential decay rates for the moment estimates} \\
+    m_t, v_t & \text{ - first and second moment estimates} \\
+    \hat{m}_t, \hat{v}_t & \text{ - bias-corrected first and second moment estimates} \\
+    \epsilon & \text{ - small constant to prevent division by zero}
+\end{align*}
+
+The original paper sets the following parameters for ADAM: $\beta_1 = 0.99, \beta_2 = 0.9 \mu=10^{-8}$ and $\alpha = 0.001$ \cite{kingma2017adam}.
