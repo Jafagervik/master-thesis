@@ -3,7 +3,7 @@
 
 We start of at the same spot we left of after the thesis. Before we go on to explain what's been done this semester, lets recap. 
 
-We started off by just getting a drive with lots of \acrshort{das} data, and a script from \acrfull{asn} which set up us perfectly. We chose to rewrite python code to a language similar to that of MAtlab and Python. We landed on Julia, and with its broad ecosytstem it has support for all kinds of development we'd ever need. \\
+We started off by just getting a drive with lots of \acrshort{das} data, and a script from \acrfull{asn} which set up us perfectly. We chose to rewrite python code to a language similar to that of Matlab and Python. We landed on Julia, and with its broad ecosytstem it has support for all kinds of development we'd ever need. \\
 
 We first wrote a 1:1 copy of the script, and then parallellized parts of the code until we had a version that could handle large amounts of data in parallel. We also wrote methods for being able to run a window over and \\ 
 
@@ -22,13 +22,13 @@ The \acrshort{api} that's being created is called \texttt{Judas} (Julia and DAS)
 \end{figure}
 
 % Data
-\include{chapters/meth/data}
+\input{chapters/meth/data}
 
 % NETWORK ARCH
-\include{chapters/meth/architecture}
+\input{chapters/meth/architecture}
 
 % DAS
-\include{chapters/meth/das}
+\input{chapters/meth/dasapi}
 
 \section{SignalProcessing.jl}
 
@@ -39,7 +39,7 @@ After data has been read and processed, it's ready to be processed by signal pro
 The main aspects of this code lies within the module \texttt{AI.jl}. 
 
 
-\include{chapters/meth/judasnet}
+\input{chapters/meth/judasnet}
 
 
 

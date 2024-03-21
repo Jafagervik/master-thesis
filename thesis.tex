@@ -1,11 +1,11 @@
-\documentclass[british,titlepage]{ntnuthesis}
+\documentclass[british]{ntnuthesis}
 
 % \title{Interpretable Machine Learning Models for DAS Data}
-\title{Anomaly Detection on DAS Data using LSTM Autoencoder}
-\shorttitle{AD and DAS data}
-\author{Jorgen Aleksander Fagervik \\
+\title{Anomaly Detection on DAS signal data using LSTM Autoencoders}
+\shorttitle{Anomaly Detection on DAS signal data using LSTM Autoencoders}
+\author{Jørgen Aleksander Fagervik \\
         Supervisor: Ole Jakob Mengshoel}
-\shortauthor{Jorgen A. F.}
+\shortauthor{J. A. Fagervik}
 \date{CC-BY \ntnuthesisdate}
 
 \addbibresource{thesis.bib}
@@ -15,11 +15,6 @@
 \usepackage{siunitx}
 \usepackage{multirow}
 \usepackage{pgfplots}
-
-
-%% MY COMMANDS %%%
-\newcommand{\das}{\acrshot{das}}
-
 
 
 %%
@@ -54,6 +49,39 @@
 
 
 \begin{document}
+
+
+\begin{titlepage}
+\newgeometry{left=1.6in, right=2in}
+\vspace*{1.5cm}
+
+\noindent  \textcolor{gray}{\large Jørgen Aleksander Fagervik} \\
+\vspace{1cm}
+
+\noindent \textbf{\Large Anomaly Detection on DAS signal data using LSTM Autoencoders} \\
+\vspace{0.5cm}
+
+\noindent {\large A case study on Julia and AI} \\
+
+
+
+\vspace{7cm}
+\noindent Master's thesis in Computer Science \\
+Supervisor: Ole Jakob Mengshoel \\
+Co-supervisor: Matrin Landrø \\
+July 2024 \\
+
+\vspace{0.2cm}
+\noindent Norwegian University of Science and Technology \\
+Faculty of Information techonolgy and electrical engineering \\
+Department of Computer Science (IDI) \\
+
+\begin{figure}[h]
+    \includegraphics[width=0.28\textwidth]{figures/ntnu_basic.png}
+\end{figure}
+\end{titlepage}
+\restoregeometry
+\myemptypage 
 
 \input{chapters/0c-preface.tex}
 \input{chapters/0a-abstract.tex}
