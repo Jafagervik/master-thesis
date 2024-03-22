@@ -12,9 +12,21 @@ E_\phi: X \rightarrow Z
 D_\theta: Z \rightarrow X
 \end{equation}
 
+The optima for any kind of autoencoder becomes that of lossless encoding, which can further be described as such:
+
+\begin{equation}
+    X = D_\theta(E_\phi(X))
+\end{equation}
+
+When a auto encoder is trained to max effiency, we can in some cases remove the decoder part. Since the goal in the beginning was to map data to a lower-dimensional latent space, which has been increased. If ones goal is feature extraction, the decoder is not needed any more. Additionally, by removing the decoder, the overall complexity and size of the model $M$ decreases.
+
 
 Typical usecases for autoencoders are signal analysis, anomaly detection, reconstructing images and so on. 
 One of the more well known usages for autoencoders
+
+\subsubsection{Variational Autoencoder (\acrshort{vae})}
+
+Similar to the regular autoencoder, a \acrfull{vae}
 
 \subsubsection{LSTM Auto Encoder}
 

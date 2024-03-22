@@ -8,8 +8,6 @@ We started off by just getting a drive with lots of \acrshort{das} data, and a s
 We first wrote a 1:1 copy of the script, and then parallellized parts of the code until we had a version that could handle large amounts of data in parallel. We also wrote methods for being able to run a window over and \\ 
 
 
-
-
 \section{Overview}
 
 The \acrshort{api} that's being created is called \texttt{Judas} (Julia and DAS) and is split in 3 modules as well as a seperate Utils file as shown in \ref{fig:ccuda}
@@ -21,14 +19,15 @@ The \acrshort{api} that's being created is called \texttt{Judas} (Julia and DAS)
     \label{fig:judasoverview}
 \end{figure}
 
+% DAS
+\input{chapters/meth/dasapi}
+
 % Data
 \input{chapters/meth/data}
 
 % NETWORK ARCH
 \input{chapters/meth/architecture}
 
-% DAS
-\input{chapters/meth/dasapi}
 
 \section{SignalProcessing.jl}
 

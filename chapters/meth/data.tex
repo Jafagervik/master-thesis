@@ -20,15 +20,33 @@ The data is recorded in \acrshort{hdf5} files, with each file containing 20000 s
 
 
 
-TODO: Figure over dataflow  
+\begin{figure}[h]
+    \centering
+    \includegraphics{figures/dataflow.png}
+    \caption{Dataflow from we read HDF5 files to we are ready to train}
+    \label{fig:dataflow}
+\end{figure}
 
 \subsection{Pre processing}
+
+\subsubsection{Resampling and Channel decimation}
+
+Following our previous work \cite{projthesis}, the following improvements have been made to \texttt{Judas}: 
+
+\begin{enumerate}
+    \item Judas now make use of multiple processors contra multithreading, seeing major speedups.
+    \item Function \texttt{load\_DAS\_files} now writes processed data to a single file back.
+    \item Methods for resampling and chann
+\end{enumerate}
+
+
+\subsubsection{Window and Filter operations}
 
 After the data has been loaded \cite{projthesis}, it's still not ready for processing. 
 
 The function \lstinline|process_DAS_data| takes in the signal data, perform a tukey \ref{dsp:tukey} window algorithm over it. We then run a bandpass filter algorithm with Butterworth over it to extract the and 
 
-\begin{figure}
+\begin{figure}[h]
     \centering
     \lstinputlisting{code/procdasdata.jl}
     \caption{Process DAS data function}
@@ -48,10 +66,9 @@ The
     \label{fig:trdstrdas}
 \end{figure}
 
-\subsection{Data preparation before } 
+\subsection{Data preparation before Training} 
 
-Now that the data has been successfully pre-processed, we still need to 
-
+Now that the data has been successfully pre-processed, we still need to change how we input our data into the model
 
 
 \subsubsection{Data augmentation}
