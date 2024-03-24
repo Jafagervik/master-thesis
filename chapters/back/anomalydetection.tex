@@ -2,11 +2,21 @@
 
 Anomaly detection, also referred to as outlier detection, is about identifying observations that can be deemed inconsistent with the rest of the dataset.  
 
-Given the set $X = \{x_1, x_2, ..., x_n\}$, we define an anomaly as any value $\theta$ in set $X$ such that , where $\epsilon$ is based on a heuristic.
+Given the set $X = \{x_1, x_2, ..., x_n\}$, we define an anomaly as any sest of values $\theta_i$ in set $X$ such that $\theta_i - mean(X) > \epsilon$, where $\epsilon$ is a tresshold value. How one determine this value varies on a case by case scenario.
 
-Anomaly detection can be performd 
+Anomaly detection can be performed in a lot of different ways. From common machine learning tasks such as K-means clustering \cite{7507933}, \Gls{svm} \cite{10.1007/978-3-540-28647-9_97}
 
 Anomaly detection is used in a plethora of fields, such as networking, medical informatics and more. 
+
+In essence, there are 3 main types of anomalies we'll be looking at. They are as follows:
+
+\begin{enumerate}
+    \item Point anomalies 
+    \item Contextual anomalies 
+    \item Collective anomalies
+\end{enumerate}
+
+While point anomalies target single instances that differ from the rest off the dataset, collective anomalies targets group of instances that together form an anomaly. Contextual ones, as in the word, require context to determine whether or not an anomaly has been detected. In the case of multichannel sensor data, collective anomalies become the most interesting ones. 
 
 
 \subsection{Multivariate Anomaly detection}

@@ -41,14 +41,26 @@ By applying batch normalization to \acrshort{lstm}s, not only did the models con
 
 Whereas \acrshort{rnn}s shines at \acrshort{nlp}, speech recognition, and media processing, \acrshort{lstm}s is vastly better for time series forecasting due to the memory gates. This makes \acrshort{lstm}s a suitable option for us when working with anomaly detection on sensor data, which in its essence is nothing more than more complex time series data across multiple columns or channels. 
 
-The alternative to using \acrshort{lstm} nodes for our network would be \acrfull{gru}s.
+The alternative to using \acrshort{lstm} nodes for our network would be \acrfull{gru}s. Gated recurrent units are ... Simple recurrent units are \cite{lei2018simple}.
 
 
-\subsubsection{Loss functions}
+\subsubsection{Loss functions on LSMTS}
 
 In typical LSTM 
 
 \acrfull{mae} is the most common algorithm when it 
+
+\subsubsection{KL Divergence}
+
+Another high relevant loss function to look at is the KL divergence  \cite{shlens2014notes}. It is used to measure distance between two probability distributions. Given the prior distribution $P$ and the posterior $Q$, it is described as follows:
+
+\begin{equation}
+    \text{KL}(P||Q) = \int_{-\infty}^{\infty} P(x) \log \left( \frac{P(x)}{Q(x)} \right) \, dx
+\end{equation}
+
+Regardin variational autoencoders, its objective is to measure discrepancy between the prior and the posterior over latent variables. It has 
+
+The 
 
 \subsubsection{Activation fun}
 
