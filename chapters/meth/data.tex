@@ -68,7 +68,14 @@ The
 
 \subsection{Data preparation before Training} 
 
-Now that the data has been successfully pre-processed, we still need to change how we input our data into the model
+Now that the data has been successfully pre-processed, we still need to change how we input our data into the model.
 
+Before getting the data, we perform normalization across the data to avoid overfitting and also ... This normalization, referred to as \textit{z-score normalization}, is formulated as follows
+
+\begin{equation}
+    x' = \frac{x - \mu}{\sigma}
+\end{equation}
+
+Where $\mu$ is the mean of the data, and $\sigma$ is the standard deviation of data.
 
 \subsubsection{Data augmentation}
