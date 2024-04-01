@@ -1,0 +1,9 @@
+\section{GAN - Generative Adversarial Network}
+
+\acrfull{gan}, created by Ian Goodfellow and other researchers at Universite de Montreal in 2014 \cite{goodfellow2014generative, goodfellow2016nips}, is a machine learning framework for working with generative \acrshort{ai}. \acrshort{gan}s consist of two models, a generator $G$ and a discriminator $D$ playing a zero sum game. Mathematically, the game objective of a \acrshort{gan} can be formulated as such: 
+
+\begin{equation}
+    \min_{G}\max_{D}\mathbb{E}_{x\sim p_{\text{data}}(x)}[\log{D(x)}] +  \mathbb{E}_{z\sim p_{\text{z}}(z)}[1 - \log{D(G(z))}]
+\end{equation}
+
+
