@@ -4,6 +4,13 @@ The autoencoder is a type of network used to learn efficient encodings of unlabe
 
 Autoencoders are split into two parts. The encoder $E_\phi$ and the decoder $D_\theta$. The relationship between these can be articulated as such: 
 
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.5]{figures/ae.png}
+    \caption{Autoencoder Architecture Diagram}
+    \label{fig:aediagram}
+\end{figure}
+
 \begin{equation}
 E_\phi: X \rightarrow Z 
 \end{equation}
@@ -26,9 +33,15 @@ One of the more well known usages for autoencoders
 
 \subsubsection{Variational Autoencoder (\acrshort{vae})}
 
-Similar to the regular autoencoder, a \acrfull{vae} also aims to map input over to a feature representation. The diffre. Broadly speaking, the difference between a \acrshort{AE} and a \acrshort{VAE} is that a AE maps inpot to points, where as VAEs map over to a distribution in the latent space. Thus, the \acrlong{vae} can be seemed as a generative model.
+Similar to the regular autoencoder, a \acrfull{vae} also aims to map input over to a feature representation. The diffre. Broadly speaking, the difference between a \acrshort{ae} and a \acrshort{vae} is that a AE maps input to points, where as VAEs map over to a distribution in the latent space. Thus, the \acrlong{vae} can be seemed as a generative model.
 
 
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.5]{figures/vae.png}
+    \caption{Variational Autoencoder Architecture Diagram}
+    \label{fig:vaediagram}
+\end{figure}
 
 
 VAEs can be trained by backpropagation due to something known as the \textit{reparametrization trick}. We need this because since VAEs maps to a stochastic variable, abckpropagation would else not be feasible.
