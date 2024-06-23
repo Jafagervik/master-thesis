@@ -1,24 +1,25 @@
 \chapter{Method}
 \label{chap:method}
 
-In this chapter, we mention our choice of language and frameworks for implementations. Furthermore, we go into detail about the datasets provided, how we improve on previous implementation of our program and how data is processed. Finally we describe how our models are implemented, as well a choice of parameters and architectures. \\
+In this chapter, we go through our choice of language and frameworks for implementation. Furthermore, we go into detail about the datasets provided, how we improve on the previous implementation of our program and how data is processed. Finally we describe how our models are implemented, as well as a choice of parameters and architectures. \\
 
 \input{chapters/meth/framework}
 
-We start of at the same spot we left of after the thesis. Before we go on to explain what's been done this semester, lets recap. 
+We start at the same spot we left off after the project thesis. Before we go on to explain what's been done this semester, lets recap. 
 
-We started off by just getting a drive with lots of \acrshort{das} data, and a script from \acrfull{asn} which set up us perfectly. We chose to rewrite python code to a language similar to that of Matlab and Python. We landed on Julia, and with its broad ecosytstem it has support for all kinds of development we'd ever need. \\
+We initially got started by just getting a drive with lots of \acrshort{das} data, and a script from \acrfull{asn} which set up us perfectly. We chose to rewrite python code to a language similar to that of Matlab and Python. We landed on Julia, and with its broad ecosytstem it has support for all kinds of development we'd ever need. \\
 
-We first wrote a 1:1 copy of the script, and then parallellized parts of the code until we had a version that could handle large amounts of data in parallel. We also wrote methods for being able to run a window over and \\ 
+We first wrote a 1:1 copy of the script, and then parallelized parts of the code until we had a version that could handle large amounts of data in parallel. We also wrote methods for being able to run a window over and \\ 
 
 
 \section{Overview}
 
+Our product is split into two apis. Those being \texttt{Judas} and \texttt{JudasNET}. Judas is the direct continuation from \cite{projthesis}
 The \acrshort{api} that's being created is called \texttt{Judas} (Julia and DAS) and is split in 3 modules as well as a seperate Utils file as shown in \ref{fig:ccuda}
 
 \begin{figure}[h]
     \centering
-    \includegraphics{figures/overview.png}
+    \includegraphics[scale=.6]{figures/judas_overview.png}
     \caption{Overview over our package Judas}
     \label{fig:judasoverview}
 \end{figure}
@@ -28,7 +29,7 @@ The \acrshort{api} that's being created is called \texttt{Judas} (Julia and DAS)
 
 % Data
 \input{chapters/meth/data}
-
+l
 % NETWORK ARCH
 \input{chapters/meth/architecture}
 
@@ -51,3 +52,6 @@ We're using \acrfull{adam} as the choice of our optimizer
 \begin{equation}
     \omega - \alpha \frac{v_{dw}}  {\sqrt{s_{dw}} + \epsilon}
 \end{equation}
+
+
+\input{chapters/meth/experiment}

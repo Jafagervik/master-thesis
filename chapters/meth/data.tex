@@ -70,13 +70,22 @@ The
 
 \subsection{Data preparation before Training} 
 
-Now that the data has been successfully pre-processed, we still need to change how we input our data into the model.
-
-Before getting the data, we perform normalization across the data to avoid overfitting and also ... This normalization, referred to as \textit{z-score normalization}, is formulated as follows
+After the preprocessing, some final work must be done before we can train the model. Normalization, also called data standardization, 
+is a basic staple of preprocessing, we  . This normalization makes sure all the values . For our model, we use z-score normalization, 
+which normalizes vales to be in the range 0 to 1. The f
 
 \begin{equation}
-    x' = \frac{x - \mu}{\sigma}
+    x' = \frac{x - \mu}{x}
 \end{equation}
+
+This method is implemented as such in \texttt{Flux.jl}
+
+\begin{figure}[h]
+    \centering
+    \lstinputlisting{code/norm.jl}
+    \caption{Flux normalization function}
+    \label{fig:normalize_data}
+\end{figure}
 
 Where $\mu$ is the mean of the data, and $\sigma$ is the standard deviation of data.
 

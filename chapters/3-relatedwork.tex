@@ -4,17 +4,32 @@
 In this chapter, we take a look at different methods used during the years for dealing with unsupervised anomaly detection. We'll start looking at traditional \acrlong{ml} methods, and move over to look at \textit{state-of-the-art} models for anomaly detection, both in one and two dimensions. \\
 
 
-Anomaly detection, or outlier detection as it is often referred as, has gone through many iterations throughout the year, and been a stable problem to test different statistical and artificial models on. \\ 
+Anomaly detection, or outlier detection as it is often referred as, has gone through many iterations throughout the year, and has been a stable problem to test different statistical and artificial models on. \\ 
 
-As we mentioned in \ref{chap:back}, we differentiate between labled and unlabeled problems, and in this case, unsupervised, semi supervised and fully supervised algorithms.
+As we mentioned in \ref{chap:back}, we differentiate between labeled and unlabeled problems and in this case, unsupervised, semi-supervised, and fully supervised algorithms.
 
 \section{ML and clustering}
-The most popular 
+The most commonly used algorithms regarding machine learning have traditionally been centered around Kmeans clustering, K nearest neighbors, and  Support Vector machines \cite{10.14778/3538598.3538602, 10.1145/3444690}. These have proven to be efficient especially when dealing with unlabeled data. These clustering techniques are good at outlining groups grouping them, and finding outliers while dealing with them. One article found k means to be a great choice when dealing with traffic analysis and detection \cite{7507933}. Others have looked at svms as another solid option when dealing with anomaly detection \cite{10.1007/978-3-540-28647-9_97}. Omar (et al 2013) \cite{omar2013machine} looked in general at machine learning techniques such as SVMs, k means, decision trees and bayesian networks, and found that supervised ones generally outperforms their unsupervised counterparts when the types of anomalies where known beforehand, but struggle with novel anomalies. \\ 
 
-\section{AI}
+Alongside well known clustering techniques such as k means and knn, \acrfull{dbscan}, first published in 1996 \cite{10.5555/3001460.3001507} is a well-known clustering technique suited for outlier detection in multidimensional datasets. Its still being researched and improved as of this date for multivariate time series \cite{waltz2024time}, and has numerous implementations in different frameworks and languages. 
+
+An improvement of the original \acrshort{dbscan} can be found in the \acrfull{hdbscan}, first introduced in 2013 \cite{10.1007/978-3-642-37456-2_14}. This algorithm performs a regular dbscan over multiple $\epsilon$ values and integrates the result to find the optimal solution. Like its predecessor, it has several implementations available \cite{McInnes2017}, and just like dbscan, it works well for clustering and anomaly detection tasks. \\
 
 
+In general, these techniques have found great results, especially on supervised algorithms, but also unsupervised ones. 
 
+\section{AI and deep learning techniques}
+
+With the introduction of deep neural networks, several newer algorithms have been introduced as possible solutions to anomaly detection. Just like the machine learning algorithms, the supervised or semi supervised algorithms tend to outperform their unsupervised counterparts, but struggle to find novel outliers. 
+
+\section{Research on DAS data}
+
+
+\section{Summary}
+
+As we have seen in this chapter, anomaly detection has a long history with research and trial with many algorithms. From more well-known ML techniques such as Bayesian networks, knn and isolation forests to more novel deep learning algorithms utilizing LSTMs and \acrshort{gan} networks. \\
+
+The development and findings of several of these algorithms bring us directly to this project. We continue the research on anomaly detection by trying to improve unsupervised learning algorithms utilizing more novel deep learning algorithms, not only as sole models to solve a problem but also as a pre-processor model for supervised learning algorithms to be used on multi-sensor das data. We do so by improving and continuing \texttt{Judas} (formerly known as Emerald.jl), a processing and analysis package. We also distinguish our result by opting for a more novel language of choice, Julia, to not only demonstrate small examples of data science or data processing but as a serious contender for the language of choice when implementing libraries or applications dealing with big data, distributed computing and artificial intelligence
 
 \input{chapters/relwork/anomaly}
 \input{chapters/relwork/daswork}

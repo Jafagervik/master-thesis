@@ -1,6 +1,15 @@
-JudasNET(n_in::Int, n_out::Int) = Chain(
-    RLSTM(n_in => 100),
-    RepeatVector(n_out),
-    RLSTM(100 => 100),
-    TimeDistributed(Dense(100, n_out))
-)
+include("ae.jl")
+
+M, N  = 100000, 2000
+data = ones(Float32, M, N)
+
+# Training
+args = AEArgs(; M, N, epochs=200, device=gpu)
+losses = train(args, data)
+
+# Inference
+inference_data = ones(Float32, M, N)
+anomalies = infer(inference_data)
+
+plot_anomalies(anomalies)
+scores = roc_scores(anomalies)

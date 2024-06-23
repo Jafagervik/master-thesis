@@ -1,0 +1,53 @@
+\subsection{Data}
+\label{back:data}
+
+\subsubsection{Normalization and Standardization}
+
+Normalization is a technique of which data is transformed from it's original scale, to a more standard scale. These techniques are 
+The two most common types of . \\
+
+\textbf{MinMax Normalization}
+
+This algorithm transforms data to a specified range, most often $[0, 1]$ but it can also be $[-1, 1]$ or any other range.
+Minmax normalization can be described as follows:
+
+\begin{equation}
+   x_{normalized} = \dfrac{x - x_{min}}{x_{max}-x_{min}}
+\end{equation}
+
+\textbf{ZScore Standardization}
+
+Contrary to normalization, standardization ...
+The z score 
+\begin{equation}
+   x_{standardized} = \dfrac{x - \mu}{\sigma}
+\end{equation}
+
+\subsection{Half Precision Training}
+
+
+TODO: source about mixed precision training
+
+\subsection{Datasets}
+
+Loading and processing data before it's trained is a crucial task of constructing any neural networks. In many of the most popular frameworks such as \texttt{Pytorch} and \texttt{TensorFlow}, Datasets and Dataloaders are used to retrieve data from a certain location, transform it to fit the network, and load the data in batches to the model. \\
+
+Datasets are objects that contain information about where to gather the data from, which transformations are to be applied, and functions to gather a single instance of a batch.
+
+\subsection{Dataloaders}
+
+If the datasets contain information about the data and how to retrieve a single instance, the dataloaders job is to create an object that can be iterated over, containing $n$ amount of batches, and transferring these data to the wanted devices. In the case of data parallel multi-gpu training, when the data is loaded, it's \textit{sharded} across the different gpus, in a manner that balances the load of each gpu. Let's say we have a batch  of size $[4, 5, 5]$ and we have two gpus available. The dataloader can split this Tensor in two batches, where each of the gpus get a tensor of size $[2, 5, 5]$. By sharding the data along the first axis, ideally we can half the amount it takes, not taking data transfer time into consideration. 
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.2]{figures/sharding.png}
+    \caption{Example of data sharding with 2 gpus, and a original Tensor of size [4,5,5]}
+    \label{fig:sharding}
+\end{figure}
+
+
+\textbf{Parallel loading}
+
+When iterating over the dataloader, each element of the batch is retrieved and undergoes transformations. Depending on the batch size and  the size of the data, this procecedure can be very resource-intensice and time-consuming. To mitigate this, we can introduce the concept of parallel batch loading. Instead of gathering and transforming the data sequentially, we instead introduce several workers to be able to do this process in parallel. 
+
+\lstinputlisting[language=Python]{code/parallel_batch_load.py}

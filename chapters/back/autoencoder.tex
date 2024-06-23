@@ -31,6 +31,44 @@ When a auto encoder is trained to max effiency, we can in some cases remove the 
 Typical usecases for autoencoders are signal analysis, anomaly detection, reconstructing images and so on. 
 One of the more well known usages for autoencoders
 
+\subsubsection{Loss functions}
+
+\textbf{\acrfull{mse}}
+
+The \acrshort{mse} loss function, also referred to as L1 loss, is one of the most well known loss functions. It punishes bigger differences by squaring the difference between two elements in the prior and the posterior.
+
+\begin{equation}
+    MSE = \dfrac{1}{n}  \sum_{i=1}^{n}(x_i-\hat{x}_i)^2
+\end{equation}
+
+\textbf{\acrfull{mae}}
+
+The \acrshort{mae} loss function, also referred to as L2 loss, is quite similar to the L1 loss. The difference is that the \acrshort{mae} function will only return the absolute value of the difference between two distributions, thus not caring about the difference itself.
+
+\begin{equation}
+    MAE = \dfrac{1}{n}  \sum_{i=1}^{n}|x_i-\hat{x}_i|
+\end{equation}
+
+\textbf{Hinge Loss}
+
+\begin{equation}
+    L = \max(0, 1 - x \cdot \hat{x}))
+\end{equation}
+
+\textbf{Log Loss, VAE}
+
+The log loss, also known as Binary Cross Entropy loss
+
+\begin{equation}
+L(x, \hat{x}) = - \frac{1}{N} \sum_{i=1}^{N} \left( x_i \log(\hat{x}_i) + (1 - x_i) \log(1 - \hat{x}_i) \right)
+\end{equation}
+
+
+\textbf{Activation Functions}
+\begin{equation}
+    ReLU(z) = max(0, z)
+\end{equation}
+
 \subsubsection{Variational Autoencoder (\acrshort{vae})}
 
 Similar to the regular autoencoder, a \acrfull{vae} also aims to map input over to a feature representation. The diffre. Broadly speaking, the difference between a \acrshort{ae} and a \acrshort{vae} is that a AE maps input to points, where as VAEs map over to a distribution in the latent space. Thus, the \acrlong{vae} can be seemed as a generative model.
