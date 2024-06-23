@@ -3,8 +3,8 @@
 
 \subsubsection{Normalization and Standardization}
 
-Normalization is a technique of which data is transformed from it's original scale, to a more standard scale. These techniques are 
-The two most common types of . \\
+Normalization is a technique of which data is transformed from it's original scale, to a more standard scale. These techniques are normally used when the dataset has elements of different ranges. Normalization contribute to faster convergence, and it's why they are as commonly used when preprocessing neural networks. 
+The two most common types of normalization are minmax and z score. \\
 
 \textbf{MinMax Normalization}
 
@@ -17,16 +17,18 @@ Minmax normalization can be described as follows:
 
 \textbf{ZScore Standardization}
 
-Contrary to normalization, standardization ...
-The z score 
+Contrary to normalization, standardization aims to transform the values to have a mean of 0, and a standard deviation of 1. It also assumes a distribution close to that of a normal one. This method can be expressed as follows. \\ 
 \begin{equation}
    x_{standardized} = \dfrac{x - \mu}{\sigma}
 \end{equation}
 
 \subsection{Half Precision Training}
 
+Working with large datasets and \acrshort{dnn}s can be rather time- and resource consumptive. To address this, one can cast the datatype from single precision to half precision, along with weights, biases and activations. This will reduce in loss of accuracy and information, but it can drastically lower memory consumption and decrease training time. It is important to note that casting of data occurs with normalization techniques, the order of which operation happens first is quintessential. If the data is casted to half precision before normalization, the normalization will be based on a slightly inaccurate representation of the data, but the computation of the normalized data will be faster. If normalization were to occur first, less detail about the data would be lost, but at the expense of being more computational intensive. \\
 
-TODO: source about mixed precision training
+\textbf{Mixed precision training}
+
+Mixed precision training, introduced in 2018 \cite{micikevicius2018mixed}, is a technique where the weights, activations and biases of a neural network is stored in single precision, while the data itself stays in it's original format. It allows for reduced memory consumption, while also speeding up operations of deep neural nets. Additionally, the amount of $kwH$ required to train the neural nets would decrease, thus reducing both the cost and the environmental tax by training neural nets. This becomes more important the larger the datasets, models and the sheer amount of GPUS required to train massive workloads. This introduce the concept of loss scaling, where the losses needs to be adjusted based on the weights. \\
 
 \subsection{Datasets}
 

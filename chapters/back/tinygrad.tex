@@ -1,0 +1,31 @@
+\subsection{Python and Tinygrad}
+\label{back:tiny}
+
+It is no secret that python is the \textit{de-facto standard} language when it comes to \acrshort{ai} and data science. Even though we rely mostly on Julia for our code, Python still 
+
+
+
+
+\subsubsection{Python}
+
+Python is a dynamically typed, weak language famously known for it's \textit{easy-to-learn} syntax. Created by Guido Van Rossum in the late 80-s \cite{python}, Python has slowly emerged as one of the fastest growing programming languages ever created \cite{srinath2017python}. 
+
+Virutally all of the larger libraries for data science and \acrlong{ml} have bindings to \gls{python}, or are written in Python from scratch. Some examples include \texttt{Pandas}, \texttt{NumPy}, \texttt{SciKit Learn}, \texttt{Pytorch} and \texttt{TensorFlow}. Many of these rely on code written in C or C++ to be fast, sincc
+
+Due to the large ecosystem already established, it's seemingly a hard task  \\
+
+\subsubsection{Tinygrad}
+
+Tinygrad is a neural network framework created by George Hotz in October 2020. It is based on Andry Carpathys library \texttt{Micrograd}, which aims to serve as an introduction to understand neural networks at its core. Tinygrad was introduced as an alternative to other giants such as \texttt{Pytorch} and \texttt{TensorFlow}, critizising them to be too hardware dependent on NVIDIA GPUs, and their CUDA software. Unlike its alternatives, Tinygrad strives towards being hardware agnostic, where writing codes for different accelerators should be as similar as possible. \\
+
+As noted above, all operations in tinygrad are lazy. This means that an operation such as $a+b$ is not computed until the \texttt{realize()} method is called. In addition, no stateless operations require classes, as opposed to \texttt{Pytorch}. \\
+
+\textbf{Tensor}
+
+At its core, Tinygrad revolves around Tensors. Tensors can be represented as multidimensional arrays. They are the core of all operations, whether it be storing of weights and biases, or data itself.
+
+\textbf{MultiLazyBuffer}
+
+\textbf{TinyJit}
+
+Most neural network libraries spends a lot of effort on making dispatch as fast as possible. Tinygrad instead use a decorator \texttt{@TinyJit} that replays the kernels used in the decorated functions.
