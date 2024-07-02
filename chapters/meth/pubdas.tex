@@ -1,0 +1,35 @@
+\subsection{PubDAS}
+
+PubDAS \cite{spica2023pubdas} is a distributed dataset of \acrfull{das} data. 
+
+
+
+\subsubsection{File format}
+
+PubDAS consist of 8 datasets stored in 3 different file formats. These 3 are \texttt{TDMS}, \texttt{HDF5} and \texttt{SEG-Y}. 
+The FORESEE
+
+\subsubsection{Metadata}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|l|}
+    \hline
+    \multicolumn{1}{|c|}{\textbf{Name}} & \multicolumn{1}{c|}{\textbf{Value}} \\ \hline
+    IU                                  & Silixa iDAS-v2                      \\ \hline
+    Time Span                           & 365 days                            \\ \hline
+    Format                              & HDF5                                \\ \hline
+    Sample rate (Hz)                    & 125 (From 500)                      \\ \hline
+    Volume (GB)                         & 29,338                              \\ \hline
+    Gauge length (m)                    & 10                                  \\ \hline
+    Cable Length (m)                    & 4900                                \\ \hline
+    Channel spacing (m)                 & 2                                   \\ \hline
+    File duration (s)                   & 60                                  \\ \hline
+    \end{tabular}
+    \caption{Metadata of the Foresee dataset}
+    \label{tab:foresee_meta}
+\end{table}
+
+\subsubsection{Pre processing}
+
+As opposed to the dataset from BaneNOR, the FORESEE dataset is already preprocessed. A lowpass filter is applied on the data

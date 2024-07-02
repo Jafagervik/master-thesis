@@ -52,4 +52,5 @@ If the datasets contain information about the data and how to retrieve a single 
 
 When iterating over the dataloader, each element of the batch is retrieved and undergoes transformations. Depending on the batch size and  the size of the data, this procecedure can be very resource-intensice and time-consuming. To mitigate this, we can introduce the concept of parallel batch loading. Instead of gathering and transforming the data sequentially, we instead introduce several workers to be able to do this process in parallel. 
 
+\lstset{style=pstyle}
 \lstinputlisting[language=Python]{code/parallel_batch_load.py}

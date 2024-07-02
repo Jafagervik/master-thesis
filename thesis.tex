@@ -11,6 +11,7 @@
 \addbibresource{thesis.bib}
 
 \input{glossary.tex} % add glossary and acronym lists before document
+\usepackage{listings}
 \usepackage[table,xcdraw]{xcolor}
 \usepackage{siunitx}
 \usepackage{multirow}
@@ -18,37 +19,48 @@
 \usepackage{textcomp}
 
 
+\usepackage{caption}
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
 
-%%
-%% Julia definition (c) 2014 Jubobs
-%%
-\lstdefinelanguage{Julia}
-  {morekeywords={abstract,break,case,catch,const,continue,do,else,elseif,
-      end,export,false,for,function,immutable,import,importall,if,in,
-      macro,module,mutable,otherwise,quote,return,switch,true,try,type,typealias,using,while,@btime},
-   otherkeywords={
-        <, >, ->, <=, >=, ==, ===, !==, !=
-   },
-   numbers=left,
-   numberstyle=\scriptsize,
-   sensitive=true,
-   alsoother={\$},
-   morecomment=[l]\#,
-   morecomment=[n]{\#=}{=\#},
-   morestring=[s]{"}{"},
-   morestring=[m]{'}{'},
-}[keywords,comments,strings]
-
-\lstset{
-    language         = Julia,
-    basicstyle       = \ttfamily,
-    keywordstyle     = \bfseries\color{blue},
-    stringstyle      = \color{magenta},
-    commentstyle     = \color{teal},
-    showstringspaces = false,
+% Define Julia style
+\lstdefinelanguage{Julia}{
+  keywords={abstract, break, case, catch, const, continue, do, else, elseif, end, export, false, for, function, global, if, import, in, macro, module, otherwise, quote, return, true, try, using, while, type, mutable, struct, @inline, @simd, @time, @btime, @layer, @functor, @error, @warn, @show, @inbounds, @kwdef, @view, @layout, @gif,
+  Real, Integer, Int, Int8, Int16, Int32, Int64,
+  String, AbstractString,
+  DateTime, Second, Minute, Hour, Date,
+  Bool, Tuple, Matrix, Dict, Set, Vector, AbstractArray, AbstractVector, AbstractMatrix,
+  AbstractFloat, Float, Float8, Float16, Float32, Int64,
+  },
+  sensitive=true,
+  comment=[l]\#,
+  morecomment=[s]{\#=}{=\#},
+  morestring=[b]",
 }
 
+\definecolor{backcolour}{rgb}{0.99,0.99,0.99}
+\definecolor{codegreen}{rgb}{0,0.6,0}
 
+% Define a custom style
+\lstdefinestyle{dasstyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    keepspaces=true,                 
+    numbers=left,
+    frame=single,
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+}
+
+% Use \lstset to make myStyle the global default
+\lstset{style=dasstyle}
 
 \begin{document}
 

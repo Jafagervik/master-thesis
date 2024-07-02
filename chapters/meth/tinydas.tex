@@ -1,35 +1,32 @@
-\subsection{PubDAS}
+\section{TinyDAS}
 
-PubDAS \cite{spica2023pubdas} is a distributed dataset of \acrfull{das} data. 
+TinyDAS is a program we've created to easily be able to train, and test different types of autoencoder models for anomaly detection. The main ideas behind creating this program are as follows:
 
+\begin{enumerate}
+    \item New autoencoder models are easy to add
+    \item Easy to tune configurations
+    \item Scalable from single core computer to distributed systems.
+    \item The program is not tied to any particular hardware accelerator architecture
+    \item Support for half precision training
+    \item Support for transfer learning and early stopping
+    \item Testing of autoencoders should be easy to add
+\end{enumerate}
 
+Based on these conditions, our choice of framework was tinygrad \ref{back:tinygrad}, mainly since the framework is designed to be accelerator-independent.
 
-\subsubsection{File format}
+\subsection{\acrshort{api} design}
 
-PubDAS consist of 8 datasets stored in 3 different file formats. These 3 are \texttt{TDMS}, \texttt{HDF5} and \texttt{SEG-Y}. 
-The FORESEE
+\subsubsection{Early Stopping}
 
-\subsubsection{Metadata}
+Even though the model loss ideally should decrease to eventually reach zero almost immediately, this is never the case. Overfitting is when the loss starts increasing, never to return to its best value. To avoid spending time and resources on unnecessary training, we implement a useful mechanism called early stopping, which is described as follows:
 
-\begin{table}[h]
-    \centering
-    \begin{tabular}{|l|l|}
-    \hline
-    \multicolumn{1}{|c|}{\textbf{Name}} & \multicolumn{1}{c|}{\textbf{Value}} \\ \hline
-    IU                                  & Silixa iDAS-v2                      \\ \hline
-    Time Span                           & 365 days                            \\ \hline
-    Format                              & HDF5                                \\ \hline
-    Sample rate (Hz)                    & 125 (From 500)                      \\ \hline
-    Volume (GB)                         & 29,338                              \\ \hline
-    Gauge length (m)                    & 10                                  \\ \hline
-    Cable Length (m)                    & 4900                                \\ \hline
-    Channel spacing (m)                 & 2                                   \\ \hline
-    File duration (s)                   & 60                                  \\ \hline
-    \end{tabular}
-    \caption{Metadata of the Foresee dataset}
-    \label{tab:foresee_meta}
-\end{table}
-
-\subsubsection{Pre processing}
-
-As opposed to the dataset from BaneNOR, the FORESEE dataset is already preprocessed. A lowpass filter is applied on the data
+\begin{align*}
+&\text{Stop at epoch } T \text{ if:} \\
+&\forall i \in \{T-p+1, ..., T\}: L_v(i) > L_v^* - \epsilon \\
+&\text{where } L_v^* = \min_{j=1}^{T} L_v(j) \\
+\\
+&\text{Given:} \\
+&L_v(t) \text{ is the validation loss at epoch } t \\
+&p \text{ is the patience (number of epochs to wait)} \\
+&\epsilon \text{ is a small threshold for improvement}
+\end{align*}
