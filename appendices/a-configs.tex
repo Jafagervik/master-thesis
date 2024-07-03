@@ -1,0 +1,42 @@
+\chapter{Hyperparameters and Configurations in TinyDAS}
+\label{app:configs}
+
+\section{Hyperparameters}
+
+\begin{figure}[h]
+  \begin{subfigure}[t]{.45\textwidth}
+    \centering
+    \lstinputlisting{code/configs/ae.yaml}
+    \caption{AE}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{.45\textwidth}
+    \centering
+    \lstinputlisting{code/configs/cnnae.yaml}
+    \caption{CNN AE}
+  \end{subfigure}
+
+  \medskip
+
+  \begin{subfigure}[t]{.45\textwidth}
+    \centering
+    \lstinputlisting{code/configs/vae.yaml}
+    \caption{VAE}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{.45\textwidth}
+    \centering
+    \lstinputlisting{code/configs/betavae.yaml}
+    \caption{Beta VAE}
+  \end{subfigure}
+    \caption{Hyperparameters for all models}
+\end{figure}
+
+\section{Configurations}
+
+\begin{figure}[h]
+    \centering
+    \lstinputlisting[language=sh, caption=Slurm script example]{code/configs/ae.sh}
+    \label{fig:slurmconf}
+\end{figure}
+

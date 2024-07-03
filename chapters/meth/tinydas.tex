@@ -16,9 +16,22 @@ Based on these conditions, our choice of framework was tinygrad \ref{back:tinygr
 
 \subsection{\acrshort{api} design}
 
+\subsubsection{Datasets and Dataloaders}
+
+For easy swap out between datasets, we introduce two classes, \texttt{Dataset} and \texttt{DataLoader}. The former handles information about the dataset to be trained on, as well as logic for loading a single file from a \acrshort{hdf5} file, or whatever other format might be sent in later on. The latter one handles loading of batches in parallel, loading $n$ samples into the model.
+
+\subsubsection{Autoencoder Base Class}
+
+\lstinline{BaseAE} is the abstract class which all the different models inherit from. The \lstinline{criterion} method is the main method to use when using a model. It runs the \lstinline{__call__} method, apply the loss function of choice, and stores in a dictionary in case we'd like to store multiple losses. We define the class as follows:
+
+\lstinputlisting[language=Python, label={lst:baseae}, caption=Base Autoencoder class]{code/baseae.py}
+
+As we see in the listing above \ref{lst:baseae}, we also provide method in here for prediction. 
+
 \subsubsection{Early Stopping}
 
 Even though the model loss ideally should decrease to eventually reach zero almost immediately, this is never the case. Overfitting is when the loss starts increasing, never to return to its best value. To avoid spending time and resources on unnecessary training, we implement a useful mechanism called early stopping, which is described as follows:
+
 
 \begin{align*}
 &\text{Stop at epoch } T \text{ if:} \\
@@ -30,3 +43,11 @@ Even though the model loss ideally should decrease to eventually reach zero almo
 &p \text{ is the patience (number of epochs to wait)} \\
 &\epsilon \text{ is a small threshold for improvement}
 \end{align*}
+
+\subsubsection{Trainer}
+
+The Trainer class serves as the core component of our program. As demonstrated in listing \ref{fig:lstmcell}, it integrates a model, dataloader, and optimizer to execute the training process. Additionally, it handles early stopping, storing history of losses and saving the best model for further use.
+
+\subsubsection{Hyperparameters and configurations}
+
+To set hyperparameters 
