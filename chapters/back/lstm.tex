@@ -59,26 +59,87 @@ In typical LSTM
 
 \subsubsection{KL Divergence}
 
-Another high relevant loss function to look at is the KL divergence  \cite{shlens2014notes}. It is used to measure distance between two probability distributions. Given the prior distribution $P$ and the posterior $Q$, it is described as follows:
+Another high relevant loss function to look at is the KL divergence (Kullback-Leibler divergence)  \cite{shlens2014notes}. It is used to measure distance or similarity between two probability distributions. Given the prior distribution $P$ and the posterior $Q$, it is described as follows:
 
 \begin{equation}
     \text{KL}(P||Q) = \int_{-\infty}^{\infty} P(x) \log \left( \frac{P(x)}{Q(x)} \right) \, dx
 \end{equation}
 
-Regardin variational autoencoders, its objective is to measure discrepancy between the prior and the posterior over latent variables. It has 
+It is worth nothing that the KL divergence is non-negative $KL \geq 0$, thus meaning it is not a distance metric.
+Regarding variational autoencoders, its objective is to measure discrepancy between the prior and the posterior over latent variables. It is 
 
-The 
+\subsubsection{ELBO Loss}
 
-\subsubsection{Activation fun}
+ELBO (Evidenve Lower BOund) loss is 
 
+\subsubsection{Activation functions}
 
-\subsubsection{Optimizers for Unsupervised Learning }
+To be able to develop complex representations and functions based on inputs, nonlinearity is a necessity. To be able to achieve this, nonlinear activation functions are introduced. Some of the most commonly used activation functions in deep learning are tanh, sigmoid and \acrshort{relu} which are displayed in \ref{fig:actfuncs}.
 
-Diffre
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}
+\begin{groupplot}[
+    group style={
+        group size=3 by 1,
+        horizontal sep=2cm
+    },
+    width=0.3\textwidth,
+    height=0.3\textwidth,
+    xlabel=$x$,
+    ylabel=$y$,
+    xmin=-5, xmax=5,
+    ymin=-1.2, ymax=1.2,
+    xtick={-4,-2,0,2,4},
+    ytick={-1,-0.5,0,0.5,1},
+    legend pos=north west,
+    legend style={font=\small},
+    title style={font=\small},
+]
 
+% Sigmoid
+\nextgroupplot[title=Sigmoid]
+\addplot[blue, domain=-5:5, samples=100] {1 / (1 + exp(-x))};
 
+% Tanh
+\nextgroupplot[title=Tanh]
+\addplot[red, domain=-5:5, samples=100] {tanh(x)};
 
-JudasNET uses \Gls{adam} as its optimizer, which is defined as follows: 
+% ReLU
+\nextgroupplot[title=ReLU]
+\addplot[green, domain=-5:0, samples=2] {0};
+\addplot[green, domain=0:5, samples=2] {x};
+
+\end{groupplot}
+\end{tikzpicture}
+\caption{Comparison of Sigmoid, Tanh, and ReLU activation functions}
+\label{fig:actfuncs}
+\end{figure}
+
+\paragraph{Tanh} also known as hyperbolic function is ...
+
+\begin{equation}
+    tanh(z) = \dfrac{sinh(z)}{cosh(z)} = \dfrac{e^{2z} - 1}{e^{2z} + 1}
+\label{eq:tanh}
+\end{equation}
+
+\paragraph{ReLU} is commonly used in many different types of neural networks. Compared to the other alternatives, it introduce low computational overhead, yet still achives non linearity. Many variations of relu, such as leaky relu, gelu and relu6, try to improve on relu, yet the classic relu still reigns as the top alternative for many.
+
+\begin{equation}
+    ReLU(z) = max(0, z)
+\label{eq:relu}
+\end{equation}
+
+\paragraph{Sigmoid} is popular due to 
+
+\begin{equation}
+    \Phi(z) = \dfrac{1}{1 + e^{-z}}
+\label{eq:sigmoid}
+\end{equation}
+
+\subsubsection{Optimizers}
+
+Choosing the correct optimizer for the neural network of choice can drastically change the results and training time. During the years, several optimizers have been shown to produce great results. Some of these are \acrfull{sgd}, RMSprop and \acrfull{adagrad}. \acrfull{adam}, first introduced in 2017, \cite{kingma2017adam}, is a continuation and improvement upon the two latter ones. Known for its computational efficiency, low memory requirement and straightforwardness to implement, it's now the \textit{de-facto standard} of optimizers. It is defined as follows:
 
 
 \begin{align}
@@ -100,4 +161,4 @@ where:
     \epsilon & \text{ - small constant to prevent division by zero}
 \end{align*}
 
-The original paper sets the following parameters for ADAM: $\beta_1 = 0.99, \beta_2 = 0.9 \mu=10^{-8}$ and $\alpha = 0.001$ \cite{kingma2017adam}.
+The original paper sets the following parameters for ADAM: $\beta_1 = 0.99, \beta_2 = 0.9, \mu=10^{-8}$ and $\alpha = 0.001$ \cite{kingma2017adam}.

@@ -4,12 +4,52 @@ The field of \acrfull{dsp} has been researched since the dawn of time. Signals a
 
 When working with \acrshort{das} data in particular, we want to filter the data to remove distortion, and get cleaner outputs to work with. A common way to remove signals outside of a range are called High-pass filters and Low-pass filters. 
 
-A high-pass filter is a function that only allows frequencies above a certain threshold to be accepted, while a low-pass filter only accepts frequencies lower than a threshold $T$. A bandpass filter on the other hand, only allows frequencies within a certain range to be accepted. 
+A high-pass filter is a function that only allows frequencies above a certain threshold to be accepted, while a low-pass filter only accepts frequencies lower than a threshold $T$. A band-pass filter on the other hand, only allows frequencies within a certain range to be accepted.
 
-\subsection{Tukey}
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=12cm,
+    height=8cm,
+    xlabel={Frequency (Hz)},
+    ylabel={Magnitude (dB)},
+    xmode=log,
+    xmin=1, xmax=10000,
+    ymin=-60, ymax=5,
+    xtick={1,10,100,1000,10000},
+    xticklabels={1,10,100,1k,10k},
+    ytick={-60,-40,-20,0},
+    grid=both,
+    minor grid style={gray!25},
+    major grid style={gray!50},
+    title={Band-pass Filter Frequency Response},
+]
+
+% Low-frequency rolloff
+\addplot[domain=1:100,samples=100,blue,thick] {-40*log10(100/x)};
+
+% Passband
+\addplot[domain=100:1000,samples=100,blue,thick] {0};
+
+% High-frequency rolloff
+\addplot[domain=1000:10000,samples=100,blue,thick] {-40*log10(x/1000)};
+
+% Annotations
+\node[anchor=north west] at (axis cs:10,-3) {Passband};
+\draw[<->,red] (axis cs:100,-10) -- (axis cs:1000,-10);
+\node[anchor=south] at (axis cs:300,-8) {Bandwidth};
+
+\end{axis}
+\end{tikzpicture}
+\caption{Ideal Bandpass Filter Response}
+\end{figure}
+
+
+\subsection{Tukey Window}
 \label{dsp:tukey}
 
-Window functions are function often used in \acrshort{dsp} and are zero-valued outside of an interval. The tukey window is one of the more popular window methods, and its mathematical function is described as such: 
+Window functions are function often used in \acrshort{dsp} and are zero-valued outside of an interval. The Tukey window, also known as the \textit{cosine-tapered window} is one of the more popular window methods, and its mathematical function is described as such: 
 
 \[
     w(x)= 
@@ -19,10 +59,13 @@ Window functions are function often used in \acrshort{dsp} and are zero-valued o
     \frac{1 + \cos{2 \pi \alpha (x - \frac{1-\alpha}{2})}}{2}, & \text{if } x > \frac{1-\alpha}{2}
 \end{cases}
 \]
-By using 
+
+This window becomes a rectangle when $\alpha = 0$.
+
+
+\subsection{Resampling}
+
+Also known as sampling-frequency conversion, resampling is the act of modifying the sampling rate of a discrete signal to obtain a new discrete representation of this data. For signal data, lots of samples are usually recorded, but the amount needed to perform calculations or observe patterns does not require this much data. Thus, one can downsample the data to decrease memory usage for storage, as well as time for processing this data. \\
+
 
 \subsection{Butterworth}
-
-\subsection{Fourier Transforms}
-
-"The fourier transform is a mathematical transformation that maps a function from its temporal domain over to its frequency domain". As previously discussed \cite{projthesis}, Julia allows
