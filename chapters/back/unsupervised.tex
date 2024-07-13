@@ -31,3 +31,24 @@ Lets denote this function as $f$, we now get the following equation.
 Linear layers have several advantages, such as computational efficiency, flexibility as well as intrerprebility, where the weight and bias vectors can be interpreted as learned parameters. They also serve as building blocks for other components, such as \acrshort{rnn}s, \acrshort{lstm}s or even attention blocks. \\ 
 
 They are however prone to overfitting and linearity, due to their inherent linearity. They can become quite limited when trying to extract more complex features, thus reducing some of the discriminative power.
+
+\subsection{Parallelism within \acrlong{ml}}
+
+With rapid evolving deep learning architectures, the importance of scalable model training and networks grows larger each year. It is even estimated that these networks grow 1,5x each year \cite{9499913}, making parallelization a vital topic when it comes to \acrlong{ml} to accommodate ever increasing memory needs. Several different hardware accelerators have been created to best accommodate these needs, the most apparent of these are \acrshort{gpu}s. NVIDIA have for several years dominated this market, and their hardware is becoming faster and increasing in memory. \\
+
+By workers, we mainly refer to \acrshort{gpu}s, but this could also be processors or other types of hardware accelerators such as TPUs.
+
+
+\subsubsection{Model Parallelism}
+
+Deep learning models need to store a lot of data. Weights and biases tend to take up a lot of memory, thus requiring the need of splitting up a model across several workers. As an example, given a model $M$ of 50 layers, we can split this model in 2 parts by having a worker $A$ manage the first 25 layers, and worker $B$ manage the latter half.
+
+The overhead of transferring data across these workers can become a bottleneck, so this should only be utilized when absolutely necessary.
+
+\subsubsection{Data Parallelism}
+
+Data parallelism refers to partitioning data across multiple workers.  Given a large set of data, we can split these data across the workers and store a copy of the model on each worker, calculate gradients across them all and update the trainable parameters for the model. An example of this would be to split a batch of size $b$ across $n$ workers, calculate the gradients and update the model. Before updating the parameters of the model, an average across all parameters is calculated, and each of the copies of the model is updated before continuing.
+
+\subsubsection{Hybrid Parallelism}
+
+This kind of parallelization is a combination of the two previously mentioned techniques. By first splitting a model across several workers, data is subsequently split across multiple workers. 

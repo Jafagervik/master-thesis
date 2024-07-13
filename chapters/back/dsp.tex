@@ -1,4 +1,5 @@
 \section{Digital Signal Processing}
+\label{back:dsp}
 
 The field of \acrfull{dsp} has been researched since the dawn of time. Signals are all around us, and we do have the means to gather and store the data, but how do we process it more efficiently to be able to analyze and interpret the data in a fast and efficient manner.
 
@@ -66,6 +67,17 @@ This window becomes a rectangle when $\alpha = 0$.
 \subsection{Resampling}
 
 Also known as sampling-frequency conversion, resampling is the act of modifying the sampling rate of a discrete signal to obtain a new discrete representation of this data. For signal data, lots of samples are usually recorded, but the amount needed to perform calculations or observe patterns does not require this much data. Thus, one can downsample the data to decrease memory usage for storage, as well as time for processing this data. \\
+
+\subsubsection{Parallel Matrix Resampling}
+
+Matrices can be resampled by resampling each vector either row-wise or column-wise. Consequentially, the resulting outputs can be concatenated into a new matrix. These types of matrix operations can be classified as trivial parallelizable, either by using multiple threads or processes. In either case, $n$ workers are created, where each of them get an almost equal amount of vectors to resample, and a \texttt{gather} procedure is then performed to create the output matrix. This is further illustrated in figure \ref{fig:parres}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{figures/parallel_resample.png}
+    \caption{Showcase of how columnwise resampling of a matrix can be parallellized}
+    \label{fig:parres}
+\end{figure}
 
 
 \subsection{Butterworth}
