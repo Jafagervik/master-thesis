@@ -71,7 +71,9 @@ L(x, \hat{x}) = - \frac{1}{N} \sum_{i=1}^{N} \left( x_i \log(\hat{x}_i) + (1 - x
 
 \subsubsection{Variational Autoencoder (\acrshort{vae})}
 
-Similar to the regular autoencoder, a \acrfull{vae} also aims to map input over to a feature representation. The diffre. Broadly speaking, the difference between a \acrshort{ae} and a \acrshort{vae} is that a AE maps input to points, where as VAEs map over to a distribution in the latent space. Thus, the \acrlong{vae} can be seemed as a generative model.
+Similar to the regular autoencoder, a \acrfull{vae} also aims to map input over to a feature representation. The diffre. Broadly speaking, the difference between a \acrshort{ae} and a \acrshort{vae} is that a AE maps input to points, where as VAEs map over to a distribution in the latent space. The encoder $E$ outputs to vectors. 
+
+Thus, the \acrlong{vae} can be seemed as a generative model.
 
 
 \begin{figure}[h]
@@ -96,14 +98,6 @@ VAEs can be trained by backpropagation due to something known as the \textit{rep
 \text{Loss Function:} & \quad \mathcal{L} = \text{reconstruction\_loss} + \text{KL\_divergence}
 \end{align*}
 
-
-
-
-\subsubsection{LSTM Variational Auto Encoder}
-
-As we've discussed in \ref{ai:lstm} and \ref{ai:rnn}, these types of networks are well suited for . The issues found with \acrshort{rnn}s, such as long term dependencies, are solved with using \acrshort{lstm}s, and also initializing the weights in a more intelligent way. We are not going to make use of transfer learning for our network, thus we solely rely on \acrshort{lstm}s to solve these issues.
-
-Combining the \acrshort{lstm} with an autoencoder approach, we'll be able to create a network well suited for anomaly detection on variable time series data.
 
 \textbf{KEYS TO GETTING A GOOD VARIATIONAL AUTO ENCODER}
 

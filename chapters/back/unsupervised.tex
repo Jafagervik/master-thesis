@@ -6,6 +6,7 @@ When it comes to \acrshort{ai} and \acrshort{ml} we usually differentiate betwee
 
 
 \subsection{Linear Layers}
+\label{back:linear}
 
 Fully Connected Layer, Dense Layer or Linear Layers  are types of an operation used in several deep learning models. This layer take an input vector and maps it to an output of learnable parameters. The resulting parameters are thus a weight matrix $W$ and a bias vector $b$. It is defined as follows:
 
@@ -52,3 +53,5 @@ Data parallelism refers to partitioning data across multiple workers.  Given a l
 \subsubsection{Hybrid Parallelism}
 
 This kind of parallelization is a combination of the two previously mentioned techniques. By first splitting a model across several workers, data is subsequently split across multiple workers. 
+
+\include{chapters/back/cnn}
