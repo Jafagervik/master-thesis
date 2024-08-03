@@ -1,0 +1,34 @@
+\subsection{Convolutional Autoencoder}
+\label{resdis:tiny-cae}
+
+The first model to be tested is a convolutional autoencoder  where we
+
+\begin{table}[ht]
+    \centering
+    \caption{Convolutional Autoencoder (CAE) Architecture}
+    \begin{tabular}{lrr}
+        \toprule
+        Layer & Output Shape & Parameters \\
+        \midrule
+        Input & (2137, 625, 1) & 0 \\
+        \multicolumn{3}{l}{\textit{Encoder:}} \\
+        ConvBlock & (2137, 625, 16) & 160 \\
+        MaxPool2d & (1068, 312, 16) & 0 \\
+        ConvBlock & (1068, 312, 8) & 1,160 \\
+        MaxPool2d & (534, 156, 8) & 0 \\
+        ConvBlock & (534, 156, 8) & 584 \\
+        MaxPool2d & (267, 78, 8) & 0 \\
+        \multicolumn{3}{l}{\textit{Decoder:}} \\
+        DeconvBlock & (534, 156, 8) & 584 \\
+        DeconvBlock & (1068, 312, 8) & 584 \\
+        DeconvBlock & (2136, 624, 16) & 1,168 \\
+        Conv2d & (2136, 624, 1) & 145 \\
+        \midrule
+        Total Parameters & & 4,385 \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:cae}
+\end{table}
+
+\textbf{Activation Functions:} ReLU (all layers except output), Sigmoid (output)\\
+\textbf{Optimizer:} Not specified in the provided code
