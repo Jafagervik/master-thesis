@@ -1,13 +1,76 @@
 \section{TinyDAS}
 \label{res:tinydas}
 
-
-
+In this section, we'l be looking at the results for both training our autoencoders, as well as testing our models on the test data mentioned in the method section.
 
 \subsection{Result Setup}
-All the tests were run and tested on \gls{idun} computers made for \acrshort{hpc}. 
+
+All the models were trained and tested on \gls{idun} computers made for \acrshort{hpc}. Configuration parameter for the different models can be found in the appendix \ref{app:judasnethyperparams}, and details of the machines used can be found in the table below. \\
 
 
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|}
+\hline
+\textbf{Unit} & \textbf{Description}         \\ \hline
+Os            & Ubuntu Linux          \\ \hline
+GPU           & NVIDIA A100 80GB     \\ \hline
+VRAM          & 80GB                  \\ \hline
+Gpu Cores     & 4352                  \\ \hline
+Amount        & 4 (1 for testing)     \\ \hline
+\end{tabular}
+\label{tab:specs}
+\caption{Specs for the machines running and resting the models}
+\end{table}
+
+\begin{equation}
+    TPR(TruePositiveRate/Recall) = \frac{TP}{TP + FN}
+\end{equation}
+
+\begin{equation}
+    FPR(FalsePositiveRate/Recall) = \frac{FP}{FP + TN}
+\end{equation}
+
+\begin{equation}
+    Precision = \frac{TP}{TP + FP}
+\end{equation}
+
+\begin{equation}
+    F1 - score = 2 x (\frac{Precision \cdot Recall}{Precision + Recall})
+\end{equation}
+
+\begin{equation}
+    Accuracy = \frac{TP + TN}{TP + TN + FP + FN}
+\end{equation}
+
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|ll|ll|}
+\hline
+\multicolumn{2}{|c|}{\multirow{2}{*}{\textbf{Total Population}}} & \multicolumn{2}{c|}{Predictions}      \\ \cline{3-4} 
+\multicolumn{2}{|c|}{}                                           & \multicolumn{1}{l|}{Normal} & Anomaly \\ \hline
+\multicolumn{1}{|l|}{\multirow{2}{*}{Actual}}      & Normal      & \multicolumn{1}{l|}{TN}     & FP      \\ \cline{2-4} 
+\multicolumn{1}{|l|}{}                             & Anomaly     & \multicolumn{1}{l|}{FN}     & TP      \\ \hline
+\end{tabular}
+\label{tab:confmat}
+\caption{Confusion matrix}
+\end{table}
+
+
+\subsection{Model Training}
+
+All models are trained using the ADAM optimizer.
+
+
+\subsubsection{Training Times}
+\subsubsection{Loss Values}
+\subsubsection{Accuracy}
+
+\subsection{Model Inference}
+
+An important part of analysing our autoencoders is the choice of metrics. Whereas loss and accuracy can provide proficient details about the model training itself, other metrics are better suited for analysing the 
 
 \input{chapters/resdis/models/ae}
 \input{chapters/resdis/models/cae}

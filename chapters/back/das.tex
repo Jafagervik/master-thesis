@@ -1,7 +1,14 @@
 \section{Distributed Acoustic Sensing}
 \label{back:das}
 
-\acrfull{das} is a type of sensing where one use fiber optic cables to measure strain sensing. By using a optoelectronic device such as a OptoDAS, frequency strains can be measured over vast distances. They are heavily used for monitoring conditions within geophysical environments, such as movement of traffic, land slides, maritime wildlife and much more. Due to their high sensitivity, measuring irregularities is and analyzing this is a very common task. \\
+\acrfull{das} is a type of sensing where one use fiber optic cables to measure strain sensing. By using a optoelectronic device such as a OptoDAS, frequency strains can be measured over vast distances. They are heavily used for monitoring conditions within geophysical environments, such as movement of traffic, land slides, maritime wildlife and much more. Due to their high sensitivity, measuring irregularities is and analyzing this is a very common task. 
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\linewidth]{figures/das_example.png}
+    \caption{DAS data frame example}
+    \label{fig:dasframe-ex}
+\end{figure}
 
 \subsection{Numerical analysis}
 
@@ -24,8 +31,7 @@ Then there is the data itself, which is stored in a matrix format as shown in ta
     a_{21} & a_{22} & \cdots & a_{2c}\\
     \vdots & \vdots & \ddots & \vdots\\
     a_{t1} & a_{t2} & \cdots & a_{tc}\\
-    \label{tab:das}
   \end{array} } \right]
 \]
 
-In the table above, $t$ denotes the max amount of recordings for the file; for one second this would be equal to the sample rate. $c$ is the max index of channels. In this way, channels are stored column-wise, and samples row-wise. Depending on whats more interesting to analyze, this matrix may be transposed to speed up calculations.
+In the matric $A$ above, $t$ denotes the max amount of recordings for the file; for one second this would be equal to the sample rate. $c$ is the max index of channels. In this way, channels are stored column-wise, and samples row-wise. Depending on whats more interesting to analyze, this matrix may be transposed to speed up calculations.
