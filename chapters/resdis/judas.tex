@@ -24,7 +24,7 @@ Gpu Cores     & 4352                  \\ \hline
 
 \subsection{Experiment: HDF5 file processing and resampling}
 
-In this experiment, we will be processing $n$ amount of \acrshort{hdf5} files with $p$ processes, from the point of reading raw data gathered by \acrshort{cgf} from the OptoDAS, through pre-processing, resampling the signals and denoising the result. This will give an accurate view of what needs to happen from rawdata until they are ready to be trained on different \acrshort{ml} or \acrshort{dl} models. \\
+In this experiment, we will be processing $n$ amount of \acrshort{hdf5} files with $p$ processes, from the point of reading raw data gathered by \acrshort{cgf} from the OptoDAS, through pre-processing, resampling the signals and denoising the result. This will give an accurate view of what needs to happen from rawdata until they are ready to be trained on different \acrshort{ml} or \acrshort{dl} models. Full code example can be found in appendix \ref{app:judas}. \\
 
 We will be resampling the signals to $100Hz$ from $500Hz$, and the Channel ROI will be 250m. We will be utilizing 1, 2, 4 and 8 processes, and use of a different amount of \acrshort{das} data ranging from 10 seconds until 1 hour of \acrshort{das} data.
 
