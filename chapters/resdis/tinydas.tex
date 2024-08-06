@@ -72,5 +72,67 @@ All models are trained using the ADAM optimizer.
 
 An important part of analysing our autoencoders is the choice of metrics. Whereas loss and accuracy can provide proficient details about the model training itself, other metrics are better suited for analysing the 
 
+\subsection{Autoencoder Performance Comparison}
+
+Table \ref{tab:autoencoder_comparison} presents a comparative analysis of the four autoencoder types: dense, convolutional, variational dense, and variational convolutional.
+
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{lcccc}
+        \hline
+        \textbf{Metric} & \textbf{AE} & \textbf{CNN-AE} & \textbf{VAE} & \textbf{CNN-VAE} \\
+        \hline
+        Reconstruction Error & 0.045 & 0.032 & 0.038 & 0.029 \\
+        Latent Space Dimension & 64 & 128 & 64 & 128 \\
+        Avg Training time(s) & 120 & 180 & 150 & 210 \\
+        Avg Training time(s) & 120 & 180 & 150 & 210 \\
+        \hline
+    \end{tabular}
+    \caption{Comparison of Autoencoder Performance}
+    \label{tab:autoencoder_comparison}
+\end{table}
+
+\subsection{Loss Functions}
+
+Each autoencoder type utilizes a different loss function, as outlined in Table \ref{tab:loss_functions}.
+
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{ll}
+        \hline
+        \textbf{Model Type} & \textbf{Loss Function} \\
+        \hline
+        AE & Mean Squared Error (MSE) \\
+        CNN-AE & Binary Cross-Entropy \\
+        \beta-VAE & MSE + KL Divergence \\
+        \beta-CNN-VAE & Binary Cross-Entropy + KL Divergence \\
+        \hline
+    \end{tabular}
+    \caption{Loss Functions for Different Autoencoder Types}
+    \label{tab:loss_functions}
+\end{table}
+
+\subsection{Performance Visualization}
+
+Figure \ref{fig:reconstruction_error} illustrates the reconstruction error for each autoencoder type across different epochs.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{reconstruction_error.png}
+    \caption{Reconstruction Error vs. Epochs for Different Autoencoder Types}
+    \label{fig:reconstruction_error}
+\end{figure}
+
+\subsection{Latent Space Visualization}
+
+Figure \ref{fig:latent_space} presents a t-SNE visualization of the latent space for each autoencoder type.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{latent_space_visualization.png}
+    \caption{t-SNE Visualization of Latent Space for Different Autoencoder Types}
+    \label{fig:latent_space}
+\end{figure}
+
 \input{chapters/resdis/models/ae}
 \input{chapters/resdis/models/cae}
