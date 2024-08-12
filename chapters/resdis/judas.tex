@@ -22,7 +22,7 @@ Gpu Cores     & 4352                  \\ \hline
 \caption{Specs for our machine running our code}
 \end{table}
 
-\subsection{Experiment: HDF5 file processing and resampling}
+\subsection{Experiment 1: HDF5 file processing and resampling}
 
 In this experiment, we will be processing $n$ amount of \acrshort{hdf5} files with $p$ processes, from the point of reading raw data gathered by \acrshort{cgf} from the OptoDAS, through pre-processing, resampling the signals and denoising the result. This will give an accurate view of what needs to happen from rawdata until they are ready to be trained on different \acrshort{ml} or \acrshort{dl} models. Full code example can be found in appendix \ref{app:judas}. \\
 
@@ -88,3 +88,75 @@ As we can see.
 \caption{Efficiency for different problem sizes and process counts. $m$ is the amount of minutes of data we want to process.}
 \label{fig:efficiency}
 \end{figure}
+
+\subsection{Experiment 2: Parallel Resampling}
+
+For this experiment, we will be using the same signals as we did in our last experiment. The duration of the \acrshort{das} signal will be 5 minutes, meaning the input matrix will be of size $600000
+*231$ We will be resampling to $1000Hz, 500Hz, 250Hz, 100Hz$, utilizing 1, 2, 4 and 8 processes. For this operation \\
+
+
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    ylabel={Execution Time (seconds)},
+    xlabel={Resampling Rate (Hz)},
+    xticklabels={1000, 500, 250, 100},
+    xtick={1000,500,250,100},
+    legend pos=north west,
+    ymajorgrids=true,
+    grid style=dashed,
+    width=12cm,
+    height=8cm,
+    bar width=10pt,
+    ybar,
+    legend style={at={(0.5,-0.20)},
+    anchor=north,legend columns=-1},
+    symbolic x coords={1000, 500, 250, 100},
+    x dir=reverse,
+    ymin=0, ymax=6,
+]
+\addplot coordinates {(1000,1.448) (500,1.581) (250,2.563) (100,5.832)};
+\addplot coordinates {(1000,0.732) (500,0.817) (250,1.286) (100,2.928)};
+\addplot coordinates {(1000,0.363) (500,0.400) (250,0.650) (100,1.478)};
+\addplot coordinates {(1000,0.181) (500,0.200) (250,0.325) (100,0.772)};
+\legend{1 thread, 2 threads, 4 threads, 8 threads}
+\end{axis}
+\end{tikzpicture}
+\caption{Execution times for different resampling rates and thread counts}
+\label{fig:resampling-benchmark}
+\end{figure}
+
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    ylabel={Efficiency},
+    xlabel={Number of Threads},
+    xticklabels={1,2,4,8},
+    xtick={1,2,3,4},
+    legend pos=south east,
+    ymajorgrids=true,
+    grid style=dashed,
+    width=12cm,
+    height=8cm,
+    ymax=1,
+    ymin=0.90,
+]
+\addplot coordinates {(1,1) (2,0.99) (3,0.9975) (4,1.00)};
+\addplot coordinates {(1,1) (2,0.97) (3,0.9875) (4,0.98875)};
+\addplot coordinates {(1,1) (2,0.995) (3,0.985) (4,0.98625)};
+\addplot coordinates {(1,1) (2,0.995) (3,0.9875) (4,0.94375)};
+\legend{1000 Hz, 500 Hz, 250 Hz, 100 Hz}
+\end{axis}
+\end{tikzpicture}
+\caption{Efficiency for different resampling rates and thread counts}
+\label{fig:resampling_efficiency}
+\end{figure}
+
+Figure \ref{fig:resampling-benchmark} clearly indicates how the addition of more processes decreases the overall runtime of the function. Lower resampling, and overall smaller resampling rate, obviously increase the overall time, yet even here, the average wall time for resampling to $100Hz$ using 8 threads only use about 0.8 seconds. \\
+
+
+As we can see from figure \ref{fig:resampling_efficiency}, we achieve high efficiency, and near-linear scaling for all rates and frequencies. The only notable drop happens at $100Hz$ using 8 threads, but we still achieve an efficiency of around 0.94. 

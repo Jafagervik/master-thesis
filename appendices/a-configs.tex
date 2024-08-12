@@ -1,4 +1,4 @@
-\chapter{Hyperparameters and Configurations in TinyDAS}
+\chapter{TinyDAS Config and Architectures}
 \label{app:configs}
 
 \section{Hyperparameters}
@@ -13,7 +13,7 @@
   \begin{subfigure}[t]{.45\textwidth}
     \centering
     \lstinputlisting{code/configs/cnnae.yaml}
-    \caption{CNN AE}
+    \caption{CAE}
   \end{subfigure}
 
   \medskip
@@ -27,16 +27,122 @@
   \begin{subfigure}[t]{.45\textwidth}
     \centering
     \lstinputlisting{code/configs/betavae.yaml}
-    \caption{Beta VAE}
+    \caption{CNN VAE}
   \end{subfigure}
     \caption{Hyperparameters for all models}
 \end{figure}
 
-\section{Configurations}
+\section{Architectures}
+\label{app:archs}
 
-\begin{figure}[h]
+\subsection{AE}
+\label{app:a-ae}
+
+\begin{table}[h]
     \centering
-    \lstinputlisting[language=sh, caption=Slurm script example]{code/configs/ae.sh}
-    \label{fig:slurmconf}
-\end{figure}
+    \begin{tabular}{lrr}
+        \toprule
+        Layer & Output Shape & Parameters \\
+        \midrule
+        Input & (1,335,625,) & 0 \\
+        Dense (Encoder) & (1024,) & 1,367,680,000 \\
+        Dense (Encoder) & (512,) & 524,800 \\
+        Dense (Encoder) & (128,) & 65,664 \\
+        Dense (Encoder) & (64,) & 8,256 \\
+        Dense (Latent) & (32,) & 2,080 \\
+        Dense (Decoder) & (64,) & 2,112 \\
+        Dense (Decoder) & (128,) & 8,320 \\
+        Dense (Decoder) & (512,) & 66,048 \\
+        Dense (Decoder) & (1024,) & 525,312 \\
+        Dense (Output) & (1,335,625,) & 1,367,680,000 \\
+        \midrule
+        Total Parameters & & 2,735,562,592 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Linear Autoencoder Architecture}
+    \label{tab:a-ae}
+\end{table}
 
+\subsection{CAE}
+\label{app:a-cae}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{lrr}
+        \toprule
+        Layer & Output Shape & Parameters \\
+        \midrule
+        Input & (1,335,625,) & 0 \\
+        Dense (Encoder) & (1024,) & 1,367,680,000 \\
+        Dense (Encoder) & (512,) & 524,800 \\
+        Dense (Encoder) & (128,) & 65,664 \\
+        Dense (Encoder) & (64,) & 8,256 \\
+        Dense (Latent) & (32,) & 2,080 \\
+        Dense (Decoder) & (64,) & 2,112 \\
+        Dense (Decoder) & (128,) & 8,320 \\
+        Dense (Decoder) & (512,) & 66,048 \\
+        Dense (Decoder) & (1024,) & 525,312 \\
+        Dense (Output) & (1,335,625,) & 1,367,680,000 \\
+        \midrule
+        Total Parameters & & 2,735,562,592 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Convolutional Autoencoder Architecture}
+    \label{tab:a-cae}
+\end{table}
+
+\subsection{VAE}
+\label{app:a-vae}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{lrr}
+        \toprule
+        Layer & Output Shape & Parameters \\
+        \midrule
+        Input & (1,335,625,) & 0 \\
+        Dense (Encoder) & (1024,) & 1,367,680,000 \\
+        Dense (Encoder) & (512,) & 524,800 \\
+        Dense (Encoder) & (128,) & 65,664 \\
+        Dense (Encoder) & (64,) & 8,256 \\
+        Dense (Latent) & (32,) & 2,080 \\
+        Dense (Decoder) & (64,) & 2,112 \\
+        Dense (Decoder) & (128,) & 8,320 \\
+        Dense (Decoder) & (512,) & 66,048 \\
+        Dense (Decoder) & (1024,) & 525,312 \\
+        Dense (Output) & (1,335,625,) & 1,367,680,000 \\
+        \midrule
+        Total Parameters & & 2,735,562,592 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Variational Autoencoder Architecture}
+    \label{tab:a-vae}
+\end{table}
+
+\subsection{CNN VAE}
+\label{app:a-cvae}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{lrr}
+        \toprule
+        Layer & Output Shape & Parameters \\
+        \midrule
+        Input & (1,335,625,) & 0 \\
+        Dense (Encoder) & (1024,) & 1,367,680,000 \\
+        Dense (Encoder) & (512,) & 524,800 \\
+        Dense (Encoder) & (128,) & 65,664 \\
+        Dense (Encoder) & (64,) & 8,256 \\
+        Dense (Latent) & (32,) & 2,080 \\
+        Dense (Decoder) & (64,) & 2,112 \\
+        Dense (Decoder) & (128,) & 8,320 \\
+        Dense (Decoder) & (512,) & 66,048 \\
+        Dense (Decoder) & (1024,) & 525,312 \\
+        Dense (Output) & (1,335,625,) & 1,367,680,000 \\
+        \midrule
+        Total Parameters & & 2,735,562,592 \\
+        \bottomrule
+    \end{tabular}
+    \caption{CNN Variational Autoencoder}
+    \label{tab:a-cnnvae}
+\end{table}

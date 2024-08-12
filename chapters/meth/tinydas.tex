@@ -1,5 +1,61 @@
 \section{TinyDAS}
 
+
+\subsection{Dataset}
+
+PubDAS \cite{spica2023pubdas} is a distributed dataset of \acrfull{das} data. 
+
+
+
+\subsubsection{File format}
+
+PubDAS consist of 8 datasets stored in 3 different file formats. These 3 are \texttt{TDMS}, \texttt{HDF5} and \texttt{SEG-Y}. 
+The FORESEE
+
+\subsubsection{Metadata}
+
+\begin{table}[h]
+    \small
+    \centering
+    \begin{tabular}{|l|l|}
+    \toprule
+    \multicolumn{1}{|c|}{\textbf{Name}} & \multicolumn{1}{c|}{\textbf{Value}} \\ \hline
+    IU                                  & Silixa iDAS-v2                      \\ \hline
+    Time Span                           & 365 days                            \\ \hline
+    Format                              & HDF5                                \\ \hline
+    Sample rate (Hz)                    & 125 (From 500)                      \\ \hline
+    Volume (GB)                         & 29,338                              \\ \hline
+    Gauge length (m)                    & 10                                  \\ \hline
+    Cable Length (m)                    & 4900                                \\ \hline
+    Channel spacing (m)                 & 2                                   \\ \hline
+    File duration (s)                   & 60                                  \\ \hline
+    Name format                         & FORESEE\_UTC\_YYYYMMDD\_HHMMSS:MMM.hdf5 \\ 
+    \bottomrule
+    \end{tabular}
+    \caption{Metadata of the Foresee dataset}
+    \label{tab:foresee_meta}
+\end{table}
+
+\subsubsection{Pre processing}
+
+As opposed to the dataset from BaneNOR, the FORESEE dataset is already preprocessed. A lowpass filter is applied on the data. TBD ... \\
+
+When first downloading these data, they're stored in 10 minute files, resulting in quite massive files as shown below.  
+
+\begin{align*}
+    S_{gb} &= 10 * 60 * 125 * 2137 * 4 \\
+           &= 600 * 125 * 2137 * 4 \\
+           &= 641100000 bytes \\ 
+           &= 0.6411 gb \\
+\end{align*}
+
+Most consumer grade \acrshort{gpu}s can only store about 8-16gb of data in VRAM, thus meaning the batches of data we can store is not that big. Additionally, not only does the \acrshort{gpu}s have to store data, but also the weights and biases of the model, as well as losses and more. Motivated by this, we decide to split the files to last 5 seconds compared to 10 minutes. \\ 
+
+We start of by looking at the file names and removing the prefix \textbf{FORESEE\_UTC\_}, since we're only working with one dataset at the time. Furthermore, in parallel fashion, we split each of the files in smaller ones, calculating new filenames based on the beginning timestamp. Now, each \acrshort{hdf5} file store a $625*2137$ matrix of \acrshort{das} data, successfully reducing the memory usage. 
+These data are originally stored as \texttt{Float32}, but will be casted as \texttt{Float16} for faster training as we will see later on. In total, more than 25 000 files from the month of april 2020 is gathered to train our model on. 
+RESULT: SPEAK ABOUT 5 SECONDS FOR LIVE ENVIRONMENT.
+TODO: Inference data from 15042019!
+
 TinyDAS is a program we've created to easily be able to train, and test different types of autoencoder models for anomaly detection. The main ideas behind creating this program are as follows:
 
 \begin{enumerate}

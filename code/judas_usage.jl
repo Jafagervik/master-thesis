@@ -1,53 +1,25 @@
 using Judas
 using Dates
 
-function load_data(tp::TimePeriod=Minute(1); step::Int=6 * 2 * 2)
-    f = "/media/jorgenaf/BaneNOR-DAS/"
-    day = DateTime(2021, 8, 31, 10, 0, 5)
-    duration = Second(tp)
+f = "/media/jorgenaf/BaneNOR-DAS/"
+day = DateTime(2021, 8, 31, 10, 0, 5)
+duration = Minute(5)
 
-    filepaths, ch_idx, samples = find_DAS_files(f, day, duration; step=step)
+# We will only be looking at every 48 * 4 channel of the ones in ROI
+step = 6 * 2 * 2 * 2
 
-    s = load_DAS_files(filepaths, ch_idx, samples; sensitivity_select=-1)
+#  Find DAS Data
+filepaths, ch_idx, samples = find_DAS_files(f, day, duration; step=step)
 
-    @show times(s)
+#  Load DAS data
+das_signal = load_DAS_files(filepaths, ch_idx, samples; sensitivity_select=-1)
 
-    return nothing
-end
+#  Process Data
+data = combine_matrices(duraration)
 
-function process(data)
-    m = Minute(1)
-    hz = freq(data)
-    data = combine_matrices(m)
+new_hz = 100.0f0
+rate = new_hz / freq(das_signal)
 
-    new_hz = 100.0f0
-    rate = new_hz / hz
-    resampled = resample_das_signal(data, rate)
+resampled = parallel_resample(data, rate)
 
-    filtered = window_and_filter(resampled)
-end
-
-function test(; tp=Minute(5))
-    step = 6 * 2 * 2 * 2
-    dasdata = load_data(tp; step=step)
-
-    @show channel_distance(dasdata)
-    @show size(dasdata)
-    @show freq(dasdata)
-    @show dasdata
-
-    processed = process(dasdata)
-    normalized = normalize(processed)
-
-    before = das_heatmap(processed)
-    after = das_heatmap(normalized)
-
-    display(before)
-    display(after)
-    
-    @info "Now ready for ai training"
-
-    return processed
-end
-
-load_data()
+filtered = denoise(resampled)

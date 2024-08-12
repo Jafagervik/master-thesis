@@ -22,6 +22,13 @@ where:
     Y & \text{ - output vector [$n x p$]} \\
 \end{align*}
 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{figures/linearlayer.png}
+    \caption{Example of a $3x2$ linear layer}
+    \label{fig:linearlayer}
+\end{figure}
+
 Furthermore, an activation function such as \gls{relu} \ref{eq:relu} is applied to the output to achieve nonlinearity.
 Lets denote this function as $f$, we now get the following equation.
 
@@ -31,7 +38,7 @@ Lets denote this function as $f$, we now get the following equation.
 
 Linear layers have several advantages, such as computational efficiency, flexibility as well as intrerprebility, where the weight and bias vectors can be interpreted as learned parameters. They also serve as building blocks for other components, such as \acrshort{rnn}s, \acrshort{lstm}s or even attention blocks. \\ 
 
-They are however prone to overfitting and linearity, due to their inherent linearity. They can become quite limited when trying to extract more complex features, thus reducing some of the discriminative power.
+However, linear layers have several limitations. Due to their inherent linearity, they are prone to overfitting and struggle to capture complex relationships in data. This can limit their ability to extract more complex features, potentially reducing some of the model's discriminative power. Furthermore, the size of linear layers can become problematic, especially in fully connected dense neural networks. Each neuraon connection between layers requires storing weights and biases, which increases the overall model size. This can create bottlenecks for many hardware accelerators, such as \acrshort{gpu}s, when dealing with large models.
 
 \subsection{Parallelism within \acrlong{ml}}
 

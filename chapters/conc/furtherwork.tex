@@ -3,7 +3,9 @@
 
 \subsection{Judas}
 
-Our program Judas is more or less done. It forills it task by taking in \acrshort{das} data provided by \acrshort{cgf}, and preprocissing the data ahead of analysis. Even so, there are still a couple of things that can be further improved upon. In the project thesis, we detailed how fourier transforms, a vital part of resampling with FIR filters, can be performed fast on \acrshort{gpu}s. \\
+Our program Judas is more or less done. It fulfill's its task by taking in \acrshort{das} data provided by \acrshort{cgf}, and preprocissing the data ahead of analysis. Even so, there are still a couple of things that can be further improved upon. In the project thesis, we detailed how fourier transforms, a vital part of resampling with FIR filters, can be performed fast on \acrshort{gpu}s. \\
+
+As things stand, the complete duration
 
 This is however a small change to be done if found necessary. A bigger change would be to use \acrshort{hdf5} files for output data of the preprocessing, as compared to our currently memory mapped solution. This would allow us to use TinyDAS as is without modifications on the data provided by \acrshort{cgf}, without having to parse data from memory mapped files to \acrshort{hdf5} files. Additionally, these files can store timestamps or metadata in the same file as their processed data, instead of \texttt{struct} or other data structures. This is particularly of interest while we use TinyDAS instead of JudasNET for training and analysing data.
 

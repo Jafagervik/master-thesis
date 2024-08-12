@@ -1,8 +1,32 @@
-\section{Artificial Intelligence Framework}
+\section{Programming Languages and Frameworks}
+
+Our initial decision was to continue using Julia for our \acrshort{dl} methods, and train our models on the same dataset provided by \acrshort{cgf}. We created a Julia package called JudasNET, containing code for training different \acrshort{ai} models. However, due to severe computational limitations, we were unable to continue our work on the previous decision. With only 11GB of VRAM, the single \acrshort{gpu} available quickly became a bottleneck. Not only do we need to store batches of \acrshort{das} data matrices, but we also need to store the weights and biases of our models. By switching to a open source dataset, we would be able to use \Gls{idun}, and leverage multiple \acrshort{gpu}s and in general more computational power. Since the BANENOR dataset is close sourced, we would not be able to train our models on any other resources outside of those provided by \acrshort{cgf}.
+
+Not only were our attempts at training models unsuccessful, Julia's main framework for \acrshort{ml} training \texttt{Flux.jl} does not provide built in tools for multigpu training. \\  
+
+The more obvious choice would now be to use the Python package \texttt{Pytorch}, which is well established, documented and supports not only  \href{https://pytorch.org/docs/stable/generated/torch.nn.DataParallel.html}{data parallel training}, but also \href{https://pytorch.org/tutorials/intermediate/ddp_tutorial.html}{distributed data parallel training}. What needs to be mentrioned is that Pytorch is heavily optimized for CUDA and NVIDIA \acrshort{gpu}s, and in general performs significantly better on these accelerators, compared to other alternatives such as AMD, NV, METAL and so on. \\ 
+
+We want to create models where we don't need to change much of our code to run on different accelerators. We also want \acrshort{cgf} to  quickly be able to both continue training and running their own models. NVIDIA \acrshort{gpu}s are generally expensive, many of them reaching prices of tens of thousands of dollars per \acrshort{gpu}. We realize that this would not be feasible for \acrshort{cgf} to invest in right now, and thus we decided to look for other frameworks which supports a broader range of hardware accelerators. \\ 
+
+Due to these constraints, we believe a solid choice of framework is Tinygrad.
+
+\subsection{TinyGrad}
+
+Tinygrad is a neural network framework created by George Hotz in October 2020. It is based on Andry Carpathys library \texttt{Micrograd}, which aims to serve as an introduction to understand neural networks at its core. Tinygrad was introduced as an alternative to other giants such as \texttt{Pytorch} and \texttt{TensorFlow}, critizising them to be too hardware dependent on NVIDIA GPUs, and their CUDA software. Unlike its alternatives, Tinygrad strives towards being hardware agnostic, where writing codes for different accelerators should be as similar as possible. \\
+
+As noted above, all operations in tinygrad are lazy. This means that an operation such as $a+b$ is not computed until the \texttt{realize()} method is called. In addition, no stateless operations require classes, as opposed to \texttt{Pytorch}. \\
+
+
+
+
+
+
+
+
 
 \subsection{Julia - High Performance Data Driven Scientific Computing}
 
-Created in 2009, first released in 2012 as part of a master thesis \cite{juliaMs} and further a doctural thesis \cite{juliaPHD}, Julia is a high performance, dynamically typed programming language with the goal of being a fast and performant language like C, the simplicity of Python, linear algebra extensions like matlab, and statistics like R \cite{julia}.  \\ 
+Created in 2009, first released in 2012 as part of a master thesis \cite{juliaMs} and further a doctoral thesis \cite{juliaPHD}, Julia is a high performance, dynamically typed programming language with the goal of being a fast and performant language like C, the simplicity of Python, linear algebra extensions like matlab, and statistics like R \cite{julia}.  \\ 
 
 Like Python, Julia can be used in a script-like fashion through its \acrfull{repl}. Notebook style programming has been a standard way for data analysts to write their code, and Jupyter notebooks support Julia as well through the \texttt{IJulia.jl} package. 
 

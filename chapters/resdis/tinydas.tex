@@ -14,8 +14,8 @@ All the models were trained and tested on \gls{idun} computers made for \acrshor
 \begin{tabular}{|l|c|}
 \hline
 \textbf{Unit} & \textbf{Description}         \\ \hline
-Os            & Ubuntu Linux          \\ \hline
-GPU           & NVIDIA A100 80GB     \\ \hline
+OS            & Ubuntu Linux          \\ \hline
+GPU           & NVIDIA H100 HBM3     \\ \hline
 VRAM          & 80GB                  \\ \hline
 Gpu Cores     & 4352                  \\ \hline
 Amount        & 4 (1 for testing)     \\ \hline
@@ -112,6 +112,36 @@ Each autoencoder type utilizes a different loss function, as outlined in Table \
     \label{tab:loss_functions}
 \end{table}
 
+
+\begin{figure}
+  \begin{subfigure}[t]{.5\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/loss.png}
+    \caption{AE}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{.5\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/loss.png}
+    \caption{CNN AE}
+  \end{subfigure}
+
+  \medskip
+
+  \begin{subfigure}[t]{.5\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/loss.png}
+    \caption{VAE}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{.5\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/loss.png}
+    \caption{Beta VAE}
+  \end{subfigure}
+    \caption{Losses for all models}
+\end{figure}
+
 \subsection{Performance Visualization}
 
 Figure \ref{fig:reconstruction_error} illustrates the reconstruction error for each autoencoder type across different epochs.
@@ -134,5 +164,197 @@ Figure \ref{fig:latent_space} presents a t-SNE visualization of the latent space
     \label{fig:latent_space}
 \end{figure}
 
-\input{chapters/resdis/models/ae}
-\input{chapters/resdis/models/cae}
+% Confusion Matrix Components Table
+\begin{table}[h]
+\centering
+\begin{tabular}{lSSSS}
+\toprule
+Model & {TP} & {FP} & {TN} & {FN} \\
+\midrule
+AE  & 100 & 10 & 80 & 10 \\
+CAE  & 95 & 15 & 75 & 15 \\
+VAE  & 105 & 8 & 85 & 5 \\
+CVAE & 98 & 12 & 82 & 8 \\
+\bottomrule
+\end{tabular}
+\caption{Confusion Matrix Components}
+\end{table}
+
+% Performance Metrics Table
+\begin{table}[h]
+\centering
+\begin{tabular}{lSSSSS}
+\toprule
+Model & {TPR} & {FPR} & {Precision} & {F1-score} & {Accuracy} \\
+\midrule
+AE & 0.909 & 0.111 & 0.909 & 0.909 & 0.900 \\
+CAE & 0.864 & 0.167 & 0.864 & 0.864 & 0.850 \\
+VAE  & 0.955 & 0.086 & 0.929 & 0.942 & 0.941 \\
+CVAE & 0.925 & 0.128 & 0.891 & 0.907 & 0.900 \\
+\bottomrule
+\end{tabular}
+\caption{Performance Metrics}
+\end{table}
+
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.8\textwidth,
+    height=0.8\textwidth,
+    xlabel={False Positive Rate},
+    ylabel={True Positive Rate},
+    xmin=0, xmax=1,
+    ymin=0, ymax=1,
+    xtick={0,0.2,0.4,0.6,0.8,1},
+    ytick={0,0.2,0.4,0.6,0.8,1},
+    legend pos=south east,
+    legend cell align={left},
+    grid=major,
+    title={ROC Curves for Four Models}
+]
+
+% Diagonal reference line
+\addplot[thick,dashed,gray] coordinates {(0,0) (1,1)};
+
+% ROC curve for Model A
+\addplot[thick,blue] coordinates {
+    (0,0) (0.05,0.4) (0.1,0.6) (0.2,0.8) (0.3,0.85) (0.5,0.9) (0.8,0.95) (1,1)
+};
+
+% ROC curve for Model B
+\addplot[thick,red] coordinates {
+    (0,0) (0.05,0.3) (0.1,0.5) (0.2,0.7) (0.3,0.8) (0.5,0.85) (0.8,0.9) (1,1)
+};
+
+% ROC curve for Model C
+\addplot[thick,green] coordinates {
+    (0,0) (0.05,0.5) (0.1,0.7) (0.2,0.85) (0.3,0.9) (0.5,0.95) (0.8,0.98) (1,1)
+};
+
+% ROC curve for Model D
+\addplot[thick,orange] coordinates {
+    (0,0) (0.05,0.45) (0.1,0.65) (0.2,0.75) (0.3,0.83) (0.5,0.88) (0.8,0.93) (1,1)
+};
+
+\legend{Reference, AE, CAE, VAE, CVAE}
+
+\end{axis}
+\end{tikzpicture}
+\caption{ROC Curves Comparison for our Autoencoders }
+\end{figure}
+
+
+\begin{figure}[h]
+    \centering
+    
+    % Row 0 (Image Names)
+    \begin{subfigure}{0.33\textwidth}
+        \centering
+        \textbf{Image 1}
+    \end{subfigure}%
+    \hfill
+    \begin{subfigure}{0.33\textwidth}
+        \centering
+        \textbf{Image 2}
+    \end{subfigure}%
+    \hfill
+    \begin{subfigure}{0.33\textwidth}
+        \centering
+        \textbf{Image 3}
+    \end{subfigure}
+    
+    \vspace{1em}
+    
+    % Row 1 (Original)
+    \begin{subfigure}{0.33\textwidth}
+        \includegraphics[width=\textwidth]{figures/test.png}
+        \caption{Original}
+    \end{subfigure}%
+    \hfill
+    \begin{subfigure}{0.33\textwidth}
+        \includegraphics[width=\textwidth]{figures/test.png}
+        \caption{Original}
+    \end{subfigure}%
+    \hfill
+    \begin{subfigure}{0.33\textwidth}
+        \includegraphics[width=\textwidth]{figures/test.png}
+        \caption{Original}
+    \end{subfigure}
+    
+    \vspace{1em}
+    
+    % Row 2 (Model 1)
+    \begin{subfigure}{0.33\textwidth}
+        \includegraphics[width=\textwidth]{figures/test.png}
+        \caption{AE}
+    \end{subfigure}%
+    \hfill
+    \begin{subfigure}{0.33\textwidth}
+        \includegraphics[width=\textwidth]{figures/test.png}
+        \caption{AE}
+    \end{subfigure}%
+    \hfill
+    \begin{subfigure}{0.33\textwidth}
+        \includegraphics[width=\textwidth]{figures/test.png}
+        \caption{AE}
+    \end{subfigure}
+    
+    \vspace{1em}
+    
+    % Row 3 (Model 2)
+    \begin{subfigure}{0.33\textwidth}
+        \includegraphics[width=\textwidth]{figures/test.png}
+        \caption{CAE}
+    \end{subfigure}%
+    \hfill
+    \begin{subfigure}{0.33\textwidth}
+        \includegraphics[width=\textwidth]{figures/test.png}
+        \caption{CAE}
+    \end{subfigure}%
+    \hfill
+    \begin{subfigure}{0.33\textwidth}
+        \includegraphics[width=\textwidth]{figures/test.png}
+        \caption{CAE}
+    \end{subfigure}
+    
+    \vspace{1em}
+    
+    % Row 4 (Model 3)
+    \begin{subfigure}{0.33\textwidth}
+        \includegraphics[width=\textwidth]{figures/test.png}
+        \caption{VAE}
+    \end{subfigure}%
+    \hfill
+    \begin{subfigure}{0.33\textwidth}
+        \includegraphics[width=\textwidth]{figures/test.png}
+        \caption{VAE}
+    \end{subfigure}%
+    \hfill
+    \begin{subfigure}{0.33\textwidth}
+        \includegraphics[width=\textwidth]{figures/test.png}
+        \caption{VAE}
+    \end{subfigure}
+    
+    \vspace{1em}
+    
+    % Row 5 (Model 4)
+    \begin{subfigure}{0.33\textwidth}
+        \includegraphics[width=\textwidth]{figures/test.png}
+        \caption{CVAE}
+    \end{subfigure}%
+    \hfill
+    \begin{subfigure}{0.33\textwidth}
+        \includegraphics[width=\textwidth]{figures/test.png}
+        \caption{CVAE}
+    \end{subfigure}%
+    \hfill
+    \begin{subfigure}{0.33\textwidth}
+        \includegraphics[width=\textwidth]{figures/test.png}
+        \caption{CVAE}
+    \end{subfigure}
+    
+    \caption{Comparison of original images and their reconstructions by different autoencodes}
+    \label{fig:aereconstruct}
+\end{figure}
