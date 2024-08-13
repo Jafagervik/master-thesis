@@ -1,12 +1,12 @@
 using Judas
 using Dates
 
-f = "/media/jorgenaf/BaneNOR-DAS/"
+f = "/path/to/das/data/"
 day = DateTime(2021, 8, 31, 10, 0, 5)
-duration = Minute(5)
+duration = Hour(1)
 
-# We will only be looking at every 48 * 4 channel of the ones in ROI
-step = 6 * 2 * 2 * 2
+# Step size between sensors
+step = 48
 
 #  Find DAS Data
 filepaths, ch_idx, samples = find_DAS_files(f, day, duration; step=step)
@@ -22,4 +22,4 @@ rate = new_hz / freq(das_signal)
 
 resampled = parallel_resample(data, rate)
 
-filtered = denoise(resampled)
+filtered = denoise(resampled, new_hz)

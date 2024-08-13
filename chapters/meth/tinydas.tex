@@ -1,9 +1,38 @@
 \section{TinyDAS}
 
+In this section, we introduce TinyDAS, a Python program aimed at training autoencoder models and detecting anomalies in \acrshort{das} data. In this program, we use a combination of Tinygrad and Pytorch for training and testing our models. For the anomaly detection module, we utilize a combination of sklearn and Seaborn to evaluate our models.
+
+\subsection{Tools}
+
+Python is a dynamically typed, weak language famously known for it's \textit{easy-to-learn} syntax. Created by Guido Van Rossum in the late 80-s \cite{python}, Python has slowly emerged as one of the fastest growing programming languages ever created \cite{srinath2017python}. 
+
+Virtually all of the larger libraries for data science and \acrlong{ml} have bindings to \gls{python}, or are written in Python from scratch. Some examples include \texttt{Pandas}, \texttt{NumPy}, \texttt{SciKit Learn}, \texttt{Pytorch} and \texttt{TensorFlow}. Many of these rely on code written in C or C++ to be fast, sincc
+
+\subsubsection{Pytorch}
+
+\subsubsection{Tinygrad}
+
+
+
+
+\subsection{Overview}
+
+An overview of how TinyDAS works is shown in the figure below \ref{fig:dataflow}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.5]{figures/methodflow.png}
+    \caption{Dataflow}
+    \label{fig:dataflow}
+\end{figure}
 
 \subsection{Dataset}
 
-PubDAS \cite{spica2023pubdas} is a distributed dataset of \acrfull{das} data. 
+For this project, we will be using the FORESEE dataset 
+ as part of the PubDAS collection. \cite{spica2023pubdas}
+
+\subsection{Usage}
+
 
 
 
@@ -40,14 +69,24 @@ The FORESEE
 
 As opposed to the dataset from BaneNOR, the FORESEE dataset is already preprocessed. A lowpass filter is applied on the data. TBD ... \\
 
-When first downloading these data, they're stored in 10 minute files, resulting in quite massive files as shown below.  
+When first downloading these data, they're stored in 10-minute files, resulting in quite large files as shown below:
 
 \begin{align*}
-    S_{gb} &= 10 * 60 * 125 * 2137 * 4 \\
-           &= 600 * 125 * 2137 * 4 \\
-           &= 641100000 bytes \\ 
-           &= 0.6411 gb \\
+\text{Size} &= 10 \times 60 \times 125 \times 2137 \times 4 \\
+&= 600 \times 125 \times 2137 \times 4 \\
+&= 641,100,000 \text{ bytes} \\
+&\approx 641.1 \text{ MB} \\
+&\approx 0.6411 \text{ GB}
 \end{align*}
+
+where:
+\begin{itemize}
+    \item 10 minutes is the duration of each file
+    \item 60 seconds per minute
+    \item 125\si{\hertz} is the sampling rate
+    \item 2137 is the number of channels
+    \item 4 bytes per sample (Float32)
+\end{itemize}
 
 Most consumer grade \acrshort{gpu}s can only store about 8-16gb of data in VRAM, thus meaning the batches of data we can store is not that big. Additionally, not only does the \acrshort{gpu}s have to store data, but also the weights and biases of the model, as well as losses and more. Motivated by this, we decide to split the files to last 5 seconds compared to 10 minutes. \\ 
 
@@ -107,3 +146,21 @@ The Trainer class serves as the core component of our program. As demonstrated i
 \subsubsection{Hyperparameters and configurations}
 
 To set hyperparameters 
+
+\subsection{Evaluation}
+
+We will be splitting the evaluation of \texttt{TinyDAS} in two sections. The first section will focus more on overall model training. Here is a list of points to be evaluated: 
+
+\begin{itemize}
+    \item \textbf{Experiment 1}: Median training time and model sizes
+    \item \textbf{Experiment 2}: Losses
+    \item \textbf{Experiment 3}: Reconstruction Capabilities
+\end{itemize}
+
+The section will revolve around anomaly detection based on the different architectures.
+
+\begin{itemize}
+    \item \textbf{Experiment 1}: Anomaly Detection Accuracy
+    \item \textbf{Experiment 2}: Confusion Matrix and Metrics
+\end{itemize}
+

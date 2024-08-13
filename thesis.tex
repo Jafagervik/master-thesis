@@ -1,8 +1,8 @@
 \documentclass[british]{ntnuthesis}
 
 % \title{Interpretable Machine Learning Models for DAS Data}
-\title{Optimizing Big Data Anomaly Detection: Parallel Processing of Geophysical Data and Scalable Autoencoder Models}
-\shorttitle{Anomaly Detection on Multidimensional signal data using Unsupervised Learning}
+\title{Parallel Processing and Anomaly Detection of DAS Data using Autoencoders: Enhancing Efficiency in Large-Scale Sensor Data Analysis}
+\shorttitle{Parallel Processing and Anomaly Detection on DAS data}
 \author{Jørgen Aleksander Fagervik \\
         Supervisor: Ole Jakob Mengshoel}
 \shortauthor{J. A. Fagervik}
@@ -20,12 +20,31 @@
 \usepackage{tikz}
 \usepgfplotslibrary{groupplots}
 \usepackage{booktabs}
-
-
+\usepackage{array}
+\usepackage{makecell}
+\usepackage{xcolor}
 \usepackage{caption}
-\DeclareCaptionFont{white}{\color{white}}
-\DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}}
-\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
+
+% Define a custom color for the caption background
+\definecolor{captionbg}{RGB}{240,240,240}
+\definecolor{captiontext}{RGB}{0,0,0}
+\definecolor{captionframe}{RGB}{100,100,100}
+
+% Define a custom caption style
+\DeclareCaptionFormat{thesiscaption}{%
+    \begin{tikzpicture}
+    \node[inner sep=10pt, fill=captionbg, draw=captionframe, line width=0.5pt, rounded corners] {%
+        \parbox{\dimexpr\textwidth-20pt\relax}{%
+            \textbf{\color{captiontext}#1#2}%
+            \par\vskip2pt%
+            \color{captiontext}#3%
+        }%
+    };
+    \end{tikzpicture}%
+}
+
+% Apply the custom style to listings and figures
+\captionsetup[lstlisting]{format=thesiscaption, labelfont={bf}, textfont={}, justification=justified, singlelinecheck=false}
 
 % Define Julia style
 \lstdefinelanguage{Julia}{
@@ -75,10 +94,10 @@
 \noindent  \textcolor{gray}{\large Jørgen Aleksander Fagervik} \\
 \vspace{1cm}
 
-\noindent \textbf{\Large Optimizing Big Data Anomaly Detection: Parallel Processing of Geophysical Data and Scalable Autoencoder Models} \\
+\noindent \textbf{\Large Parallel Processing and Anomaly Detection of DAS Data using Autoencoders } \\
 \vspace{0.5cm}
 
-\noindent {\large A case study on Unsupervised Learning for Anomaly Detection on DAS data using Julia} \\
+\noindent {Enhancing Efficiency in Large-Scale \acrshort{das} Data Analysis} \\
 
 
 

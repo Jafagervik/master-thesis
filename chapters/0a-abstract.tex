@@ -1,10 +1,10 @@
 \chapter*{Abstract}
 
-\das
-Anomaly detection has a wide range of use cases these days. From network traffic, to stock forecasting, the options are endless. 
-Signal processing deals with a pletora of unorganized data, where one often want to see . This has traditionally b. 
-This field has started to see lots of applications appear. Fiber optic cables has become increasingly more popular due to how \acrshort{das} works in tangent with them, due to its high sensitivity. Applying anomaly detection algorithms to these kinds of data could potentially help us detect unwanted objects or creatures automatically on real-time data, reducing time spent on manual intervention. It can also be applied in before algorithms to remove these kinds of data from the original data. \\
+This thesis examines parallel processing of \acrfull{das} data and the application of autoencoders for anomaly detection on this data. The research addresses the growing need for efficient processing and analysis of large-scale sensor data, with potential applications ranging from earthquake detection to landslide monitoring. \\
 
-We present \texttt{JudasNET}, a model for performing anomaly detection on DAS data. Additionally, we propose a package written in Julia, for pre-processing DAS files \cite{projthesis} and functionality for both training and inference mode on these models. We validate our model on real world data received from \acrfull{cgf}.   \\
+We present two novel programs: 1) \texttt{Judas.jl}, a Julia package for pre-processing large volumes of \acrshort{das} data, and 2) \texttt{TinyDAS}, a Python program for training multiple autoencoders across multiple \acrshort{gpu}s, and performing anomaly detection on \acrshort{das} data. These tools aim to automate the detection of anomalies in real-time data streams, potentially reducing the need for manual intervention and improving the accuracy of data analysis.
+Our methodology involves validating these programs on both proprietary and open-source real-world \acrshort{das} datasets. The results demonstrate scalable solutions for both data processing and anomaly detection, showing significant improvements in efficiency and accuracy compared to existing methods at \acrfull{cgf}. \\
 
-Parts of this thesis are taken from or based on my submitted project assignment in the subject TDT4501 with the title "Parallel DAS Processing: Julia is all you need".
+This research contributes to the field of \acrshort{das} data analysis by providing robust tools for handling large-scale \acrshort{das} data and leveraging various efficient autoencoders for anomaly detection. The findings have implications for various industries utilizing \acrshort{das} technology, including \acrfull{cgf}, offering potential enhancements in data processing pipelines and anomaly detection capabilities. \\
+
+Parts of this thesis are taken from or based on my submitted project assignment in the subject TDT4501 with the title "Parallel \acrshort{das} Processing: Julia is all you need".
