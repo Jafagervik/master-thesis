@@ -3,29 +3,49 @@
 
 \subsection{Judas}
 
-When we first started working on a library for das processing 
+Our general performance memory wise is quite good. We're able to load in large samples of data without experiencing any issues.
+The results from the parallel resampling function underscores the importance in the utilization of parallel techniques. Certain algorithms benefit greatly by simply introducing parallel techniques. By using \texttt{SharedArrays}, we're able to avoid unnecessary allocations, and let all processes share the same matrix. Additionally, we avoid having to gather the results after computation, we simply return the underlying array. Although we see almost linear scaling across all configurations, there are two potential alternatives to our current solution. The first one is to use multithreading instead of processes, which only yield better results for smaller matrices.
 
-FINE GRAINED APPROACH .. \\
+Fine grained approach. \\
 
-API Design and CGF. \\ 
+We can clearly see that the current bottleneck of \texttt{Judas} is the first part of the program, more specifically, the \texttt{load\_DAS\_files} function. Even though we are successful at avoiding loading large arrays into memory, only a small part of the program is parallellizable. This does of course limit the effectiveness and scalability of the program, but compared to similar programs at \acrshort{cgf}, we can now find and load several \acrshort{das} files over larger durations overall. Additionally, this first part of the program could be run before resampling and denoising, thus circumventing having to wait for data to be pre processed. An alternative to our fine grained approach at parallellization would be to parallellize both the and \texttt{load\_DAS\_files} function. This more coarse grained approach distributes the files found by \texttt{find\_DAS\_files} across several processes, and decreases the overall run time of \texttt{load\_DAS\_files}. \\
 
-\textbf{JU} \\ 
+Deployment. \\ 
 
-\textbf{JU} \\ 
+Ease of use. \\ 
+ 
 
-\textbf{JU} \\ 
+\subsection{JudasNET}
+
+After the creation of Judas, we were determined to continue the implementation of \acrshort{ai} models and anomaly detection in Julia. We wanted to train our models on the same dataset as described earlier \ref{met:judas}. Ultimately, there was two reasons for us turning away from Julia, and opting for Python instead. \\
+
+The first reason is the limited amount of \acrshort{gpu}s available at \acrshort{cgf}. With only a single consumer grade level \acrshort{gpu} with 11Gb VRAM available, we were failing to be able to train even small models. This constraint led us to switch to the IDUN cluster for computation, but we were now not allowed to continue our work on the BANENOR dataset, due to it being propietery and classified data. IDUN is a public server, and most of the data at \acrshort{cgf} is not allowed on public servers. This led us to working with the PubDAS dataset. \\
+
+Even after switching servers and dataset, we could still use Julia and \texttt{Flux.jl} to train our models. The issue here was the core support for multigpu training provided by \texttt{Flux.jl}. This issue is being discusssed by the maintainers \href{https://github.com/FluxML/Flux.jl/issues/1829}{in a forum}, but ultimately, only third party solutions exist as of now. Several of these packages are old, and are not compatible current versions of Julia, Flux or other packages. Instead of implementing this feature ourselves, we instead want to highlight how autoencoders can be used for anomaly detection on \acrshort{das} data, and thus we ended up going with Python in the end. 
+
+This work is collected in the \texttt{JudasNET} codebase, and serves as a guideline for how further development.
+
 
 \subsection{TinyDAS}
 
-aksdflkfsdjlkjsfd. \\ 
-a:KLSDj.
+
 
 \subsection{Modularity in Data Science}
 
 api design for data science has for far long enough been overlooked. Full AI models are regularly being comprised in a single file, with only a argument parser to make sure python can run the script. We instead wanted to seperate between the different aspects of the AI part of the code. The models, engine and hyperparameters can all easily be split into multiple files, but yet this is not common. The advantage we gain by splitting up this module, is easier ways of debugging, as well as to more easily reuse only the sections of the code that we're interested in. Training and Inference are by default split in their own files, since we don't actually want those two run after each other. The training of the neural net should only happen when needed, inference is the mode we'd actually like to test against and return the answers about loss and so on 
 
 
-\subsection{Interpretibility}
-One major question we wanted to tackle is regarding interpretibility. Is this achieved, or do we still have a long way to go?
-
 \subsection{Did we reach our goals?}
+
+
+\textbf{G1: Evaluate the effectiveness in detecting anomalies within \acrshort{das} data}. With our autoencoder based approach, we're able to effectively detecting anomalies within \acrshort{das} data. With even bigger datasets, and more image labeling of \acrshort{das} data, we believe one can achieve even greater results. \\
+
+\textbf{G2: Contribute to the open source community, particularly with tools and resources that are beneficial to members of \acrshort{cgf}.} Throughout our work, we've always maintained a strong stance on developing tools that are both beneficial and easy to use. We firmly believe that both of our tools can be of use, specifically for members at \acrshort{cgf}.  \\ 
+
+\textbf{G3: Determine whether Julia is a suitable programming language for 
+ high performance data processing, analysis and \acrshort{ai}, specifically aimed at \acrshort{das} data}. Overall, we find Julia satisfactory in developing novel, high performance algorithms, as well as working with data science in general, yet lacking when it comes to training \acrshort{ai} models across multiple \acrshort{gpu}s. We believe it to be an effective language of choice for members at \acrshort{cgf}.\\
+
+
+\subsection{Research Questions}
+
+\textbf{RQ 2: Can we reduce the precision of \acrshort{das} data to enable faster model training and inference without sacrificing performance?} The results suggests that we indeed can train and analyze \acrshort{das} data on smaller datatypes. Although we don't encounter many errors with the results of the detections, we encounter small errors when training using \texttt{Float16} data. \\

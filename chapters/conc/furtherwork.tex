@@ -9,7 +9,7 @@ As things stand, the complete duration
 
 This is however a small change to be done if found necessary. A bigger change would be to use \acrshort{hdf5} files for output data of the preprocessing, as compared to our currently memory mapped solution. This would allow us to use TinyDAS as is without modifications on the data provided by \acrshort{cgf}, without having to parse data from memory mapped files to \acrshort{hdf5} files. Additionally, these files can store timestamps or metadata in the same file as their processed data, instead of \texttt{struct} or other data structures. This is particularly of interest while we use TinyDAS instead of JudasNET for training and analysing data.
 
-\subsection{Tinydas}
+\subsection{TinyDAS}
 
 As we noted previously in the discussion section, we were unable to both continue using data provided by \acrshort{cgf}, as well as leveraging Julia due to an immature \acrshort{ai} framework lacking support for scalable \acrshort{gpu} training. \\
 
@@ -21,11 +21,11 @@ Besides the data itself, the framework in which we train and analyse our models 
 
 We have presented a handful of useful models for analysing \acrshort{das} data, but further expanding on this, and even introducing models based on other architectures such as \acrshort{gan} would allow us to analyse different events. \\
 
-From the very point we introduced TinyDAS, utilizing \Gls{python} instead of \Gls{julia}, we've had the intention of converting all the models over to JudasNET in the future when multi-gpu training is part of Flux. Not only would this allow us to further compare python and julia with regards to data analysis and \acrshort{ml}, but also keeping our entire ecosystem in a singular language, Julia, well suited for both \acrshort{hpc} tasks as well as \acrshort{ml}. \\
+From the very point we introduced TinyDAS, utilizing \Gls{python} instead of \Gls{julia}, we've had the intention of converting all the models over to JudasNET in the future when multi-gpu training is part of Flux. Not only would this allow us to further compare python and Julia with regards to data analysis and \acrshort{ml}, but also keeping our entire ecosystem in a singular language, Julia, well suited for both \acrshort{hpc} tasks as well as \acrshort{ml}.  \\
 
-The intention of keeping input data in small time chunks has previously been  argued for by reducing the workload for each \acrshort{gpu}, and instead using several batches. Another reason is the ability to use our models in a live environement. Every $x$ amount of seconds \acrshort{das} data is recorded and stored in files, a program can be made to continuously analyse and notify whenever an anomaly is found. \\
+The intention of keeping input data in small time chunks has previously been  argued for by reducing the workload for each \acrshort{gpu}, and instead using several batches. Another reason is the ability to use our models in a live environment. Every $x$ amount of seconds \acrshort{das} data is recorded and stored in files, a program can be made to continuously analyse and notify whenever an anomaly is found. \\
 
-Continuing to add several different models, both for anomaly detection and live classification or segmentation tasks will further the cause of analysing \acrshort{das} data and in an optimal scenario, prevent geophysical catastrophies.
+Continuing to add several different models, both for anomaly detection and live classification or segmentation tasks will further the cause of analysing \acrshort{das} data and in an optimal scenario, prevent geophysical catastrophes.
 
 \subsection{Final Remarks}
 

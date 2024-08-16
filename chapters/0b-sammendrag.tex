@@ -1,9 +1,12 @@
 \chapter*{Sammendrag}
 
-Anomalideteksjon har et bredt spekter av bruksområder i dag. Fra nettverkstrafikk til prognostisering av aksjemarkedet, er alternativene uendelige. Signalbehandling håndterer en overflod av uorganiserte data, der man ofte ønsker å observere. Dette har tradisjonelt vært.
+Denne avhandlingen undersøker parallell prosessering av distribuert akustisk sensing (DAS)-data og anvendelsen av autoencodere for anomalideteksjon på disse dataene. Forskningen adresserer det økende behovet for effektiv prosessering og analyse av storskala \acrshort{das} data, med potensielle anvendelser som spenner fra jordskjelvdeteksjon til overvåking av jordskred. \\
 
-Dette feltet har begynt å se mange anvendelser dukke opp. Fiberoptiske kabler har blitt stadig mer populære på grunn av hvordan \acrshort{das} fungerer i samspill med dem, på grunn av sin høye følsomhet. Å anvende algoritmer for anomalideteksjon på denne typen data kan potensielt hjelpe oss med å oppdage uønskede objekter eller skapninger automatisk i sanntidsdata, noe som reduserer tiden brukt på manuell inngripen. Det kan også brukes i før-algoritmer for å fjerne denne typen data fra den opprinnelige datamengden. \\
+Vi presenterer to nye programmer: 1) Judas.jl, en Julia-pakke for forbehandling av store volumer av \acrshort{das} data, og 2) TinyDAS, et Python-program for trening av flere autoencodere på tvers av flere GPU-er, og utføring av anomalideteksjon på DAS-data. Disse verktøyene har som mål å automatisere deteksjonen av anomalier i sanntids datastrømmer, og potensielt redusere behovet for manuell intervensjon og forbedre nøyaktigheten av lignende dataanalyse. \\
 
-Vi presenterer \texttt{JudasNET}, en modell for utføring av anomalideteksjon på DAS-data. I tillegg foreslår vi et pakke skrevet i Julia for forbehandling av DAS-filer \cite{projthesis} og funksjonalitet for både opplæring og inferansemodus for disse modellene. Vi validerer modellen vår på virkelige data mottatt fra \acrfull{cgf}.   \\
+Vår metodikk involverer validering av disse programmene på både proprietære og åpen kildekode DAS-datasett fra den virkelige verden. Resultatene demonstrerer skalerbare løsninger for både dataprosessering og anomalideteksjon, og viser betydelige forbedringer i effektivitet og nøyaktighet sammenlignet med eksisterende metoder ved NTNU Senter for Geofysisk Prediksjon (CGF). \\
 
-Deler av denne avhandlingen er hentet fra eller basert på prosjektoppgaven min som ble levert i emnet TDT4501 med tittelen "Parallel DAS Processing: Julia is all you need".
+Denne forskningen bidrar til feltet DAS-dataanalyse ved å tilby robuste verktøy for håndtering av storskala DAS-data og utnyttelse av ulike effektive autoencodere for anomalideteksjon. Funnene har implikasjoner for ulike industrier som benytter DAS-teknologi, inkludert NTNU CGF, og tilbyr potensielle forbedringer i dataprosesseringspipelines og anomalideteksjonskapabiliteter. \\
+
+Deler av denne avhandlingen er hentet fra eller basert på min innleverte prosjektoppgave i faget TDT4501 med tittelen "Parallel DAS Processing: Julia is all you need".
+

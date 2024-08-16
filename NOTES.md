@@ -49,7 +49,7 @@ kapoor2020novel - novel algo RT ad in time series
 ruff2020 deep - deep ss ad
 
 huang2021esad - end to end ss ad
-
+s23084094 - ae for das data
 ### AE
 
 tan2023improving - adjustable probibalistic recon error

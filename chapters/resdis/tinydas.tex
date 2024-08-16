@@ -9,7 +9,7 @@ All the models were trained and tested on \gls{idun} computers made for \acrshor
 
 
 
-\begin{table}[h]
+\begin{table}[!h]
 \centering
 \begin{tabular}{|l|c|}
 \hline
@@ -24,96 +24,50 @@ Amount        & 4 (1 for testing)     \\ \hline
 \caption{Specs for the machines running and resting the models}
 \end{table}
 
-\begin{equation}
-    TPR(TruePositiveRate/Recall) = \frac{TP}{TP + FN}
-\end{equation}
-
-\begin{equation}
-    FPR(FalsePositiveRate/Recall) = \frac{FP}{FP + TN}
-\end{equation}
-
-\begin{equation}
-    Precision = \frac{TP}{TP + FP}
-\end{equation}
-
-\begin{equation}
-    F1 - score = 2 x (\frac{Precision \cdot Recall}{Precision + Recall})
-\end{equation}
-
-\begin{equation}
-    Accuracy = \frac{TP + TN}{TP + TN + FP + FN}
-\end{equation}
 
 
-\begin{table}[h]
-\centering
-\begin{tabular}{|ll|ll|}
-\hline
-\multicolumn{2}{|c|}{\multirow{2}{*}{\textbf{Total Population}}} & \multicolumn{2}{c|}{Predictions}      \\ \cline{3-4} 
-\multicolumn{2}{|c|}{}                                           & \multicolumn{1}{l|}{Normal} & Anomaly \\ \hline
-\multicolumn{1}{|l|}{\multirow{2}{*}{Actual}}      & Normal      & \multicolumn{1}{l|}{TN}     & FP      \\ \cline{2-4} 
-\multicolumn{1}{|l|}{}                             & Anomaly     & \multicolumn{1}{l|}{FN}     & TP      \\ \hline
-\end{tabular}
-\label{tab:confmat}
-\caption{Confusion matrix}
-\end{table}
 
 
-\subsection{Model Training}
+\subsection{Experiment 1: Model training}
 
 All models are trained using the ADAM optimizer.
 
-
-\subsubsection{Training Times}
-\subsubsection{Loss Values}
-\subsubsection{Accuracy}
-
-\subsection{Model Inference}
-
-An important part of analysing our autoencoders is the choice of metrics. Whereas loss and accuracy can provide proficient details about the model training itself, other metrics are better suited for analysing the 
-
-\subsection{Autoencoder Performance Comparison}
-
-Table \ref{tab:autoencoder_comparison} presents a comparative analysis of the four autoencoder types: dense, convolutional, variational dense, and variational convolutional.
-
-\begin{table}[htbp]
+\begin{table}[!htbp]
     \centering
     \begin{tabular}{lcccc}
         \hline
-        \textbf{Metric} & \textbf{AE} & \textbf{CNN-AE} & \textbf{VAE} & \textbf{CNN-VAE} \\
+        \textbf{Metric} & \textbf{AE} & \textbf{CAE} & \textbf{VAE} & \textbf{CVAE} \\
         \hline
-        Reconstruction Error & 0.045 & 0.032 & 0.038 & 0.029 \\
-        Latent Space Dimension & 64 & 128 & 64 & 128 \\
-        Avg Training time(s) & 120 & 180 & 150 & 210 \\
-        Avg Training time(s) & 120 & 180 & 150 & 210 \\
+        Reconstruction Error* & 0.045 & 0.032 & 0.038 & 0.029 \\
+        Latent Space Dimension Size & 64 & 128 & 64 & 128 \\
+        Median time p/epoch(s) & 120 & 180 & 150 & 210 \\
         \hline
     \end{tabular}
-    \caption{Comparison of Autoencoder Performance}
+    \caption{Comparison of Autoencoder Performance\\ *The Reconstruciton error is the sum of all reconstruction errors across all batches.}
     \label{tab:autoencoder_comparison}
 \end{table}
 
-\subsection{Loss Functions}
+\subsubsection{Loss Functions}
 
 Each autoencoder type utilizes a different loss function, as outlined in Table \ref{tab:loss_functions}.
 
-\begin{table}[htbp]
+\begin{table}[!htbp]
     \centering
     \begin{tabular}{ll}
         \hline
         \textbf{Model Type} & \textbf{Loss Function} \\
         \hline
-        AE & Mean Squared Error (MSE) \\
-        CNN-AE & Binary Cross-Entropy \\
-        \beta-VAE & MSE + KL Divergence \\
-        \beta-CNN-VAE & Binary Cross-Entropy + KL Divergence \\
+        AE & \acrshort{mse} \\
+        CAE & \acrshort{mse} \\
+        VAE & \acrshort{mse} + KL Divergence \\
+        CVAE & \acrshort{mse} + KL Divergence \\
         \hline
     \end{tabular}
     \caption{Loss Functions for Different Autoencoder Types}
     \label{tab:loss_functions}
 \end{table}
 
-
-\begin{figure}
+\begin{figure}[!h]
   \begin{subfigure}[t]{.5\textwidth}
     \centering
     \includegraphics[width=\linewidth]{figures/loss.png}
@@ -123,7 +77,7 @@ Each autoencoder type utilizes a different loss function, as outlined in Table \
   \begin{subfigure}[t]{.5\textwidth}
     \centering
     \includegraphics[width=\linewidth]{figures/loss.png}
-    \caption{CNN AE}
+    \caption{CAE}
   \end{subfigure}
 
   \medskip
@@ -137,116 +91,14 @@ Each autoencoder type utilizes a different loss function, as outlined in Table \
   \begin{subfigure}[t]{.5\textwidth}
     \centering
     \includegraphics[width=\linewidth]{figures/loss.png}
-    \caption{Beta VAE}
+    \caption{CVAE}
   \end{subfigure}
     \caption{Losses for all models}
 \end{figure}
 
-\subsection{Performance Visualization}
+\subsubsection{Reconstruction Capabiltites}
 
-Figure \ref{fig:reconstruction_error} illustrates the reconstruction error for each autoencoder type across different epochs.
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.8\textwidth]{reconstruction_error.png}
-    \caption{Reconstruction Error vs. Epochs for Different Autoencoder Types}
-    \label{fig:reconstruction_error}
-\end{figure}
-
-\subsection{Latent Space Visualization}
-
-Figure \ref{fig:latent_space} presents a t-SNE visualization of the latent space for each autoencoder type.
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.8\textwidth]{latent_space_visualization.png}
-    \caption{t-SNE Visualization of Latent Space for Different Autoencoder Types}
-    \label{fig:latent_space}
-\end{figure}
-
-% Confusion Matrix Components Table
-\begin{table}[h]
-\centering
-\begin{tabular}{lSSSS}
-\toprule
-Model & {TP} & {FP} & {TN} & {FN} \\
-\midrule
-AE  & 100 & 10 & 80 & 10 \\
-CAE  & 95 & 15 & 75 & 15 \\
-VAE  & 105 & 8 & 85 & 5 \\
-CVAE & 98 & 12 & 82 & 8 \\
-\bottomrule
-\end{tabular}
-\caption{Confusion Matrix Components}
-\end{table}
-
-% Performance Metrics Table
-\begin{table}[h]
-\centering
-\begin{tabular}{lSSSSS}
-\toprule
-Model & {TPR} & {FPR} & {Precision} & {F1-score} & {Accuracy} \\
-\midrule
-AE & 0.909 & 0.111 & 0.909 & 0.909 & 0.900 \\
-CAE & 0.864 & 0.167 & 0.864 & 0.864 & 0.850 \\
-VAE  & 0.955 & 0.086 & 0.929 & 0.942 & 0.941 \\
-CVAE & 0.925 & 0.128 & 0.891 & 0.907 & 0.900 \\
-\bottomrule
-\end{tabular}
-\caption{Performance Metrics}
-\end{table}
-
-
-\begin{figure}[h]
-\centering
-\begin{tikzpicture}
-\begin{axis}[
-    width=0.8\textwidth,
-    height=0.8\textwidth,
-    xlabel={False Positive Rate},
-    ylabel={True Positive Rate},
-    xmin=0, xmax=1,
-    ymin=0, ymax=1,
-    xtick={0,0.2,0.4,0.6,0.8,1},
-    ytick={0,0.2,0.4,0.6,0.8,1},
-    legend pos=south east,
-    legend cell align={left},
-    grid=major,
-    title={ROC Curves for Four Models}
-]
-
-% Diagonal reference line
-\addplot[thick,dashed,gray] coordinates {(0,0) (1,1)};
-
-% ROC curve for Model A
-\addplot[thick,blue] coordinates {
-    (0,0) (0.05,0.4) (0.1,0.6) (0.2,0.8) (0.3,0.85) (0.5,0.9) (0.8,0.95) (1,1)
-};
-
-% ROC curve for Model B
-\addplot[thick,red] coordinates {
-    (0,0) (0.05,0.3) (0.1,0.5) (0.2,0.7) (0.3,0.8) (0.5,0.85) (0.8,0.9) (1,1)
-};
-
-% ROC curve for Model C
-\addplot[thick,green] coordinates {
-    (0,0) (0.05,0.5) (0.1,0.7) (0.2,0.85) (0.3,0.9) (0.5,0.95) (0.8,0.98) (1,1)
-};
-
-% ROC curve for Model D
-\addplot[thick,orange] coordinates {
-    (0,0) (0.05,0.45) (0.1,0.65) (0.2,0.75) (0.3,0.83) (0.5,0.88) (0.8,0.93) (1,1)
-};
-
-\legend{Reference, AE, CAE, VAE, CVAE}
-
-\end{axis}
-\end{tikzpicture}
-\caption{ROC Curves Comparison for our Autoencoders }
-\end{figure}
-
-
-\begin{figure}[h]
+\begin{figure}[!h]
     \centering
     
     % Row 0 (Image Names)
@@ -355,6 +207,138 @@ CVAE & 0.925 & 0.128 & 0.891 & 0.907 & 0.900 \\
         \caption{CVAE}
     \end{subfigure}
     
-    \caption{Comparison of original images and their reconstructions by different autoencodes}
+    \caption{Comparison of original images and their reconstructions by different autoencoders}
     \label{fig:aereconstruct}
 \end{figure}
+
+\subsection{Autoencoder Performance Comparison}
+
+An important part of analysing our autoencoders is the choice of metrics. Whereas loss and accuracy can provide proficient details about the model training itself, other metrics are better suited for analysing the 
+
+Table \ref{tab:autoencoder_comparison} presents a comparative analysis of the four autoencoder types: dense, convolutional, variational dense, and variational convolutional.
+
+
+
+\subsection{Performance Visualization}
+
+
+% Confusion Matrix Components Table
+\begin{table}[!h]
+\centering
+\begin{tabular}{l|rrrr}
+\toprule
+\textbf{Model} & \textbf{TP} & \textbf{FP} & \textbf{TN} & \textbf{FN} \\
+\midrule
+AE  & 100 & 10 & 80 & 10 \\
+CAE  & 95 & 15 & 75 & 15 \\
+VAE  & 105 & 8 & 85 & 5 \\
+CVAE & 30 & 110 & 460 & 0 \\
+\bottomrule
+\end{tabular}
+\caption{Confusion Matrix Components}
+\end{table}
+
+% Performance Metrics Table
+\begin{table}[!h]
+\centering
+\begin{tabular}{l|SSSSS}
+\toprule
+\textbf{Model} & \textbf{TPR} & \textbf{FPR} & \textbf{Precision} & \textbf{F1-Score} & \textbf{Accuracy} \\
+\midrule
+AE & 0.909 & 0.111 & 0.909 & 0.909 & 0.900 \\
+CAE & 0.864 & 0.167 & 0.864 & 0.864 & 0.850 \\
+VAE  & 0.955 & 0.086 & 0.929 & 0.942 & 0.941 \\
+CVAE & 0.91 & 0.128 & 0.91 & 0.90 & 0.817 \\
+\bottomrule
+\end{tabular}
+\caption{Performance Metrics}
+\end{table}
+
+
+\begin{figure}[!h]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.8\textwidth,
+    height=0.8\textwidth,
+    xlabel={False Positive Rate},
+    ylabel={True Positive Rate},
+    xmin=0, xmax=1,
+    ymin=0, ymax=1,
+    xtick={0,0.2,0.4,0.6,0.8,1},
+    ytick={0,0.2,0.4,0.6,0.8,1},
+    legend pos=south east,
+    legend cell align={left},
+    grid=major,
+    title={ROC Curves for Four Models}
+]
+
+% Diagonal reference line
+\addplot[thick,dashed,gray] coordinates {(0,0) (1,1)};
+
+% ROC curve for Model A
+\addplot[thick,blue] coordinates {
+    (0,0) (0.05,0.4) (0.1,0.6) (0.2,0.8) (0.3,0.85) (0.5,0.9) (0.8,0.95) (1,1)
+};
+
+% ROC curve for Model B
+\addplot[thick,red] coordinates {
+    (0,0) (0.05,0.3) (0.1,0.5) (0.2,0.7) (0.3,0.8) (0.5,0.85) (0.8,0.9) (1,1)
+};
+
+% ROC curve for Model C
+\addplot[thick,green] coordinates {
+    (0,0) (0.05,0.5) (0.1,0.7) (0.2,0.85) (0.3,0.9) (0.5,0.95) (0.8,0.98) (1,1)
+};
+
+% ROC curve for Model D
+\addplot[thick,orange] coordinates {
+    (0,0) (0.05,0.45) (0.1,0.65) (0.2,0.75) (0.3,0.83) (0.5,0.88) (0.8,0.93) (1,1)
+};
+
+\legend{Reference, AE, CAE, VAE, CVAE}
+
+\end{axis}
+\end{tikzpicture}
+\caption{ROC Curves Comparison for our Autoencoders }
+\end{figure}
+
+\begin{figure}[!h]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.8\textwidth,
+    height=0.8\textwidth,
+    xlabel={Recall},
+    ylabel={Precision},
+    xmin=0, xmax=1,
+    ymin=0, ymax=1,
+    xtick={0,0.2,0.4,0.6,0.8,1},
+    ytick={0,0.2,0.4,0.6,0.8,1},
+    legend pos=south west,
+    legend cell align={left},
+    grid=major,
+    title={Precision-Recall Curves for Four Models}
+]
+% PR curve for Model AE
+\addplot[thick,blue] coordinates {
+    (0,1) (0.2,0.95) (0.4,0.9) (0.6,0.8) (0.8,0.7) (1,0.6)
+};
+% PR curve for Model CAE
+\addplot[thick,red] coordinates {
+    (0,1) (0.2,0.9) (0.4,0.85) (0.6,0.75) (0.8,0.65) (1,0.55)
+};
+% PR curve for Model VAE
+\addplot[thick,green] coordinates {
+    (0,1) (0.2,0.98) (0.4,0.95) (0.6,0.85) (0.8,0.75) (1,0.65)
+};
+% PR curve for Model CVAE
+\addplot[thick,orange] coordinates {
+    (0,1) (0.2,0.97) (0.4,0.92) (0.6,0.82) (0.8,0.72) (1,0.62)
+};
+\legend{AE, CAE, VAE, CVAE}
+\end{axis}
+\end{tikzpicture}
+\caption{Precision-Recall Curves Comparison for our Autoencoders}
+\end{figure}
+

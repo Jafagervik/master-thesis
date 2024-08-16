@@ -1,28 +1,19 @@
 \chapter{Introduction}
 \label{chap:introduction}
 
-In this very first chapter, we set up the rest of this thesis. We cover our moitvation for this projects, our goals and research questions, what contributions this paper have given as well as an outline for this thesis.
+In this very first chapter, we cover our motivation for this projects, our goals and research questions, what contributions this paper have given as well as an outline for the thesis.
 
-\begin{figure}[h]
+
+Digital signal processing has over the last 100 years gone from almost non-existent to utmost critical importance. There are tons of different devices for recording signals from all kinds of environments. From more well known ones such as microphones and recorders, to less commercial technologies. \acrfull{das} is a rather new technology that allows for real-time analysis over fiber-optical cables, and gives us highly sensitive senor data to work with. This technology has gained more recognition within the last decade, and have real world applications spanning from earthquake and whale detection, to landslide, CO2 and ground water level analysis \\
+
+\begin{figure}[!h]
     \centering
-    \includegraphics[scale=.5]{figures/api_overview.png}
-    \caption{JudasNET Api overview}
-    \label{fig:judasnet_overview}
+    \includegraphics[width=0.7\linewidth]{figures/das.png}
+    \caption{Showcase of how \acrshort{das} signals are recorded}
+    \label{fig:das-fig}
 \end{figure}
 
-\begin{figure}[h]
-    \centering
-    \includegraphics[scale=.5]{figures/methodflow.png}
-    \caption{Meth}
-    \label{fig:methodflow}
-\end{figure}
 
-\begin{figure}[h]
-    \centering
-    \lstinputlisting[language=Julia]{code/parallel_resample.jl}
-    \caption{Parallel Resample}
-    \label{fig:parallel_resample}
-\end{figure}
 
 \input{chapters/intro/motivation}
 \input{chapters/intro/goals}

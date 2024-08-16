@@ -1,73 +1,86 @@
 \section{TinyDAS}
 
-In this section, we introduce TinyDAS, a Python program aimed at training autoencoder models and detecting anomalies in \acrshort{das} data. In this program, we use a combination of Tinygrad and Pytorch for training and testing our models. For the anomaly detection module, we utilize a combination of sklearn and Seaborn to evaluate our models.
+In this section, we introduce TinyDAS, a Python program aimed at training autoencoder models and detecting anomalies in \acrshort{das} data. In this program, we use a combination of Tinygrad and Pytorch for training and testing four differenty types of autoencoders. For the anomaly detection module, we utilize a combination of sklearn and Seaborn to evaluate our models.
 
 \subsection{Tools}
-
+\mycomment{
 Python is a dynamically typed, weak language famously known for it's \textit{easy-to-learn} syntax. Created by Guido Van Rossum in the late 80-s \cite{python}, Python has slowly emerged as one of the fastest growing programming languages ever created \cite{srinath2017python}. 
 
 Virtually all of the larger libraries for data science and \acrlong{ml} have bindings to \gls{python}, or are written in Python from scratch. Some examples include \texttt{Pandas}, \texttt{NumPy}, \texttt{SciKit Learn}, \texttt{Pytorch} and \texttt{TensorFlow}. Many of these rely on code written in C or C++ to be fast, sincc
-
-\subsubsection{Pytorch}
-
-\subsubsection{Tinygrad}
+}
 
 
-
+Tinygrad [CITE] is a deep learning framework created by George Hotz in 2018. All operations are lazy, and will not be executed until realized. 
+Compared to alternatives as Pytorch [CITE], it is not tightly connected to NVIDIA and its \acrshort{gpu}s, and supports a variety of different accelerators. Code written in in Tinygrad is mainly hardware independent, and thus can be run on different types such as CUDA, AMD, NV and more, with minimal changes to the source code. This, in addition to its easy support for data parallel training and \acrshort{jit} compilation makes it a great choice for our usecase. \\
 
 \subsection{Overview}
 
-An overview of how TinyDAS works is shown in the figure below \ref{fig:dataflow}.
+TinyDAS consists of two parts. The first part with the training of autoencoders, while the latter handels anomaly detection of \acrshort{das} data. An overview of how TinyDAS works is shown in the figure below \ref{fig:dataflow}.
 
-\begin{figure}[h]
+\begin{figure}[!h]
     \centering
     \includegraphics[scale=0.5]{figures/methodflow.png}
-    \caption{Dataflow}
+    \caption{Overview of TinyDAS}
     \label{fig:dataflow}
 \end{figure}
 
+TinyDAS is developed with the following ideas in mind:
+
+\begin{enumerate}
+    \item Easily extendable with new models
+    \item Easy to configure hyperparameters
+    \item Scalable from single core computer to distributed systems.
+    \item Code should be independent from the code w
+    \item Support for half precision training
+    \item Support for transfer learning and early stopping
+    \item Anomaly detection should be model independent
+\end{enumerate}
+
 \subsection{Dataset}
 
-For this project, we will be using the FORESEE dataset 
- as part of the PubDAS collection. \cite{spica2023pubdas}
+For this project, we will be using datasets from the PubDAS \cite{spica2023pubdas} collection. PubDAS is described as "A PUBlic Distributed Acoustic Sensing Datasets Repository for Geosciences" and contains \acrshort{das} data from numerous location all across the globe. We will specifically be dealing with the FORESEE dataset, a \acrshort{das} dataset stored in \acrshort{hdf5} files from an area around Pennsylvania in the Valley and Ridge Appalachians region. \\
 
-\subsection{Usage}
+Some preprocessing on the dataset has already been done. This code is highlighted in the appendix \ref{app:pubdas}. To reduce the memory requirements of training such a dataset, we split the files into 5 second intervals compared to the original 10 minutes. Not only does this reduce memory requirements, but anomaly detection may be run every 5 seconds compared to the original 10 minutes. \\
 
+Subsequentially, we chose a test dataset to label anomalies on based on this paper \cite{zhu2023seismic}, that found 18 thunder-induced seismic events in in this timestamp. We manually these data to be able to calculate confusion matrices and other relevant metrics to test the accuracy of our autoencoders. Information about these datasets can be found in table \ref{tab:foresee_experiment_data}. \\
 
-
-
-\subsubsection{File format}
+\begin{table}[!htbp]
+    \centering
+    \small
+    \begin{tabular}{@{}p{0.3\textwidth}p{0.4\textwidth}p{0.2\textwidth}@{}}
+        \toprule
+        \textbf{Parameter} & \textbf{Value} & \textbf{Unit} \\
+        \midrule
+        Experiment & Foresee & \\
+        Interrogator Unit (IU) & Silixa iDAS-v2 & \\
+        \midrule
+        \textbf{Original Data} & & \\
+        Format & TDMS & \\
+        Samples per second & 500 & \si{\hertz} \\
+        Gauge length & 10 & \si{\meter} \\
+        Cable length & 23300 & \si{\meter} \\
+        Channel spacing & 2 & \si{\meter} \\
+        Data shape & 300000 \(\times\) 2137 & \\
+        \midrule
+        \textbf{After Preprocessing} & & \\
+        Format & HDF5 & \\
+        Samples per second & 125 & \si{\hertz} \\
+        Data shape & 625 \(\times\) 2137 & \\
+        \midrule
+        \textbf{Dataset Information} & & \\
+        Train dataset size & 25690 files & \\
+        Train dataset span & 20200302\_081015 to 20200303\_204010 & \\
+        Labeled dataset size & 600 files & \\
+        Labeled dataset span & 20190415\_031735 to 20190415\_040730 & \\
+        \bottomrule
+    \end{tabular}
+    \caption{Foresee Experiment Data Summary}
+    \label{tab:foresee_experiment_data}
+\end{table}
 
 PubDAS consist of 8 datasets stored in 3 different file formats. These 3 are \texttt{TDMS}, \texttt{HDF5} and \texttt{SEG-Y}. 
 The FORESEE
 
-\subsubsection{Metadata}
-
-\begin{table}[h]
-    \small
-    \centering
-    \begin{tabular}{|l|l|}
-    \toprule
-    \multicolumn{1}{|c|}{\textbf{Name}} & \multicolumn{1}{c|}{\textbf{Value}} \\ \hline
-    IU                                  & Silixa iDAS-v2                      \\ \hline
-    Time Span                           & 365 days                            \\ \hline
-    Format                              & HDF5                                \\ \hline
-    Sample rate (Hz)                    & 125 (From 500)                      \\ \hline
-    Volume (GB)                         & 29,338                              \\ \hline
-    Gauge length (m)                    & 10                                  \\ \hline
-    Cable Length (m)                    & 4900                                \\ \hline
-    Channel spacing (m)                 & 2                                   \\ \hline
-    File duration (s)                   & 60                                  \\ \hline
-    Name format                         & FORESEE\_UTC\_YYYYMMDD\_HHMMSS:MMM.hdf5 \\ 
-    \bottomrule
-    \end{tabular}
-    \caption{Metadata of the Foresee dataset}
-    \label{tab:foresee_meta}
-\end{table}
-
-\subsubsection{Pre processing}
-
-As opposed to the dataset from BaneNOR, the FORESEE dataset is already preprocessed. A lowpass filter is applied on the data. TBD ... \\
 
 When first downloading these data, they're stored in 10-minute files, resulting in quite large files as shown below:
 
@@ -95,33 +108,23 @@ These data are originally stored as \texttt{Float32}, but will be casted as \tex
 RESULT: SPEAK ABOUT 5 SECONDS FOR LIVE ENVIRONMENT.
 TODO: Inference data from 15042019!
 
-TinyDAS is a program we've created to easily be able to train, and test different types of autoencoder models for anomaly detection. The main ideas behind creating this program are as follows:
+\subsection{Models} 
 
-\begin{enumerate}
-    \item New autoencoder models are easy to add
-    \item Easy to tune configurations
-    \item Scalable from single core computer to distributed systems.
-    \item The program is not tied to any particular hardware accelerator architecture
-    \item Support for half precision training
-    \item Support for transfer learning and early stopping
-    \item Testing of autoencoders should be easy to add
-\end{enumerate}
-
-Based on these conditions, our choice of framework was tinygrad \ref{back:tinygrad}, mainly since the framework is designed to be accelerator-independent.
+We implementing four types of autoencoders: a linear autoencoder (AE), a convolutional autoencoder (CAE), a variational autoencoder (VAE), and a convolutional variational autoencoder (CVAE). The first model serves as a baseline to test against. In AE models, the latent space $Z$ can become disjoint and non-continuous, which VAE models try to solve. Additionally, we introduce convolutional layers in an attempt to improve the model's feature extraction capabilities. Based on this, these models serve as a baseline for what is to be expected by autoencoders for anomaly detection. A full list of layers and parameter sizes can be found in the appendix \ref{app:archs}. \\
 
 \subsection{\acrshort{api} design}
 
+Due to Tinygrad being a relatively simple framework, we implement components to be used for training and testing, with the intent of being reusable and modular.
+
 \subsubsection{Datasets and Dataloaders}
 
-For easy swap out between datasets, we introduce two classes, \texttt{Dataset} and \texttt{DataLoader}. The former handles information about the dataset to be trained on, as well as logic for loading a single file from a \acrshort{hdf5} file, or whatever other format might be sent in later on. The latter one handles loading of batches in parallel, loading $n$ samples into the model.
+The \texttt{Dataset} and \texttt{DataLoader} classes supports reading in \acrshort{hdf5} in batches, with support for data normalization and type casting. The former handles information about the dataset to be trained on, as well as logic for loading a single file from a \acrshort{hdf5} file, or whatever other format might be sent in later on. The latter one handles loading of batches in parallel, loading $n$ samples into the model.
 
 \subsubsection{Autoencoder Base Class}
 
-\lstinline{BaseAE} is the abstract class which all the different models inherit from. The \lstinline{criterion} method is the main method to use when using a model. It runs the \lstinline{__call__} method, apply the loss function of choice, and stores in a dictionary in case we'd like to store multiple losses. We define the class as follows:
+\lstinline{BaseAE} is the abstract class which all the different models inherit from. As long as all models inherits from this class, it will be run in the trainer. The \lstinline{criterion} method is the main method to call when training a model. It runs the \lstinline{__call__} method, applies the loss function of choice, and stores in a dictionary in case we'd like to save multiple losses across epochs. We define the class as follows:
 
 \lstinputlisting[language=Python, label={lst:baseae}, caption=Base Autoencoder class]{code/baseae.py}
-
-As we see in the listing above \ref{lst:baseae}, we also provide method in here for prediction. 
 
 \subsubsection{Early Stopping}
 
@@ -130,11 +133,11 @@ Even though the model loss ideally should decrease to eventually reach zero almo
 
 \begin{align*}
 &\text{Stop at epoch } T \text{ if:} \\
-&\forall i \in \{T-p+1, ..., T\}: L_v(i) > L_v^* - \epsilon \\
-&\text{where } L_v^* = \min_{j=1}^{T} L_v(j) \\
+&\forall i \in \{T-p+1, ..., T\}: L_t(i) > L_t^* - \epsilon \\
+&\text{where } L_t^* = \min_{j=1}^{T} L_t(j) \\
 \\
 &\text{Given:} \\
-&L_v(t) \text{ is the validation loss at epoch } t \\
+&L_t(t) \text{ is the train loss at epoch } t \\
 &p \text{ is the patience (number of epochs to wait)} \\
 &\epsilon \text{ is a small threshold for improvement}
 \end{align*}
@@ -143,21 +146,62 @@ Even though the model loss ideally should decrease to eventually reach zero almo
 
 The Trainer class serves as the core component of our program. As demonstrated in listing \ref{fig:lstmcell}, it integrates a model, dataloader, and optimizer to execute the training process. Additionally, it handles early stopping, storing history of losses and saving the best model for further use.
 
+\lstinputlisting[language=Python]{code/trainer.py}
+
+
+\subsubsection{Usage}
+
+In the same way that \texttt{Judas} is designed, we want \texttt{TinyDAS} to be modular and easy to use. We've designed components in a way that is familiar to that of \texttt{Pytorch}. Models can be trained using the following script:
+
+\lstinputlisting[caption=Example of how models within \texttt{TinyDAS} is trained, language=Python]{code/tinydas_main.py}
+
+We allow for \texttt{Float16} training by type casting all weights and biases in the model, which effectively halves the memory requirement.
+
 \subsubsection{Hyperparameters and configurations}
 
-To set hyperparameters 
+All hyperparameters for the different models are stored in separate YAML files. A list of hyperparameters used can be found in the appendix \ref{app:configs}.
 
 \subsection{Evaluation}
 
-We will be splitting the evaluation of \texttt{TinyDAS} in two sections. The first section will focus more on overall model training. Here is a list of points to be evaluated: 
+We will be splitting the evaluation of the models in two sections. The first section will focus more on overall model training. Here is a list of points to be evaluated: 
 
 \begin{itemize}
-    \item \textbf{Experiment 1}: Median training time and model sizes
-    \item \textbf{Experiment 2}: Losses
-    \item \textbf{Experiment 3}: Reconstruction Capabilities
+    \item \textbf{Experiment 1}: Median training time and model sizes, and losses
+    \item \textbf{Experiment 2}: Reconstruction Capabilities
 \end{itemize}
 
-The section will revolve around anomaly detection based on the different architectures.
+The second section will revolve around anomaly detection based on the different architectures. There are several different methods to evaluate the effectiveness and accuracy of models designed for anomaly detection. A very common pattern is to measure predicted results up against some ground truths, and construct a confusion matrix based on the result. From this confusion matrix, the following metrics will be used. \\ 
+
+The True Positive Rate (TPR), also known as recall calculated the percentage of truths calcualted out of all ground truths. TP is true positives, and FN is false negatives. 
+
+\begin{equation}
+    TPR = \frac{TP}{TP + FN} = Recall
+\end{equation}
+
+Likewise, the False Positive Rate is the percentage of falsehoolds calculated out of all the ground negatives. FP is false negatives, and TN is true negatives:
+
+\begin{equation}
+    FPR = \frac{FP}{FP + TN}
+\end{equation}
+
+Precision is the percentage of correct truths out of all predicted truths.
+
+\begin{equation}
+    Precision = \frac{TP}{TP + FP}
+\end{equation}
+
+
+The $F1\_{score}$ is used to evaluate the balance between intrusion detection accuracy and recall rate; the higher the score, the better:
+\begin{equation}
+    F1\_{score} = 2 \times (\frac{Precision \cdot Recall}{Precision + Recall})
+\end{equation}
+
+Accuracy measures the proportion of correct predictions:
+
+\begin{equation}
+    Accuracy = \frac{TP + TN}{TP + TN + FP + FN}
+\end{equation}
+
 
 \begin{itemize}
     \item \textbf{Experiment 1}: Anomaly Detection Accuracy

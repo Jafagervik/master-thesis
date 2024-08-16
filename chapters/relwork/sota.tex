@@ -1,5 +1,13 @@
-\section{State of the Art}
+\section{\acrshort{sota}}
 
+In general, both autoencoders with linear, convolutional, or recurrent layers, as well as clustering algorithms and more traditional \acrshort{ml} methods have seen many use-cases within \acrshort{das} research. However, in later years with the later additions of both attention layers, or even \acrshort{gan}s \cite{goodfellow2014generative, goodfellow2016nips}, more novel approaches are being researched. By introducing channel attention and spatial attention to \acrshort{cnn}, one article \cite{eage:/content/journals/10.1111/1365-2478.13355} finds good results for denoising \acrshort{das} signals. 
+
+One key aspect of \acrshort{ann}s is the necessity of larger train datasets, compared to clustering techniques. For more vision-based tasks, data augmentation techniques such as cropping, resizing or color grading can increase the available datasets. Another way to increase the total amount of train data is by leveraging \acrshort{gan}s. After training a \acrshort{gan} model, the generator can be used to produce data that is similar to already collected data. This has yielded great results on \acrshort{das} data \cite{Shiloh:19}, and can be a great way to provide more train-data, which in turn can help models detect anomalies more accurately, by being trained on a broader variety of data. \\
+
+One issue of concern is online long-distance distributed monitoring applications. By using a combination of a ResNET with a convolutional block attention module (CBAM), one paper is able to achieve real-time inference time cost as low as 3.3ms per sample \cite{photonics9100677}, while still averaging a high accuracy, even for multi-scenario scences. 
+
+
+LSTM based gan with attention \cite{bashar2023algan} 
 
 Unsupervised pretraining \cite{alaaDeepLstm2019}
 

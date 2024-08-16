@@ -1,32 +1,48 @@
 \section{Motivation}
 
-Digital signal processing has over the last 100 years gone from almost non-existent to utmost critical importance. By processing signal data, one can get access to all kinds of information, music, movement and locations. There are tons of different devices for recording signals from the environments. From more well known ones such as microphones and sensors, to less commercial technologies. \\
+DAS
+Big Data Processing
+Anomaly Detection 
+Unsupervised (v supervised and smaller models)
+CGF (Tools and Resources)
+What we have available
+
+Recorded \acrshort{das} signals has the potential to become quite large, taking up a large amount of computer memory. Improving methods for storing reduced To process these data, parallel techniques have the ability to drastically reduce the overall runtime, utilizing as many ... . Furthermore, 
+
+
+\subsection{Anomaly Detection}
+
+Traditionally, clustering based \acrfull{ml} techniques such as K-MEANS, DBSCAN and HDBSCAN have been quite popular for anomaly detection. However, these methods often require manual feature engineering, require labeled datasets or generally do not scale to large datasets. 
 
 \begin{figure}[ht]
     \centering
     \includegraphics[scale=0.4]{figures/anolay_line.png}
+    \caption{Example of anomalies in a dataset}
     \label{fig:anomaly_example}
 \end{figure}
 
-The world of digital signal processing is nothing new to academia, and computer science in general. Some of the most magnificent and trailblazing algorithms, like the \acrfull{dft} algorithm revolve around solving problems revolving around these data. With more and more sensors being used around us, as well as the increasing amount of data stored, the larger the need for processing and interpreting this data has become. 
-\acrfull{das} is a rather new technology that allows for real-time analysis over fiber-optical cables, and gives us highly sensitive senor data to work with. \acrshort{das} has gained more recognition. \\
 
-It is hard to underestimate the impact \acrshort{ai} has had upon the general population this last couple of years. Ever since OpenAI released ChatGPT the 30th of november 2022 \cite{chatgpt} the amount of \acrshort{ai} technology and applications has exploded, not only large language models (\acrshort{llm}), but other domains have garnered attention as well. \acrshort{llm}s made \acrfull{rnn} more popular than they had been for a while. These models are good at remembering information, making current desicions based on previous ones. \\ 
+\subsection{Autoencoders for Anomaly Detection}
+
+However, with the upcoming of \acrshort{das}, both unsupervised and supervised \acrfull{dl} methods have proven to produce even better results for anomaly detection. For \acrshort{das} data specifically, both scalability and manual labeling can become quite tedious, or outright non-feasible. For 
+
+Unsupervised learning has in later years returned after the explosion of generative models [CITE]. Compared to their supervised alternatives, unsupervised do not require manual labeling. They're therefore not prone to some of the more common problems within supervised methods, such as detecting irregular events.   are well suited for detecting novel anomalies \cite{wei2022lstmautoencoder, srivastava2016unsupervised} compared to its supervised alternatives, and do not require manual labeling. This makes them 
+
+Current autoencoder based approaches to anomaly detection of \acrshort{das} do not emphasize the overall memory consumption as well as the convertion of models to a real-time environment. This 
 
 \acrshort{das} technology in itself has now started garnering attention for research, and several papers have previously studied  how one can process this data. \acrshort{ai} and \acrshort{ml} models have been constructed for looking at time series data, and analyzing sensor data, although several of theses have studied .  Only recently has \acrshort{ai}
 
-Anomaly detection on \acrshort{das} data 
+Previous work on this data \cite{projthesis} revolved around processing \acrshort{hdf5} files as fast and efficient as possible, trying to parallellize already existent code, and take advantage of newer technologies, such as Julia.
 
-Unsupervised learning has in later years returned after the explosion of generatiive models. They are well suited for detecting novel anomalies \cite{wei2022lstmautoencoder} \cite{srivastava2016unsupervised} and do not require labeling of data, something that can rather dificult on DAS data. Both GANs, AE, and LSTM VAE have been proven to have good metrics for determining anomalies. 
+\subsection{Current Tools at \acrshort{cgf}}
 
+\acrfull{cgf} spend a lot of time and resources on processing and analysing \acrshort{das} data. Current tools for processing are quite slow, and do not utilize parallelization techniques that has the potential to drastically speed up computations. Additionally, analysis is often done using more traditional signal processing techniques, not leveraging the potential benefits of more novel \acrshort{ann} methods. \\ \\  
 
-Python has for a long been the \textit{de-facto standard} language both for \acrshort{ai}, \acrshort{ml} and data analysis. All kinds of heavy pre-processing of data before training the data is being written in C or C++ or other more performant languages.    
+We hereby present two programs: Judas and TinyDAS. Judas is a package consisting of methods for parsing \acrshort{das} data stored in \acrfull{hdf5} files,  processing them in a parallel manner. TinyDAS is a Python program for training autoencoder models and detecting anomalies , with a potential for real-time analysis. Combined, these two packages aims at expanding current tools available at \acrshort{cgf} for processing and analysing \acrshort{das} data. To evaluate our work, we use both proprietary and open source data. 
 
-
-
-
-Previous work on this data (see \cite{projthesis}) revolved around processing \acrshort{hdf5} files as fast and efficient as possible, trying to parallellize already existent code, and take advantage of newer technologies, such as Julia.
-
-\input{chapters/intro/cgf}
-
-We hereby present \texttt{JudasNET}, a LSTM VAE network written in Julia for anomaly detection on \acrshort{das} data. Additionally, we present \texttt{Judas - (Julia \& DAS)}, a Julia package containing functions for parsing HDF5 files, signal processing methods specifically for DAS sensor data, as well as functions for training, inference and utilities for AI models related to DAS data. As a sideeffect, we also show how Julia can be used effectively within multiple different fields to enable , and be easily tuned to their needs,
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=.5]{figures/api_overview.png}
+    \caption{JudasNET Api overview}
+    \label{fig:judasnet_overview}
+\end{figure}

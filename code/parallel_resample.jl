@@ -1,12 +1,11 @@
-function parallel_resample(signal::Matrix{Float32}, rate::Real)::Matrix{Float32}
+function parallel_resample(signal::Matrix{Float32}, rate::Real)::SharedMatrix{Float32}
     rows, cols = size(signal)
+    new_rows = Int(fld(rows * rate, 1))
+    result = SharedMatrix{T}(new_rows, cols)
 
-    result = Matrix{Float32}(undef, Int(fld(rows * rate, 1)), cols)
-    slices = pmap(col -> Float32.(resample(col, rate)), eachcol(signal))
-
-    @inbounds @simd for i in eachindex(slices)
-        result[:, i] = slices[i]
+    @sync @distributed for col in 1:cols
+        result[:, col] = T.(resample(signal[:, col], rate))
     end
 
-    return result
+    return sdata(result)
 end

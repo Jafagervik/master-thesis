@@ -40,7 +40,7 @@ Datasets are objects that contain information about where to gather the data fro
 
 If the datasets contain information about the data and how to retrieve a single instance, the dataloaders job is to create an object that can be iterated over, containing $n$ amount of batches, and transferring these data to the wanted devices. In the case of data parallel multi-gpu training, when the data is loaded, it's \textit{sharded} across the different gpus, in a manner that balances the load of each gpu. Let's say we have a batch  of size $[4, 5, 5]$ and we have two gpus available. The dataloader can split this Tensor in two batches, where each of the gpus get a tensor of size $[2, 5, 5]$. By sharding the data along the first axis, ideally we can half the amount it takes, not taking data transfer time into consideration. 
 
-\begin{figure}[h]
+\begin{figure}[!h]
     \centering
     \includegraphics[scale=0.4]{figures/sharding.png}
     \caption{Example of data sharding with 2 gpus, and a original Tensor of size [4,5,5]}
