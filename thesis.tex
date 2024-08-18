@@ -1,6 +1,5 @@
 \documentclass[british]{ntnuthesis}
 
-% \title{Interpretable Machine Learning Models for DAS Data}
 \title{Parallel Processing and Anomaly Detection of DAS Data using Autoencoders: Enhancing Efficiency in Large-Scale Sensor Data Analysis}
 \shorttitle{Parallel Processing and Anomaly Detection on DAS data}
 \author{Jørgen Aleksander Fagervik \\
@@ -20,6 +19,7 @@
 \usepackage{tikz}
 \usepgfplotslibrary{groupplots}
 \usepackage{booktabs}
+\usepackage{colortbl}
 \usepackage{array}
 \usepackage{makecell}
 \usepackage{xcolor}
@@ -82,6 +82,34 @@
     tabsize=2,
 }
 
+% Define colors for the command prompt
+\definecolor{promptcolor}{rgb}{0.5,0,0}
+\definecolor{commandcolor}{rgb}{0,0,0.5}
+
+% Configure the listing style for shell commands
+\lstdefinestyle{shellcommand}{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  captionpos=t,
+  commentstyle=\color{promptcolor},
+  keywordstyle=\color{commandcolor},
+  stringstyle=\color{commandcolor},
+  numbers=none,
+  numbersep=5pt,
+  numberstyle=\tiny\color{black},
+  frame=single,
+  framesep=5pt,
+  xleftmargin=15pt,
+  framexleftmargin=15pt,
+  backgroundcolor=\color{gray!10},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  breakatwhitespace=false,
+  escapeinside={(*@}{@*)},
+}
+
 % Use \lstset to make myStyle the global default
 \lstset{style=dasstyle}
 
@@ -95,10 +123,10 @@
 \noindent  \textcolor{gray}{\large Jørgen Aleksander Fagervik} \\
 \vspace{1cm}
 
-\noindent \textbf{\Large Parallel Processing and Anomaly Detection of DAS Data using Autoencoders } \\
+\noindent \textbf{\Large Parallel Processing and Anomaly Detection of Distributed Acoustic Sensing Data using Autoencoders } \\
 \vspace{0.5cm}
 
-\noindent {Enhancing Efficiency in Large-Scale \acrshort{das} Data Analysis} \\
+\noindent {Designing Scalable Programs for Enhanced Efficiency in Large-Scale \acrshort{das} Data Analysis} \\
 
 
 

@@ -1,6 +1,6 @@
 \section{TinyDAS}
 
-In this section, we introduce TinyDAS, a Python program aimed at training autoencoder models and detecting anomalies in \acrshort{das} data. In this program, we use a combination of Tinygrad and Pytorch for training and testing four differenty types of autoencoders. For the anomaly detection module, we utilize a combination of sklearn and Seaborn to evaluate our models.
+In this section, we introduce TinyDAS, a Python program aimed at training autoencoder models and detecting anomalies within \acrshort{das} data. 
 
 \subsection{Tools}
 \mycomment{
@@ -9,13 +9,13 @@ Python is a dynamically typed, weak language famously known for it's \textit{eas
 Virtually all of the larger libraries for data science and \acrlong{ml} have bindings to \gls{python}, or are written in Python from scratch. Some examples include \texttt{Pandas}, \texttt{NumPy}, \texttt{SciKit Learn}, \texttt{Pytorch} and \texttt{TensorFlow}. Many of these rely on code written in C or C++ to be fast, sincc
 }
 
+In addition to \texttt{Tinygrad}, we will also be utilizing \texttt{Pytorch} for certain models, as \texttt{Float16} calculations appear to be a bit more stable for certain models. For anomaly detection, we utilize several popular Python packages such as \texttt{numpy}, \texttt{scikit-learn} and \texttt{seaborn} for evaluation metrics, and \texttt{matplotlib} for visualization and plots. A full list of packages used can be found in 
+appendix \ref{app:tinypacks}.
 
-Tinygrad [CITE] is a deep learning framework created by George Hotz in 2018. All operations are lazy, and will not be executed until realized. 
-Compared to alternatives as Pytorch [CITE], it is not tightly connected to NVIDIA and its \acrshort{gpu}s, and supports a variety of different accelerators. Code written in in Tinygrad is mainly hardware independent, and thus can be run on different types such as CUDA, AMD, NV and more, with minimal changes to the source code. This, in addition to its easy support for data parallel training and \acrshort{jit} compilation makes it a great choice for our usecase. \\
 
 \subsection{Overview}
 
-TinyDAS consists of two parts. The first part with the training of autoencoders, while the latter handels anomaly detection of \acrshort{das} data. An overview of how TinyDAS works is shown in the figure below \ref{fig:dataflow}.
+TinyDAS consists of two parts. The first part handles model construction and training, while the latter deals with anomaly detection of \acrshort{das} data. An overview of how TinyDAS works is shown in figure \ref{fig:dataflow}. The following list outlines the fundamental philosophies and criteria used to design and evaluate the framework:
 
 \begin{figure}[!h]
     \centering
@@ -24,25 +24,28 @@ TinyDAS consists of two parts. The first part with the training of autoencoders,
     \label{fig:dataflow}
 \end{figure}
 
-TinyDAS is developed with the following ideas in mind:
 
 \begin{enumerate}
-    \item Easily extendable with new models
-    \item Easy to configure hyperparameters
-    \item Scalable from single core computer to distributed systems.
-    \item Code should be independent from the code w
-    \item Support for half precision training
-    \item Support for transfer learning and early stopping
-    \item Anomaly detection should be model independent
+    \item \textit{Support} for memory-efficient training techniques, specifically half-precision
+    \item \textit{Scalability} from single-core systems to multi-node clusters
+    \item \textit{Hardware agnostic} to ensure wide usability
+    \item \textit{Modular architecture}, easily extendable with new models
+    \item \textit{Separation of core logic} from data workflow for improved maintainability
+    \item \textit{Collection} of different algorithms for anomaly detection
+    \item \textit{Future potential} for online anomaly detection in a live environment
+    \item \textit{Model-agnostic} approach to anomaly detection for broader applicability
 \end{enumerate}
 
 \subsection{Dataset}
 
-For this project, we will be using datasets from the PubDAS \cite{spica2023pubdas} collection. PubDAS is described as "A PUBlic Distributed Acoustic Sensing Datasets Repository for Geosciences" and contains \acrshort{das} data from numerous location all across the globe. We will specifically be dealing with the FORESEE dataset, a \acrshort{das} dataset stored in \acrshort{hdf5} files from an area around Pennsylvania in the Valley and Ridge Appalachians region. \\
+For this project, we will be using datasets from the PubDAS \cite{spica2023pubdas} collection. PubDAS is described as "A PUBlic Distributed Acoustic Sensing Datasets Repository for Geosciences" and contains \acrshort{das} data from numerous location all across the globe. We will specifically be dealing with the FORESEE dataset, a \acrshort{das} dataset stored in \acrshort{hdf5} files from an area around Pennsylvania in the Valley and Ridge Appalachians region  as seen in \ref{fig:foresee}. \\
 
-Some preprocessing on the dataset has already been done. This code is highlighted in the appendix \ref{app:pubdas}. To reduce the memory requirements of training such a dataset, we split the files into 5 second intervals compared to the original 10 minutes. Not only does this reduce memory requirements, but anomaly detection may be run every 5 seconds compared to the original 10 minutes. \\
-
-Subsequentially, we chose a test dataset to label anomalies on based on this paper \cite{zhu2023seismic}, that found 18 thunder-induced seismic events in in this timestamp. We manually these data to be able to calculate confusion matrices and other relevant metrics to test the accuracy of our autoencoders. Information about these datasets can be found in table \ref{tab:foresee_experiment_data}. \\
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{figures/foresee.png}
+    \caption{Map of the FORESEE Array. Photo is taken the PubDAS paper \cite{spica2023pubdas}}
+    \label{fig:foresee}
+\end{figure}
 
 \begin{table}[!htbp]
     \centering
@@ -53,34 +56,41 @@ Subsequentially, we chose a test dataset to label anomalies on based on this pap
         \midrule
         Experiment & Foresee & \\
         Interrogator Unit (IU) & Silixa iDAS-v2 & \\
+        Gauge length & 10 & \si{\meter} \\
+        Cable length & 23300 & \si{\meter} \\
+        Channel spacing & 2 & \si{\meter} \\
         \midrule
         \textbf{Original Data} & & \\
         Format & TDMS & \\
         Samples per second & 500 & \si{\hertz} \\
-        Gauge length & 10 & \si{\meter} \\
-        Cable length & 23300 & \si{\meter} \\
-        Channel spacing & 2 & \si{\meter} \\
+        File duration & 10 & \si{\minute} \\
         Data shape & 300000 \(\times\) 2137 & \\
         \midrule
         \textbf{After Preprocessing} & & \\
         Format & HDF5 & \\
         Samples per second & 125 & \si{\hertz} \\
+        File duration & 5 & \si{\second} \\
         Data shape & 625 \(\times\) 2137 & \\
         \midrule
         \textbf{Dataset Information} & & \\
         Train dataset size & 25690 files & \\
-        Train dataset span & 20200302\_081015 to 20200303\_204010 & \\
+        Train dataset span & 02 Mar 2020 08:10:15 to \newline 03 Mar 2020 20:40:10 & \\
         Labeled dataset size & 600 files & \\
-        Labeled dataset span & 20190415\_031735 to 20190415\_040730 & \\
+        Labeled dataset span & 15 Apr 2019 03:17:35 to \newline 15 Apr 2019 04:07:30 & \\
         \bottomrule
     \end{tabular}
-    \caption{Foresee Experiment Data Summary}
+    \caption{FORESEE Experiment Data Summary}
     \label{tab:foresee_experiment_data}
 \end{table}
 
 PubDAS consist of 8 datasets stored in 3 different file formats. These 3 are \texttt{TDMS}, \texttt{HDF5} and \texttt{SEG-Y}. 
 The FORESEE
 
+\subsection{Data Preprocessing}
+
+Some preprocessing on the dataset has already been done. This code is highlighted in the appendix \ref{app:pubdas}. To reduce the memory requirements of training such a dataset, we split the files into 5 second intervals compared to the original 10 minutes. Not only does this reduce memory requirements, but anomaly detection may be run every 5 seconds compared to the original 10 minutes. \\
+
+Subsequentially, we chose a test dataset to label anomalies on based on this paper \cite{zhu2023seismic}, that found 18 thunder-induced seismic events in in this timestamp. We manually these data to be able to calculate confusion matrices and other relevant metrics to test the accuracy of our autoencoders. Information about these datasets can be found in table \ref{tab:foresee_experiment_data}. \\
 
 When first downloading these data, they're stored in 10-minute files, resulting in quite large files as shown below:
 

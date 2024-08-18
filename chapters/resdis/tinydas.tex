@@ -8,20 +8,25 @@ In this section, we'l be looking at the results for both training our autoencode
 All the models were trained and tested on \gls{idun} computers made for \acrshort{hpc}. Configuration parameter for the different models can be found in the appendix \ref{app:judasnethyperparams}, and details of the machines used can be found in the table below. \\
 
 
-
-\begin{table}[!h]
+\begin{table}[!htbp]
 \centering
-\begin{tabular}{|l|c|}
-\hline
-\textbf{Unit} & \textbf{Description}         \\ \hline
-OS            & Ubuntu Linux          \\ \hline
-GPU           & NVIDIA H100 HBM3     \\ \hline
-VRAM          & 80GB                  \\ \hline
-Gpu Cores     & 4352                  \\ \hline
-Amount        & 4 (1 for testing)     \\ \hline
+\caption{Specifications for Model Training and Testing Environment}
+\label{tab:system-specs}
+\begin{tabular}{@{}llr@{}}
+\toprule
+\textbf{Component} & \textbf{Description} & \textbf{Quantity} \\
+\midrule
+Operating System & Ubuntu Linux 22.04 LTS & 1 machine \\
+GPU Model & NVIDIA H100 PCIe & 4 units \\
+GPU Memory & HBM3 & 80 GB per GPU \\
+CUDA Cores & & 14,592 per GPU \\
+Tensor Cores & & 576 per GPU \\
+GPU Clock Speed & Boost Clock & 1.67 GHz \\
+GPU TDP & & 350 W \\
+\midrule
+\multicolumn{3}{@{}l@{}}{\textit{Note:} 1 machine dedicated for testing, 4 for training.} \\
+\bottomrule
 \end{tabular}
-\label{tab:specs}
-\caption{Specs for the machines running and resting the models}
 \end{table}
 
 
@@ -223,37 +228,55 @@ Table \ref{tab:autoencoder_comparison} presents a comparative analysis of the fo
 
 
 % Confusion Matrix Components Table
-\begin{table}[!h]
+\begin{table}[!htbp]
 \centering
-\begin{tabular}{l|rrrr}
+\label{tab:confusion-matrix-results}
+\small
+\begin{tabular}{l
+    S[table-format=3.0]
+    S[table-format=3.0]
+    S[table-format=3.0]
+    S[table-format=3.0]
+    S[table-format=3.2]
+    S[table-format=3.2]
+}
 \toprule
-\textbf{Model} & \textbf{TP} & \textbf{FP} & \textbf{TN} & \textbf{FN} \\
+\textbf{Model} & {\textbf{TP}} & {\textbf{FP}} & {\textbf{TN}} & {\textbf{FN}} & {\textbf{Precision (\%)}} & {\textbf{Recall (\%)}} \\
 \midrule
-AE  & 100 & 10 & 80 & 10 \\
-CAE  & 95 & 15 & 75 & 15 \\
-VAE  & 105 & 8 & 85 & 5 \\
-CVAE & 30 & 110 & 460 & 0 \\
+\rowcolor{gray!10} AE   & 100 & 10 & 80 & 10 & 90.91 & 90.91 \\
+CAE  & 95 & 15 & 75 & 15 & 86.36 & 86.36 \\
+\rowcolor{gray!10} VAE  & 105 & 8 & 85 & 5 & 92.92 & 95.45 \\
+CVAE & 30 & 110 & 460 & 0 & 21.43 & 100.00 \\
 \bottomrule
 \end{tabular}
-\caption{Confusion Matrix Components}
+\caption{Confusion Matrix Components and Derived Metrics}
 \end{table}
+
 
 % Performance Metrics Table
-\begin{table}[!h]
+
+\begin{table}[!htbp]
 \centering
-\begin{tabular}{l|SSSSS}
+\label{tab:performance-metrics}
+\small
+\begin{tabular}{l
+    S[table-format=1.3]
+    S[table-format=1.3]
+    S[table-format=1.3]
+    S[table-format=1.3]
+    S[table-format=1.3]
+}
 \toprule
-\textbf{Model} & \textbf{TPR} & \textbf{FPR} & \textbf{Precision} & \textbf{F1-Score} & \textbf{Accuracy} \\
+\textbf{Model} & {\textbf{TPR}} & {\textbf{FPR}} & {\textbf{Precision}} & {\textbf{F1-Score}} & {\textbf{Accuracy}} \\
 \midrule
-AE & 0.909 & 0.111 & 0.909 & 0.909 & 0.900 \\
-CAE & 0.864 & 0.167 & 0.864 & 0.864 & 0.850 \\
-VAE  & 0.955 & 0.086 & 0.929 & 0.942 & 0.941 \\
-CVAE & 0.91 & 0.128 & 0.91 & 0.90 & 0.817 \\
+\rowcolor{gray!10} AE   & 0.909 & 0.111 & 0.909 & 0.909 & 0.900 \\
+CAE  & 0.864 & 0.167 & 0.864 & 0.864 & 0.850 \\
+\rowcolor{gray!10} VAE  & 0.955 & 0.086 & 0.929 & 0.942 & 0.941 \\
+CVAE & 0.910 & 0.128 & 0.910 & 0.900 & 0.817 \\
 \bottomrule
 \end{tabular}
-\caption{Performance Metrics}
+\caption{Model Performance Metrics Comparison}
 \end{table}
-
 
 \begin{figure}[!h]
 \centering

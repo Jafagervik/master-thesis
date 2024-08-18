@@ -3,23 +3,23 @@
 
 \subsection{Result Setup}
 
-All the tests for Judas were run on local servers belonging to \acrshort{cgf}. The details are all listed in the table below. \\
+ We utilize a local server belonging to \acrshort{cgf} for all tests related to \texttt{Judas}. The details are all listed in the table below. \\
 
 
-\begin{table}[!h]
+\begin{table}[htbp]
 \centering
-\begin{tabular}{|l|l|}
-\hline
-\textbf{Unit} & \textbf{Desc}         \\ \hline
-Os            & Ubuntu Linux          \\ \hline
-Processor     & Intel i9-9940X @ 4GHz \\ \hline
-Ram           & 126GB                 \\ \hline
-GPU           & NVIDIA RTX 2080TI     \\ \hline
-VRAM          & 11GB                  \\ \hline
-Gpu Cores     & 4352                  \\ \hline
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Component} & \textbf{Specification} & \textbf{Details} \\
+\midrule
+Operating System & Ubuntu Linux & Version 20.04 LTS \\
+Processor & Intel Core i9-9940X & \qty{4.40}{\giga\hertz} \\
+RAM & 126 GB & DDR4-2400 MHz \\
+GPU & NVIDIA GeForce RTX 2080 Ti &  \qty{11}{\giga\byte} GDDR6 \\
+\bottomrule
 \end{tabular}
-\label{tab:cgfspecs}
-\caption{Specs for our machine running our code}
+\caption{System Specifications for Experimental Setup}
+\label{tab:cgfsetup}
 \end{table}
 
 \subsection{Experiment 1: HDF5 file processing and resampling}
@@ -27,6 +27,13 @@ Gpu Cores     & 4352                  \\ \hline
 In this experiment, we will be processing $n$ amount of \acrshort{hdf5} files with $p$ processes, from the point of reading raw data gathered by \acrshort{cgf} from the OptoDAS, through pre-processing, resampling the signals and denoising the result. This will give an accurate view of what needs to happen from rawdata until they are ready to be trained on different \acrshort{ml} or \acrshort{dl} models. Full code example can be found in appendix \ref{app:judas}. \\
 
 We will be resampling the signals to $100Hz$ from $500Hz$, and the Channel ROI will be 250m. We will be utilizing 1, 2, 4 and 8 processes, and use of a different amount of \acrshort{das} data ranging from 10 seconds until 1 hour of \acrshort{das} data.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{figures/heatmap_das_test.png}
+    \caption{Heatmap of the processed data before resampling and denoising}
+    \label{fig:dasoutput}
+\end{figure}
 
 
 
@@ -92,7 +99,7 @@ As we can see.
 \subsection{Experiment 2: Parallel Resampling}
 
 For this experiment, we will be using the same signals as we did in our last experiment. The duration of the \acrshort{das} signal will be 5 minutes, meaning the input matrix will be of size $600000
-*231$ We will be resampling to $1000Hz, 500Hz, 250Hz, 100Hz$, utilizing 1, 2, 4 and 8 processes. For this operation \\
+\times 261$ We will be resampling to $1000Hz, 500Hz, 250Hz, 100Hz$, utilizing 1, 2, 4 and 8 processes. For this operation \\
 
 
 

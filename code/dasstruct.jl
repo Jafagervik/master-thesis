@@ -1,20 +1,9 @@
 mutable struct DASDataFrame
     datapath::String
     rows::Int
+    nfiles::Int
     cols::Int
+    step::Int
+    tstart::DateTime
     meta::Dict
-
-    function DASDataFrame(
-        dp, rs, cs, i, m
-    )
-        cols = length(cs)
-        df = new(dp, rs, cs, m, i)
-
-        isempty(meta) || 
-            _set_dimension_range!(
-                df, rs, cs
-            )
-
-        return df
-    end
 end

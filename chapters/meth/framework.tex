@@ -8,15 +8,13 @@ The more obvious choice would now be to use the Python package \texttt{Pytorch},
 
 We want to create models where we don't need to change much of our code to run on different accelerators. We also want \acrshort{cgf} to  quickly be able to both continue training and running their own models. NVIDIA \acrshort{gpu}s are generally expensive, many of them reaching prices of tens of thousands of dollars per \acrshort{gpu}. We realize that this would not be feasible for \acrshort{cgf} to invest in right now, and thus we decided to look for other frameworks which supports a broader range of hardware accelerators. \\ 
 
-Due to these constraints, we believe a solid choice of framework is Tinygrad.
+Due to these constraints, we believe Tinygrad \cite{tinygrad} will be a well suited framework for our usecase.
 
 \subsection{TinyGrad}
 
-Tinygrad is a neural network framework created by George Hotz in October 2020. It is based on Andry Carpathys library \texttt{Micrograd}, which aims to serve as an introduction to understand neural networks at its core. Tinygrad was introduced as an alternative to other giants such as \texttt{Pytorch} and \texttt{TensorFlow}, critizising them to be too hardware dependent on NVIDIA GPUs, and their CUDA software. Unlike its alternatives, Tinygrad strives towards being hardware agnostic, where writing codes for different accelerators should be as similar as possible. \\
+Tinygrad is a neural network framework created by George Hotz in October 2020 \cite{tinygrad2020}. It is based on Andrej Karpathys library \texttt{Micrograd} \cite{micrograd}, which aims to serve as an introduction to understand neural networks at its core. Tinygrad was introduced as an alternative to other popular frameworks such as \texttt{Pytorch} \cite{paszke2019pytorch} and \texttt{TensorFlow} \cite{abadi2016tensorflow}. The main goal is to \textquote{Build an equally performance stack to Pytorch on NVIDIA and AMD} \footnote{As stated in a conversation between George Hotz and Lex Friedman \cite{LexClipsYouTube2023}}. Unlike its alternatives, Tinygrad strives towards being hardware agnostic, where writing codes for different accelerators should be as similar as possible. For organizations, such as \acrshort{cgf} with limited hardware resources, this allows for an overall cheaper entry into scalable \acrshort{ml}, without sacrificing performance. \\
 
-As noted above, all operations in tinygrad are lazy. This means that an operation such as $a+b$ is not computed until the \texttt{realize()} method is called. In addition, no stateless operations require classes, as opposed to \texttt{Pytorch}. \\
-
-
+All operations in \texttt{Tinygrad} are lazy \cite{tinygrad}. This means that a binary operation tensors, such as $a+b$, is not computed until the \texttt{realize()} method is called. Additionally, \texttt{Tinygrad} strives to a more functional design pattern, with a limited amount of classes. Furthermore, \texttt{Tinygrad} has a built in \acrfull{jit} compiler, in which a kernel can be replayed, allowing for faster operations such as a \texttt{train} function. \\
 
 
 
@@ -24,6 +22,9 @@ As noted above, all operations in tinygrad are lazy. This means that an operatio
 
 
 
+
+
+\mycomment{
 \subsection{Julia - High Performance Data Driven Scientific Computing}
 
 Created in 2009, first released in 2012 as part of a master thesis \cite{juliaMs} and further a doctoral thesis \cite{juliaPHD}, Julia is a high performance, dynamically typed programming language with the goal of being a fast and performant language like C, the simplicity of Python, linear algebra extensions like matlab, and statistics like R \cite{julia}.  \\ 
@@ -47,3 +48,5 @@ Although \texttt{Flux.jl} is the preferred way to work with \acrshort{ai} in Jul
 Julia has support for working on outlier detection as follows: \cite{muhr2022outlierdetectionjl}.
 
 A list of all packages used in addition to Flux.jl can be found in the appendix \ref{app:packages}.
+
+}

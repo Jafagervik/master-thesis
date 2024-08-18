@@ -1,4 +1,4 @@
-function parallel_resample(signal::Matrix{Float32}, rate::Real)::SharedMatrix{Float32}
+function das_resample(signal::Matrix{Float32}, rate::Real)
     rows, cols = size(signal)
     new_rows = Int(fld(rows * rate, 1))
     result = SharedMatrix{T}(new_rows, cols)
