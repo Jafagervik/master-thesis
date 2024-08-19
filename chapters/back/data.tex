@@ -50,7 +50,23 @@ If the datasets contain information about the data and how to retrieve a single 
 
 \textbf{Parallel loading}
 
-When iterating over the dataloader, each element of the batch is retrieved and undergoes transformations. Depending on the batch size and  the size of the data, this procedure can be very resource-intensive and time-consuming. To mitigate this, we can introduce the concept of parallel batch loading. Instead of gathering and transforming the data sequentially, we instead introduce several workers to be able to do this process in parallel. 
+When iterating over a dataloader, each element of the batch is retrieved and undergoes transformations. Depending on the batch size and  the size of the data, this procedure can be very resource-intensive and time-consuming. To mitigate this, we can introduce the concept of parallel batch loading. Instead of gathering and transforming the data sequentially, one can leverage available resources to do this operation in a parallel manner. Algorithm \ref{alg:parallel-batch-loading} details how such an operation is conducted.
 
-\lstset{style=pstyle}
-\lstinputlisting[language=Python]{code/parallel_batch_load.py}
+
+\begin{algorithm}
+\caption{Parallel Batch Data Loading}\label{alg:parallel-batch-loading}
+\begin{algorithmic}
+\Require BatchIndices, N
+\Ensure BatchData, LoadSingleData
+\State Initialize empty list BatchData
+\State Create ThreadPool with N threads
+\For{each Index in BatchIndices}
+    \State Submit LoadSingleData(Index) to executor
+\EndFor
+\For{each completed Future from executor}
+    \State Data $\gets$ Future.result()
+    \State Append Data to BatchData
+\EndFor
+\State \Return BatchData
+\end{algorithmic}
+\end{algorithm}

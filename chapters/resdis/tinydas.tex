@@ -35,7 +35,31 @@ GPU TDP & & 350 W \\
 
 \subsection{Experiment 1: Model training}
 
-All models are trained using the ADAM optimizer.
+As we can see in the table ...
+
+\begin{table}[!htbp]
+\centering
+%\small
+\begin{tabular}{@{}l*{4}{l}@{}}
+\toprule
+\textbf{Parameter} & \textbf{AE} & \textbf{CAE} & \textbf{VAE} & \textbf{CVAE}\\
+\midrule
+Epochs & \multicolumn{4}{c}{200} \\
+Batch Size & \multicolumn{4}{c}{512} \\
+Optimizer & \multicolumn{4}{c}{ADAM} \\
+Learning rate & \multicolumn{4}{c}{0.00042} \\
+Loss function & \multicolumn{2}{c}{MSE} & \multicolumn{2}{c}{MSE + KL} \\
+Latent dim & \multicolumn{4}{c}{32} \\
+Hidden layers & \multicolumn{4}{c}{[1024, 512, 128, 64]} \\
+Dropout (p) & \multicolumn{4}{c}{0.0} \\
+Early stopping patience & \multicolumn{4}{c}{5} \\
+Early stopping min delta & \multicolumn{4}{c}{0.005} \\
+\bottomrule
+\end{tabular}
+\caption{Hyperparameters for all models}
+\label{tab:hyperparameters}
+\end{table}
+
 
 \begin{table}[!htbp]
     \centering
@@ -44,33 +68,19 @@ All models are trained using the ADAM optimizer.
         \textbf{Metric} & \textbf{AE} & \textbf{CAE} & \textbf{VAE} & \textbf{CVAE} \\
         \hline
         Reconstruction Error* & 0.045 & 0.032 & 0.038 & 0.029 \\
-        Latent Space Dimension Size & 64 & 128 & 64 & 128 \\
         Median time p/epoch(s) & 120 & 180 & 150 & 210 \\
+        Epochs before stop & 30 & 20 & 15 & 15 \\
         \hline
     \end{tabular}
     \caption{Comparison of Autoencoder Performance\\ *The Reconstruciton error is the sum of all reconstruction errors across all batches.}
     \label{tab:autoencoder_comparison}
 \end{table}
 
-\subsubsection{Loss Functions}
 
-Each autoencoder type utilizes a different loss function, as outlined in Table \ref{tab:loss_functions}.
+\subsubsection{Loss Values}
 
-\begin{table}[!htbp]
-    \centering
-    \begin{tabular}{ll}
-        \hline
-        \textbf{Model Type} & \textbf{Loss Function} \\
-        \hline
-        AE & \acrshort{mse} \\
-        CAE & \acrshort{mse} \\
-        VAE & \acrshort{mse} + KL Divergence \\
-        CVAE & \acrshort{mse} + KL Divergence \\
-        \hline
-    \end{tabular}
-    \caption{Loss Functions for Different Autoencoder Types}
-    \label{tab:loss_functions}
-\end{table}
+The following is a list of how the losses changed over time...
+
 
 \begin{figure}[!h]
   \begin{subfigure}[t]{.5\textwidth}
@@ -104,8 +114,7 @@ Each autoencoder type utilizes a different loss function, as outlined in Table \
 \subsubsection{Reconstruction Capabiltites}
 
 \begin{figure}[!h]
-    \centering
-    
+    \centering    
     % Row 0 (Image Names)
     \begin{subfigure}{0.33\textwidth}
         \centering

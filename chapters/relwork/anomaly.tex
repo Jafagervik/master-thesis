@@ -1,11 +1,49 @@
 \section{Anomaly Detection}
 \label{relwork:anomaly}
 
+Anomaly detection, or outlier detection as it is often referred as, has gone through many iterations throughout the year, and has been a stable problem to test different statistical and artificial models on. \\ 
 
-Anomaly detection, sometimes referred to as outlier detection, is highly relevant within \acrshort{das} research. In 2017, several classical \acrshort{ml} techniques such as Gaussian Mixture Model (GMM), Hidden Markov Model (HMM), Naive Bayes (NB), and Restricted Boltzmann Machine (RBM) are being compared to discriminative models including \acrshort{ann}s \cite{app7080841}. Variations of isolation forests is shown to be able to perform fault detection for mining conveyors\cite{WIJAYA2022110330}. \\
 
-As previously mentioned in chapter \ref{chap:introduction}, label-free anomaly detection has the advantage of requiring a lot less manual labour and can be adapted to multiple datasets. A model that require only normal-state data, utilizing both autoencoders in combination with the K-means clustering technique, have proven to yield great results, even beating supervised methods \cite{s23084094}. \\ 
+\subsection{ML and clustering based Techniques}
 
-a, \cite{10.14778/3538598.3538602} \cite{10.1145/3444690}.
+The most commonly used algorithms regarding machine learning have traditionally been centered around Kmeans clustering, K nearest neighbors, and  Support Vector machines \cite{10.14778/3538598.3538602, 10.1145/3444690}. These have proven to be efficient especially when dealing with unlabeled data. These clustering techniques are good at outlining groups grouping them, and finding outliers while dealing with them. One article found k means to be a great choice when dealing with traffic analysis and detection \cite{7507933}. Others have looked at svms as another solid option when dealing with anomaly detection \cite{10.1007/978-3-540-28647-9_97}. Omar (et al 2013) \cite{omar2013machine} looked in general at machine learning techniques such as SVMs, k means, decision trees and bayesian networks, and found that supervised ones generally outperforms their unsupervised counterparts when the types of anomalies where known beforehand, but struggle with novel anomalies. \\ 
 
-These papers show how anomaly detection on \acrshort{das} data is highly relevant, and how . However, they do not necessarily concern themselves with available computational power, overall memory consumption, or how to optimize these algorithms for real-time environments, where not only accuracy and fault tolerance, but also inference speed is of utmost importance.
+Alongside well known clustering techniques such as k means and knn, \acrfull{dbscan}, first published in 1996 \cite{10.5555/3001460.3001507} is a well-known clustering technique suited for outlier detection in multidimensional datasets. Its still being researched and improved as of this date for multivariate time series \cite{waltz2024time}, and has numerous implementations in different frameworks and languages. 
+
+An improvement of the original \acrshort{dbscan} can be found in the \acrfull{hdbscan}, first introduced in 2013 \cite{10.1007/978-3-642-37456-2_14}. This algorithm performs a regular dbscan over multiple $\epsilon$ values and integrates the result to find the optimal solution. Like its predecessor, it has several implementations available \cite{McInnes2017}, and just like dbscan, it works well for clustering and anomaly detection tasks. \\
+
+
+
+
+\subsection{DL and autoencoders AD}
+
+
+Vae for time series \cite{desai2021timevae}
+
+With the introduction of deep neural networks, several newer algorithms have been introduced as possible solutions to anomaly detection. Just like the machine learning algorithms, the supervised or semi supervised algorithms tend to outperform their unsupervised counterparts, but struggle to find novel outliers. 
+
+
+
+One issue of concern is online long-distance distributed monitoring applications. By using a combination of a ResNET with a convolutional block attention module (CBAM), one paper is able to achieve real-time inference time cost as low as 3.3ms per sample \cite{photonics9100677}, while still averaging a high accuracy, even for multi-scenario scences. 
+
+
+\subsection{Other DL Approaches}
+
+
+LSTM based gan with attention \cite{bashar2023algan} 
+
+Unsupervised pretraining \cite{alaaDeepLstm2019}
+
+Anomaly detection semi supervised \cite{huang2021esad}
+
+Fault detection with LSTM VAE for maritime \cite{9514856} 
+
+GANS are a fun thing \cite{jiang2023unsupervised}
+
+iain goodfellow gan \cite{goodfellow2016nips}
+
+lstm vae gan \cite{s20133738}
+
+
+% The most relevant as of now might be \cite{s21196627} which directly looks at  data and deep learning models
+

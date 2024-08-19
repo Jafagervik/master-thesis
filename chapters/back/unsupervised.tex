@@ -40,6 +40,22 @@ Linear layers have several advantages, such as computational efficiency, flexibi
 
 However, linear layers have several limitations. Due to their inherent linearity, they are prone to overfitting and struggle to capture complex relationships in data. This can limit their ability to extract more complex features, potentially reducing some of the model's discriminative power. Furthermore, the size of linear layers can become problematic, especially in fully connected dense neural networks. Each neuraon connection between layers requires storing weights and biases, which increases the overall model size. This can create bottlenecks for many hardware accelerators, such as \acrshort{gpu}s, when dealing with large models.
 
+\subsubsection{Early Stopping}
+
+Overfitting is a common problem within \acrlong{ml}. It occurs when a model is trained , and fails to fit additional data. \textit{Early Stopping} is a regularization technique that aims to avoid such issue. When training an optimizer, such as \acrshort{adam} or \acrshort{sgd}, we can notice when a model is overfitting by studying the validation loss. If we notice an increase of validation loss, the early stop mechanism will stop the training altogether if no improvement of optimal validation loss is found after $p$ amount of epochs. The validation loss is commonly used to evaluate the hyperparameters of a model, and ac 
+
+
+\begin{align*}
+&\text{Stop at epoch } T \text{ if:} \\
+&\forall i \in \{T-p+1, ..., T\}: L_t(i) > L_t^* - \epsilon \\
+&\text{where } L_t^* = \min_{j=1}^{T} L_t(j) \\
+\\
+&\text{Given:} \\
+&L_t(t) \text{ is the train loss at epoch } t \\
+&p \text{ is the patience (number of epochs to wait)} \\
+&\epsilon \text{ is a small threshold for improvement}
+\end{align*}
+
 \subsection{Parallelism within \acrlong{ml}}
 
 With rapid evolving deep learning architectures, the importance of scalable model training and networks grows larger each year. It is even estimated that these networks grow 1,5x each year \cite{9499913}, making parallelization a vital topic when it comes to \acrlong{ml} to accommodate ever increasing memory needs. Several different hardware accelerators have been created to best accommodate these needs, the most apparent of these are \acrshort{gpu}s. NVIDIA have for several years dominated this market, and their hardware is becoming faster and increasing in memory. \\

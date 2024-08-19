@@ -1,13 +1,16 @@
-\section{Digital Signal Processing}
+\section{Digital Signal Processing Techniques for \acrshort{das} data}
 \label{back:dsp}
 
-The field of \acrfull{dsp} has been researched since the dawn of time. Signals are all around us, and we do have the means to gather and store the data, but how do we process it more efficiently to be able to analyze and interpret the data in a fast and efficient manner?
+The field of \acrshort{dsp} has been researched since the dawn of time. Signals are all around us, and we do have the means to gather and store the data, but how do we process it more efficiently to be able to analyze and interpret the data in a fast and efficient manner?
 
 When working with \acrshort{das} data in particular, we want to filter the data to remove noise, and get cleaner outputs to work with. A common way to remove signals outside of a range are called High-pass filters and Low-pass filters. 
 
 A high-pass filter is a function that only allows frequencies above a certain threshold $T$ to be accepted, while a low-pass filter only accepts frequencies lower than $T$. A band-pass filter on the other hand, only allows frequencies within a certain range to be accepted.
 
-\begin{figure}[h]
+
+
+
+\begin{figure}[!h]
 \centering
 \begin{tikzpicture}
 \begin{axis}[
@@ -50,7 +53,7 @@ A high-pass filter is a function that only allows frequencies above a certain th
 \subsection{Tukey Window}
 \label{dsp:tukey}
 
-Window functions are function often used in \acrshort{dsp} to avoid artifacts. This is done by setting values oytside a pre-defined interval to zero and apply a taper from the pass-band to the first zero-value. The Tukey window, also known as the \textit{cosine-tapered window} is one of the more popular window methods, and its mathematical function is described as such: 
+Window functions are function often used in \acrshort{dsp} to avoid artifacts. This is done by setting values outside a pre-defined interval to zero and apply a taper from the pass-band to the first zero-value. The Tukey window \cite{tukey1967introduction}, also known as the \textit{cosine-tapered window} is a commonly used approach to reduce edge effects, and is defined as follows:
 
 \[
     w(x)= 
@@ -66,15 +69,50 @@ This window becomes a rectangle when $\alpha = 0$.
 
 \subsection{Resampling}
 
+Resampling is an important operation within the \acrshort{dsp} field
 Also known as sampling-frequency conversion, resampling is the act of modifying the sampling rate of a discrete signal to obtain a new discrete representation of this data. For signal data, lots of samples are usually recorded, but the amount needed to perform calculations or observe patterns does not require this much data. Thus, one can downsample the data to decrease memory usage for storage, as well as time for processing this data. \\
+
+\begin{equation}
+\begin{aligned}
+y[m] &= \sum_{l=0}^{L-1} \sum_{n=0}^{\lfloor(N-1-l)/L\rfloor} h_l[n] \cdot x\left[\left\lfloor\frac{mM+l}{L}\right\rfloor - n\right] \\[10pt]
+\text{where } &h_l[n] = h[nL + l], \quad l = 0, 1, \ldots, L-1
+\end{aligned}
+\label{eq:resample}
+\end{equation}
 
 \subsubsection{Parallel Matrix Resampling}
 
-Matrices can be resampled by resampling each vector either row-wise or column-wise. Consequentially, the resulting outputs can be concatenated into a new matrix. These types of matrix operations can be classified as trivial parallelizable, either by using multiple threads or processes. In either case, $n$ workers are created, where each of them get an almost equal amount of vectors to resample, and a \texttt{gather} procedure is then performed to create the output matrix. This is further illustrated in figure \ref{fig:parres}.
+Matrices can be resampled by resampling each vector either row-wise or column-wise. Consequentially, the resulting outputs can be concatenated into a new matrix. These types of matrix operations can be classified as trivial parallelizable, either by using multiple threads or processes. In either case, $n$ workers are created, where each of them get an almost equal amount of vectors to resample, and a \texttt{gather} procedure is then performed to create the output matrix. This operation can be described as follows:
 
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.8\linewidth]{figures/parallel_resample.png}
-    \caption{Showcase of how columnwise resampling of a matrix can be parallellized}
-    \label{fig:parres}
-\end{figure}
+
+\[
+A = \begin{bmatrix}
+a_{11} & a_{12} & \cdots & a_{1n} \\
+a_{21} & a_{22} & \cdots & a_{2n} \\
+\vdots & \vdots & \ddots & \vdots \\
+a_{m1} & a_{m2} & \cdots & a_{mn}
+\end{bmatrix}
+\]
+
+%\vspace{1cm}
+
+\begin{center}
+Resample each column in parallel
+\end{center}
+
+%\vspace{0.5cm}
+
+\[
+B = \begin{bmatrix}
+b_{11} & b_{12} & \cdots & b_{1n} \\
+b_{21} & b_{22} & \cdots & b_{2n} \\
+\vdots & \vdots & \ddots & \vdots \\
+b_{h1} & b_{h2} & \cdots & b_{hn}
+\end{bmatrix}
+\]
+
+In the equation above, $A$ is the input matrix of size $m \times n$.  $B$ is the resultant matrix, where $h$ is calculated as follows: 
+
+$$h = m \times rate = m \times \dfrac{F_{target}}{F}$$
+
+$m$ is the number of rows, which in the case of a \acrshort{das} signal where the channels are stored column-wise, can be defined by the sample frequency $F$ multiplied by the signal duration $dur$ in seconds.

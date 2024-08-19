@@ -1,7 +1,6 @@
 class Trainer:
     def __init__(self, model: BaseAE, dataloader: DataLoader,
-        optimizer: Optimizer, **kwargs):
-    ...
+        optimizer: Optimizer, **kwargs): ...
 
     @TinyJit
     def train_step(self, x: Tensor, f: Callable[[Tensor], Tensor]) -> Tensor:
@@ -23,8 +22,8 @@ class Trainer:
             with Timer() as t:
                 for data in self.dataloader:
                     running_loss += self.train_step(data, reshape_fn).item()
+                    
             self.losses[epoch] = running_loss
-
             printing(epoch, self.epochs, running_loss, t.interval)
 
             if running_loss < self.best_loss:

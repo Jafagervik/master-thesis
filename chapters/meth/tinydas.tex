@@ -138,28 +138,24 @@ The \texttt{Dataset} and \texttt{DataLoader} classes supports reading in \acrsho
 
 \subsubsection{Early Stopping}
 
-Even though the model loss ideally should decrease to eventually reach zero almost immediately, this is never the case. Overfitting is when the loss starts increasing, never to return to its best value. To avoid spending time and resources on unnecessary training, we implement a useful mechanism called early stopping, which is described as follows:
+As of now, we do not use a validation dataset for our training, so we will instead be using the training loss as a trigger. This will of course not allow us to analyze our hyperparameters, but will 
 
+\lstinputlisting[language=Python, label={cods:es}, caption=Early Stopping Mechanism]{code/es.py}
 
-\begin{align*}
-&\text{Stop at epoch } T \text{ if:} \\
-&\forall i \in \{T-p+1, ..., T\}: L_t(i) > L_t^* - \epsilon \\
-&\text{where } L_t^* = \min_{j=1}^{T} L_t(j) \\
-\\
-&\text{Given:} \\
-&L_t(t) \text{ is the train loss at epoch } t \\
-&p \text{ is the patience (number of epochs to wait)} \\
-&\epsilon \text{ is a small threshold for improvement}
-\end{align*}
+For each epoch in our training lop
 
 \subsubsection{Trainer}
 
-The Trainer class serves as the core component of our program. As demonstrated in listing \ref{fig:lstmcell}, it integrates a model, dataloader, and optimizer to execute the training process. Additionally, it handles early stopping, storing history of losses and saving the best model for further use.
+The Trainer class serves as the core component of our program. As demonstrated in listing \ref{fig:lstmcell}, it integrates a model, dataloader, and optimizer to execute the training process. Additionally, it handles early stopping, storing history of losses and saving the best model for further use. The core functions of the \texttt{Trainer} class is shown in code listing \ref{code:trainer}.
 
-\lstinputlisting[language=Python]{code/trainer.py}
+\lstinputlisting[language=Python, caption=Core function snippets of the \texttt{Trainer} class, label={code:trainer}]{code/trainer.py}
+
+One of the more important aspects of this class is the \texttt{train} function, which leverages the \acrshort{jit} compiler to replay this kernel for each iteration, resulting in faster training times. Furthermore, the \texttt{reshape\_fn} lambda function allows us to reshape data based on if our model is convolutional or not. For convoluional models, input should be $[BS, C, H, W]$ and $[BS, H, W]$ for models with linear input, where $BS$ is batch size, $C$ is amomunt of channels (always 1 for our \acrshort{das} data), and $H$ and $W$ is height and width of the matrix. This is not done in the model itself due to some instability with the \texttt{Tinygrad} \acrshort{api}. We continuously check and store the trainable parameters of the best performing models.
 
 
-\subsubsection{Usage}
+\subsection{Usage}
+
+\subsubsection{Training}
 
 In the same way that \texttt{Judas} is designed, we want \texttt{TinyDAS} to be modular and easy to use. We've designed components in a way that is familiar to that of \texttt{Pytorch}. Models can be trained using the following script:
 
@@ -169,18 +165,32 @@ We allow for \texttt{Float16} training by type casting all weights and biases in
 
 \subsubsection{Hyperparameters and configurations}
 
-All hyperparameters for the different models are stored in separate YAML files. A list of hyperparameters used can be found in the appendix \ref{app:configs}.
+Hyperparameters for the different models are stored in separate YAML files. A full overview can be found in appendix \ref{app:configs}.
+
+
+\subsubsection{Anomaly Detection}
+
+After having trained the models on normal signal data, we move on to the anomaly detection section of our program. As mentioned in \ref{back:anomdet}, first decide which types of anomalies are to be found. We decided to first of all split the files into smaller files of \qty{5}{\si{\second}} files, partially to fascilitate for faster inference of our model. We decide to look at the whole array as whole, instead of finding segments. We will be calculating precisions, recalls and f1scores to find a threshold for reconstruction loss of our data to determine whether or not the data is anomalous. In code listing \ref{code:th}, a function for finding this threshold is presented.  \\
+
+\lstinputlisting[language=Python, caption=Code for finding the best threshold, label={code:th}]{code/bestth.py}
+
+By finding the optimal threshold, we can utilize this in an online environment, preprocessing incoming \acrshort{das} data to fit our model and mark the data as anomalous if \lstinline[language=Julia]{reconstruction_error > threshold}. 
+
+Clustering + LabelFree Detection for discussion? reconstruction error per cell and a clustering algorithm could find where in the signal the anomaly is found
 
 \subsection{Evaluation}
 
-We will be splitting the evaluation of the models in two sections. The first section will focus more on overall model training. Here is a list of points to be evaluated: 
+We will be separating the evaluation of \texttt{TinyDAS} into two sections. The first section will focus more on overall model training. Here is a list of points to be evaluated: 
 
 \begin{itemize}
     \item \textbf{Experiment 1}: Median training time and model sizes, and losses
     \item \textbf{Experiment 2}: Reconstruction Capabilities
 \end{itemize}
 
-The second section will revolve around anomaly detection based on the different architectures. There are several different methods to evaluate the effectiveness and accuracy of models designed for anomaly detection. A very common pattern is to measure predicted results up against some ground truths, and construct a confusion matrix based on the result. From this confusion matrix, the following metrics will be used. \\ 
+The second section will revolve around anomaly detection based on the different architectures. There are several different methods to evaluate the effectiveness and accuracy of models designed for anomaly detection. A very common pattern is to measure predicted results up against some ground truths, and construct a confusion matrix based on the result. As we saw in listing \ref{code:thresh}. To be able to evaluate the model, we first label ground truths. This is done by iterating over files in a dataset, marking indices of anomalous data to a text file. Furthermore, we will be constructing a confusion 
+
+From this confusion matrix, the following metrics will be used. \\ 
+
 
 The True Positive Rate (TPR), also known as recall calculated the percentage of truths calcualted out of all ground truths. TP is true positives, and FN is false negatives. 
 

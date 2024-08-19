@@ -1,48 +1,59 @@
+
 \chapter{Packages Used}
 \label{app:packages}
 
 \section{Judas}
 \label{app:jupacks}
 
-\begin{table}[h]
-\begin{tabular}{|l|l|}
-\hline
-\textbf{Name}  & \textbf{Description}                             \\ \hline
-Flux           & AI library                                       \\ \hline
-CUDA           & NVIDIA CUDA programming                          \\ \hline
-DSP            & Digital Signal Processing                        \\ \hline
-DataFrames     & Working with Dataframes                          \\ \hline
-JLD2           & Saving and loading of models                     \\ \hline
-HDF5           & HDF5 wrapper for Julia                           \\ \hline
-LinearAlgebra  & Linear Algebra package                           \\ \hline
-Statistics     & Distrbiutions and common functions               \\ \hline
-Mmap           & Memory mapped I/O for working with large arrrays \\ \hline
-Distributed    & Parallel computing in Julia                      \\ \hline
-FFTW           & FFTW wrapper for Julia                           \\ \hline
-Dates          & Datetime library                                 \\ \hline
-Plots          & Plotting utilities                               \\ \hline
-Colors         & Extra colorschemes for plots                     \\ \hline
-BenchmarkTools & Benchmark tools and utilities                    \\ \hline
-SymPy          & Julia wrapper for working with symbolic notation \\ \hline
+\begin{table}[!htbp]
+\centering
+\caption{Packages used in Judas}
+\label{tab:judas-packages}
+\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.25\textwidth}>{\raggedright\arraybackslash}p{0.65\textwidth}}
+\toprule
+\textbf{Package Name} & \textbf{Description} \\
+\midrule
+\rowcolor{gray!10} Flux & AI library \\
+CUDA & NVIDIA CUDA programming \\
+\rowcolor{gray!10} DSP & Digital Signal Processing \\
+DataFrames & Working with Dataframes \\
+\rowcolor{gray!10} JLD2 & Saving and loading of models \\
+HDF5 & HDF5 wrapper for Julia \\
+\rowcolor{gray!10} LinearAlgebra & Linear Algebra package \\
+Statistics & Distributions and common functions \\
+\rowcolor{gray!10} Mmap & Memory mapped I/O for working with large arrays \\
+Distributed & Parallel computing in Julia \\
+\rowcolor{gray!10} FFTW & FFTW wrapper for Julia \\
+Dates & Datetime library \\
+\rowcolor{gray!10} Plots & Plotting utilities \\
+Colors & Extra colorschemes for plots \\
+\rowcolor{gray!10} BenchmarkTools & Benchmark tools and utilities \\
+SymPy & Julia wrapper for working with symbolic notation \\
+\bottomrule
 \end{tabular}
 \end{table}
 
 \section{TinyDAS}
 \label{app:tinypacks}
 
-\begin{table}[h]
+\begin{table}[!htbp]
 \centering
-\begin{tabular}{|l|l|}
-\hline
-\textbf{Name}  & \textbf{Description}         \\ \hline
-tinygrad 0.9          & AI library            \\ \hline
-pytorch 2.4          & AI library             \\ \hline
-sklearn       & Scientific computing         \\ \hline
-h5py           & HDF5 File utilities          \\ \hline
-pyyaml         & YAML File parsing            \\ \hline
-numpy          & Numeric programming          \\ \hline
-seaborb        & Confusion Matrices\\ \hline
-matplotlib     & Data visulization \\ \hline
+\caption{Packages used in TinyDAS}
+\label{tab:tinydas-packages}
+\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.25\textwidth}>{\raggedright\arraybackslash}p{0.65\textwidth}}
+\toprule
+\textbf{Package Name} & \textbf{Description} \\
+\midrule
+\rowcolor{gray!10} tinygrad 0.9 & AI library \\
+pytorch 2.4 & AI library \\
+\rowcolor{gray!10} sklearn & Scientific computing \\
+h5py & HDF5 File utilities \\
+\rowcolor{gray!10} pyyaml & YAML File parsing \\
+numpy & Numeric programming \\
+\rowcolor{gray!10} seaborn & Confusion Matrices \\
+matplotlib & Data visualization \\
+\bottomrule
 \end{tabular}
-\caption{List of }
 \end{table}
