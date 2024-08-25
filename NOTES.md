@@ -98,3 +98,29 @@ goodfellow2014generative - gan
 s20133738 - lstm vaegan for time series ad
 8942842 - a novel lstm gan algo for time series det
 bashar2023algan - time series ad with adjusted lstm gan
+
+
+flytt info om dataset til eksperiment delen?
+
+METODE
+    Overview
+    Judas
+    JudasNET
+    TinyDAS
+Experiments 
+    Eksperiment () m/ result setup diskuter med datasettene
+        1. Banenor
+        2. Foresee
+
+related work in background?
+
+alternativt splitt diskusjon i 2
+
+Diskusjon
+    Experiment 1
+    Experiment 2
+    
+    Judas:
+    Tinydas
+
+    Goals and Research Goals and overall

@@ -1,9 +1,35 @@
-\chapter{Judas: Experiment Setup}
+\chapter{Judas}
 \label{app:judas}
 
-\begin{figure}[h]
-    \centering
-    \lstinputlisting[language=Julia]{code/judastest.jl}
-    \caption{Mnist in Julia}
-    \label{fig:juliamnist}
-\end{figure}
+
+\section{Packages Used}
+\label{app:jupacks}
+
+\begin{table}[!h]
+\centering
+\caption{Packages used in Judas}
+\label{tab:judas-packages}
+\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.25\textwidth}>{\raggedright\arraybackslash}p{0.65\textwidth}}
+\toprule
+\textbf{Package Name} & \textbf{Description} \\
+\midrule
+\rowcolor{gray!10} Flux & AI library \\
+CUDA & NVIDIA CUDA programming \\
+\rowcolor{gray!10} DSP & Digital Signal Processing \\
+DataFrames & Working with Dataframes \\
+\rowcolor{gray!10} JLD2 & Saving and loading of models \\
+HDF5 & HDF5 wrapper for Julia \\
+\rowcolor{gray!10} LinearAlgebra & Linear Algebra package \\
+Statistics & Distributions and common functions \\
+\rowcolor{gray!10} Mmap & Memory mapped I/O for working with large arrays \\
+Distributed & Parallel computing in Julia \\
+\rowcolor{gray!10} FFTW & FFTW wrapper for Julia \\
+Dates & Datetime library \\
+\rowcolor{gray!10} Plots & Plotting utilities \\
+Colors & Extra colorschemes for plots \\
+\rowcolor{gray!10} BenchmarkTools & Benchmark tools and utilities \\
+SymPy & Julia wrapper for working with symbolic notation \\
+\bottomrule
+\end{tabular}
+\end{table}

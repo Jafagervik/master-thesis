@@ -26,36 +26,6 @@ In comparison to Emerald, Judas now contains methods for signal processing and g
     \label{fig:apiflow}
 \end{figure}
 
-\subsection{Dataset}
-
-Following our previous work, we will now be working with a dataset provided by BANENOR, specifically a train route between Trondheim and Støren with recorded values from the 31th of August 2021\footnote{Working with national infrastructure requires security clearance, see \ref{app:conf} for more details}. 
-
-\begin{table}[!htbp]
-    \centering
-    \small
-    \begin{tabular}{@{}p{0.3\textwidth}p{0.4\textwidth}p{0.2\textwidth}@{}}
-        \toprule
-        \textbf{Parameter} & \textbf{Value} & \textbf{Unit} \\
-        \midrule
-        Experiment & 210830\_NTNU\_Bane\_NOR\_GL8De4F2000 & \\
-        File timestamp & 2021-08-31 10:00:01 & \\
-        Type of data & Phase rate per distance & rad/m/s \\
-        Sampling frequency & 2000.0 & \si{\hertz} \\
-        Channel distance & 4.0852 & \si{\meter} \\
-        \midrule
-        Data shape & 20000 samples \(\times\) 12500 channels & \\
-        \midrule
-        Gauge length & 8.170401526197452 & \si{\meter} \\
-        Sensitivities & 9.362208901094029e6 & r \\
-        Regions of interest (ROI) & 1:4:49996 & \\
-        \bottomrule
-    \end{tabular}
-    \caption{BANENOR Experiment Data Summary}
-    \label{tab:experiment_data}
-\end{table}
-
-As we can see in table \ref{tab:experiment_data}, the total distance of this dataset is approximately 50km, where data from every 4th sensor across the route is stored. Each file contains 10 seconds of data, storing a $20000 \times 12500$ alongside relevant metadata, where each element is of type \texttt{Float32}, giving us a total of \qty{8}{\giga\byte} to be stored for every 10 seconds. To address these challenges, we will explore how resampling and channel decimation can reduce memory usage while preserving the most critical aspects of our signal data. \\
-
 
 \subsection{Preprocessing functions}
 
@@ -141,11 +111,3 @@ To run this code, we can either add processes within the program with the \textt
 
 In addition to the methods we've described in detail, there exist multiple helper methods for plotting and reading/writing \acrshort{das} data. \texttt{Judas.jl} v1.1.0 is currently available for use for members at \acrshort{cgf}. 
 
-\subsection{Evaluation}
-
-In order to evaluate the improvements and additions to this package, we will be performing benchmarks both on individual functions, as well as the overall runtime of a realistic usecase. We will also showcase heatmaps generated after loading the \acrshort{das} data. Hereby is a list of different experiments to be conducted:
-
-\begin{itemize}
-    \item \textbf{Experiment 1}: Parallel Resample function
-    \item \textbf{Experiment 2}: Loading and Processing \acrshort{das} data
-\end{itemize}

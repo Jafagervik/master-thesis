@@ -1,0 +1,67 @@
+\section{Experiment 1: BANENOR}
+
+
+\subsection{Dataset}
+
+
+Our first experiment revolves around a \acrshort{das} dataset on a a train route between Trondheim and Storen, and is owned by BANENOR. The dataset spans the entirety of the 31st of August 2021\footnote{Working with national infrastructure requires security clearance, see \ref{app:conf} for more details}. The full route between Trondheim and Storen can be seen in appendix \ref{app:judas}. All the data is stored in hdf5 files.
+
+\begin{table}[!htbp]
+    \centering
+    \small
+    \begin{tabular}{@{}p{0.3\textwidth}p{0.4\textwidth}@{}}
+        \toprule
+        \textbf{Parameter} & \textbf{Value} \\
+        \midrule
+        Experiment & 210830\_NTNU\_Bane\_NOR\_GL8De4F2000  \\
+        File timestamp & 2021-08-31 10:00:01  \\
+        Type of data & Phase rate per distance (rad/m/s) \\
+        Sampling frequency & \qty{2000}{\si{\hertz}} \\
+        Window duration & \qty{10}{\si{\second}} \\
+        Channel distance & \qty{4.0852}{\si{\meter}} \\
+        \midrule
+        Data shape & 20000 samples \(\times\) 12500 channels  \\
+        \midrule
+        Gauge length & \qty{8.1704}{ \si{\meter}} \\
+        Sensitivities & \qty{9.3622e6}{\si{\radian}
+        }\\
+        Regions of interest (ROI) & 1:4:49996 \\
+        \bottomrule
+    \end{tabular}
+    \caption{BANENOR Experiment Data Summary}
+    \label{tab:experiment_data}
+\end{table}
+
+
+As we can see in table \ref{tab:experiment_data}, the total distance of this dataset is approximately 50km, where data from every 4th sensor across the route is stored. Each file contains 10 seconds of data, storing a $20000 \times 12500$ alongside relevant metadata, where each element is of type \texttt{Float32}, giving us a total of \qty{8}{\giga\byte} to be stored for every 10 seconds.  \\
+
+\subsection{Evaluation}
+
+In order to evaluate the improvements and additions to this package, we will be performing benchmarks both on individual functions, looking at the overall runtime of a realistic use-case.  
+\paragraph{Parallel Resample function}We compare the parallel resampling method to a serial approach. Our input matrix will be a 5 minute DAS dataframe, with an effective ROI of [1:124:12499] giving an effective channel distance of \qty{200}{\si{\meter}}. The benchmark code can be found in.
+
+\paragraph{Loading and Processing \acrshort{das} data}A full test from start to finish will be conducted. The experiment code can be found in \ref{app:judas}.
+
+For both of these tests, speedups and parallel efficiency will be the main point of focus. We utilize different amounts of processes, and for the second benchmark, we compare
+
+
+\subsection{Experiment Setup}
+
+Due to national regulations, we will be performing all benchmarks on local servers belonging to \acrshort{cgf}. The system specifications can are all listed in the table below. \\
+
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Component} & \textbf{Specification} & \textbf{Details} \\
+\midrule
+Operating System & Ubuntu Linux & Version 20.04 LTS \\
+Processor & Intel Core i9-9940X & \qty{4.40}{\giga\hertz} \\
+RAM & 126 GB & DDR4-2400 MHz \\
+GPU & NVIDIA GeForce RTX 2080 Ti &  \qty{11}{\giga\byte} GDDR6 \\
+\bottomrule
+\end{tabular}
+\caption{System Specifications for Experimental Setup}
+\label{tab:cgfsetup}
+\end{table}

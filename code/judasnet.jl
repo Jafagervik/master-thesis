@@ -56,26 +56,27 @@ function model_loss(encoder, decoder, x)
     # KL-divergence
     kl_q_p = 0.5f0 * sum(@. (exp(2*logσ) + μ^2 - 1 - 2*logσ)) / batch_size
 
-    logp_x_z = -logitbinarycrossentropy(decoder_z, x, agg=sum) / batch_size
+    # Reconstruction loss
+    rec_loss = Flux.Losses.mse(x, decoder_z)
     
-    return -logp_x_z + kl_q_p
+    return rec_loss + kl_q_p
 end
 
 function convert_to_image(x, y_size)
     Gray.(permutedims(vcat(reshape.(chunk(x |> cpu, y_size), 28, :)...), (2, 1)))
 end
 
-# arguments for the `train` function 
+# Hyper parameters for the Autoencoder
 Base.@kwdef mutable struct Args
     η = 1e-3                # learning rate
     λ = 1e-4                # regularization paramater
     batch_size = 128        # batch size
     sample_size = 10        # sampling size for output    
     epochs = 20             # number of epochs
-    seed = 0                # random seed
-    use_gpu = true              # use GPU
+    seed = 5                # random seed
+    use_gpu = true          # use GPU
     input_dim = 28^2        # image size
-    latent_dim = 64          # latent dimension
+    latent_dim = 64         # latent dimension
     hidden_dim = 500        # hidden dimension
     verbose_freq = 10       # logging for every verbose_freq iterations
     tblogger = false        # log training with tensorboard
@@ -144,8 +145,4 @@ function train(; kws...)
                             "args", args)                            
         @info "Model saved: $(filepath)"
     end
-end
-
-if abspath(PROGRAM_FILE) == @__FILE__ 
-    train()
 end

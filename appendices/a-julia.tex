@@ -1,0 +1,27 @@
+\chapter{Julia}
+\label{app:julia}
+
+\section{CUDA in Julia vs C}
+\label{app:jlscicomp}
+
+\begin{figure}[!h]
+    \centering
+    \lstinputlisting[language=Julia]{code/jlcuda.jl}
+    \caption{Launching CUDA kernel in Julia. This can be run directly with the Julia compiler}
+    \label{fig:jlcuda}
+\end{figure}
+ 
+\begin{figure}[!h]
+    \centering
+    \lstinputlisting[language=C]{code/ccuda.c}
+    \caption{Launching CUDA kernel in C. This code can't be compiled without the NVIDIA compiler, and needs to be stored as a .cu file}
+    \label{fig:ccuda}
+\end{figure}
+
+\section{MNIST in Julia}
+
+\lstinputlisting[language=Julia, caption=MNIST in Julia, label={code:juliamnist}]{code/mnist.jl}
+
+\section{Autoencoder Julia Example}
+
+\lstinputlisting[language=Julia, caption=Dense Autoencoder with one hidden layer implemented in Julia using the \texttt{Flux.jl} package, label={code:judasnet}]{code/judasnet.jl}

@@ -13,7 +13,7 @@ DESC = 1e-4
 model = Chain(
     Dense(28*28, 256, relu),
     Dense(256, 10, relu), softmax
-)
+) |> gpu
 
 loss(x, y) = Flux.Losses.logitcrossentropy(model(x), y)
 optimizer = ADAM(DESC)
