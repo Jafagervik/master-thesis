@@ -1,13 +1,15 @@
 \section{Judas}
 \label{met:Judas}
 
+\subsection{Julia}
+
 \subsection{Overview}
 
-Judas, formerly known as Emerald \cite{projthesis}, is a Julia package we've created for internal use for members at \acrshort{cgf}. Our work started last fall, when we saw a limitation of current applications at \acrshort{cgf} for loading \acrshort{das} data from local servers into programs to be able to process and further analyze these data. We chose to write this package in Julia both due to its high performance, and members' familiarity with similar languages such as MatLab and Python. With Julia, we could draw strengths from its ecosystem and build systems to create an easy-to-use library for members to familiarize themselves with. We did so by starting off with a simple python program, that read multiple \acrshort{hdf5} files storing \acrshort{das} data into dataframes. From here, we parallellized certain parts of the code, and opted to store processed data in memory mapped files instead of loading large matrices into memory. This allowed us to work with more data at the same time, as well as decreasing the overall wall time and memory consumption.  
+Judas, formerly known as Emerald \cite{projthesis}, is a Julia package we've created for internal use for members at \acrshort{cgf}. Our work started last fall when we saw a limitation of current applications at \acrshort{cgf} for loading \acrshort{das} data from local servers into programs to be able to process and further analyze these data. We wrote this package in Julia due to its high performance and members' familiarity with similar languages such as MatLab and Python. With Julia, we could draw strengths from its ecosystem and build systems to create an easy-to-use library with which members can familiarize themselves. We started with a simple Python program that read multiple \acrshort{hdf5} files storing \acrshort{das} data into data frames. We parallelized certain parts of the code from here and stored processed data in memory-mapped files instead of loading large matrices into memory. This allowed us to work with more data at the same time, as well as decreasing the overall wall time and memory consumption.  
 
-In this section, we will be looking at what changes has been made ever since, from improvements of existent code, to new methods added and the availability of the library for members at \acrshort{cgf}. \\
+In this section, we will look at what changes have been made ever since, from improvements of existent code to new methods added and the availability of the library for members at \acrshort{cgf}. \\
 
-Judas is designed in a data oriented manner, without object oriented features. We split our program in 4 parts: loading \acrshort{das} data from \acrshort{hdf5} files, signal processing, matrix operations and utilities for plotting. A full overview over our package design can be seen in \ref{fig:judasoverview}.\\
+Judas is designed in a data-oriented manner without object-oriented features. We split our program into 4 parts: loading \acrshort{das} data from \acrshort{hdf5} files, signal processing, matrix operations, and utilities for plotting. A full overview of our package design can be seen in \ref{fig:judasoverview}.\\
 
 \begin{figure}[!h]
     \centering

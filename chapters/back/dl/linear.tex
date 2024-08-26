@@ -1,7 +1,7 @@
 \subsection{Fully Connected Neural Networks}
 \label{back:linear}
 
-\acrfull{fcnn} are fundamental networks used in many deep learning models. Also called dense-, or linear networks, they are characterized by all neurons between two layers being connected. 
+\acrfull{fcnn} are fundamental networks used in many deep learning models. Also called dense-, or linear networks, they are characterized by all neurons connected between two layers. 
 \begin{figure}[!h]
     \centering
     \includegraphics[width=0.5\linewidth]{figures/linearlayer.png}
@@ -12,7 +12,7 @@
 
 Linear layers perform a linear transformation on the input data, mapping an input vector to an output vector using learnable parameters. The operation can be defined as follows:
 \begin{equation}\label{f:wxb}
-    y = wx+b
+    \mathbf{y} = \mathbf{w}x+b
 \end{equation}
 Here, $x$ is the input vector, $W$ is the weight matrix, $b$ is the bias and $y$ is the output vector.
 
@@ -25,7 +25,7 @@ Here, $x$ is the input vector, $W$ is the weight matrix, $b$ is the bias and $y$
 
 Furthermore, an activation function such as $f$ is applied to the output to achieve nonlinearity. By applying $f$ to the output $y$, we now get the equation:
 \begin{equation}\label{f:fwxb}
-    y = f(wx+b)
+    \mathbf{y} = f(\mathbf{w}x+b)
 \end{equation}
 
 Some of the more popular activation functions include \cite{szandala2021review}: 
@@ -34,13 +34,13 @@ Some of the more popular activation functions include \cite{szandala2021review}:
     Relu(z) = max(0, z)
 \end{equation}
 
-Relu (Rectified Linear Unit) has been stated to be the most popular activation functions as late as 2018. Both it's forward and backward pass steps quickly, thus enabling more efficient training compared to other alternatives.
+Relu (Rectified Linear Unit) was stated to be the most popular activation function as late as 2018. Its forward and backward pass steps quickly, thus enabling more efficient training compared to other alternatives.
 
 \begin{equation}
     \sigma(z) = \frac{1} {1 + e^{-z}}
 \end{equation}
 
-The sigmoid activation is very popular to its very nature of its range being $(0,1)$ compared to other functions where the range is often broader. This makes it good at outputting probibalistic values.
+The sigmoid activation is very popular because its range is $(0,1)$, compared to other functions, where the range is often broader. This makes it good at outputting probabilistic values.
 
 \begin{equation}
     tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}} = \frac{1 - e^{-2x}}{1 + e^{-2x}}
