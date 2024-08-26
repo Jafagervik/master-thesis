@@ -1,42 +1,12 @@
-\section{TinyDAS}
+\section{FORESEE}
 \label{res:tinydas}
 
-In this section, we'l be looking at the results for both training our autoencoders, as well as testing our models on the test data mentioned in the method section.
 
-
-
-
-\subsection{Experiment 1: Model training}
+\subsection{Experiment \rnum{1}: Model training and Reconstruction}
 
 As we can see in the table ...
 
-\begin{table}[!htbp]
-\centering
-%\small
-\begin{tabular}{@{}l*{4}{l}@{}}
-\toprule
-\textbf{Parameter} & \textbf{AE} & \textbf{VAE} & \textbf{CAE} & \textbf{CVAE}\\
-\midrule
-Files & \multicolumn{4}{c}{25600} \\
-Input Shape & \multicolumn{4}{c}{$625 \times 2137$} \\
-Validation Split & \multicolumn{4}{c}{0.2} \\
-Epochs & \multicolumn{4}{c}{100} \\
-Batch Size & 512 & 512 & 64 & 64 \\
-Optimizer & \multicolumn{4}{c}{ADAM} \\
-Learning rate & \multicolumn{4}{c}{0.0001} \\
-Loss function & \acrshort{mse} & \acrshort{elbo} & \acrshort{mse} & \acrshort{elbo} \\
-Layer sizes & \multicolumn{2}{c}{$[1024, 512, 128, 64]$}  & \multicolumn{2}{c}{[1, 16, 8, 8]}\\
-Latent dim & \multicolumn{4}{c}{32} \\
-Datatype & FP16 & FP32 & FP16 & FP32 \\
-Model Sizes (\si{\giga\byte})& 2.71 & \textbf{0.00001159} & 5.183 & 0.335 \\
-%Dropout (p) & \multicolumn{4}{c}{0.0} \\
-Early stopping patience & \multicolumn{4}{c}{5} \\
-Early stopping min delta & \multicolumn{4}{c}{0.000005} \\
-\bottomrule
-\end{tabular}
-\caption{Hyperparameters for all models}
-\label{tab:hyperparameters}
-\end{table}
+
 
 
 \begin{table}[!htbp]
@@ -211,7 +181,7 @@ The following is a list of how the losses changed over time...
     \label{fig:aereconstruct}
 \end{figure}
 
-\subsection{Autoencoder Performance Comparison}
+\subsection{Experiment \rnum{2}: Anomaly Detection}
 
 An important part of analysing our autoencoders is the choice of metrics. Whereas loss and accuracy can provide proficient details about the model training itself, other metrics are better suited for analysing the 
 
@@ -219,7 +189,6 @@ Table \ref{tab:autoencoder_comparison} presents a comparative analysis of the fo
 
 
 
-\subsection{Performance Visualization}
 
 
 % Confusion Matrix Components Table

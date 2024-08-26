@@ -35,7 +35,8 @@ Our first experiment revolves around a \acrshort{das} dataset on a a train route
 
 As we can see in table \ref{tab:experiment_data}, the total distance of this dataset is approximately 50km, where data from every 4th sensor across the route is stored. Each file contains 10 seconds of data, storing a $20000 \times 12500$ alongside relevant metadata, where each element is of type \texttt{Float32}, giving us a total of \qty{8}{\giga\byte} to be stored for every 10 seconds.  \\
 
-\subsection{Evaluation}
+\subsection{Experiment \rnum{1}: Finding and Loading \acrshort{das} files}
+\subsection{Experiment \rnum{2}: Parallel Resampling}
 
 In order to evaluate the improvements and additions to this package, we will be performing benchmarks both on individual functions, looking at the overall runtime of a realistic use-case.  
 \paragraph{Parallel Resample function}We compare the parallel resampling method to a serial approach. Our input matrix will be a 5 minute DAS dataframe, with an effective ROI of [1:124:12499] giving an effective channel distance of \qty{200}{\si{\meter}}. The benchmark code can be found in.

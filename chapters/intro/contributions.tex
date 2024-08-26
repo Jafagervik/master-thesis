@@ -1,17 +1,25 @@
 \section{Contributions}
 
-In this thesis, we study processing and \acrshort{ai} based anomaly detection within \acrshort{das} data.
-Our work has led to several contributions, most notably:
+(Note to Ole)
+Goal: 
+    1. Develop, or improve tools that can process \acrshort{das} data and detect anomalies, both opensource and for CGF
+    
+RQ:
+    1. Is Float16 training sufficient for training \acrshort{das} data in the context of data reconstruction and anomaly detection
+    2. How does the different autoencoders compare, and can we make a convolutional variational autoencoder for das data
+
+In this thesis, we study processing and autoencoder-based anomaly detection within \acrshort{das} data. Our work has led to several contributions, including:
 
 \begin{itemize}
-    \item \textbf{Autoencoder-based anomaly detection}: We study the effectiveness of different autoencoders for anomaly detection on dense \acrshort{das} data. In particular, we explore how \acrshort{das} data can be classified as an image reconstruction problem, contrary to a time-series problem. Additionally, we discuss the effectiveness of half-precision training and inference.
-    \item \textbf{Julia for datascience and \acrshort{ai}}. We evaluate Julia as a programming language for developing highly performant programs and \acrshort{ai} programming.
-    \item \textbf{Software}. The following software has been produced as a part of this thesis:
+    \item \textbf{CVAE}: We present a \textit{novel} \acrfull{cvae} model for anomaly detection on \acrshort{das} data.
+    \item \textbf{Autoencoder-based anomaly detection}: We compare the effectiveness of different autoencoders for anomaly detection on dense \acrshort{das} data. In particular, we explore anomaly detection on \acrshort{das} data as an image reconstruction problem, contrary to a time-series problem. Additionally, we discuss the effectiveness of half-precision training and inference.
+    \item \textbf{Julia for datascience and \acrshort{ai}}: We evaluate Julia as a programming language for developing highly performant programs and \acrshort{ai} programming.
+    \item \textbf{Software}: The following software has been produced as a part of this thesis:
     \begin{itemize}
-        \item \textbf{Judas}. A software package developed in Julia for processing \acrshort{das} data. Initially introduced in our project thesis \cite{projthesis}, Judas is now fully operational but only available for members of \acrshort{cgf}. \\
-        \item \textbf{TinyDAS}. An open-source program written in Python, specifically designed for training and evaluation of autoencoder models, as well as performing anomaly detection on \acrshort{das} data \footnote{\href{github.com/Jafagervik/TinyDAS}{TinyDAS Repository}}. This program contains code and hyperparameters for 4 different autoencoders.  We establish how Tinygrad \cite{tinygrad} as a software package can be used to create hardware agnostic \acrshort{ai} programs that are scalable across multiple accelerators without changing source code. \\
-        \item \textbf{JudasNET}. An open-source repository with examples of autoencoders written in Julia \footnote{\href{github.com}{JudasNet}}.
+        \item \textbf{Judas}: A software package developed in Julia for processing \acrshort{das} data. Initially introduced in our project thesis \cite{projthesis}, Judas is now fully operational but only available for members of \acrshort{cgf}. 
+        \item \textbf{TinyDAS}: An open-source program written in Python, specifically designed for training and evaluation of autoencoder models, as well as performing anomaly detection on \acrshort{das} data \footnote{\url{github.com/Jafagervik/TinyDAS}}. This program contains code and hyperparameters for 4 different autoencoders.  We establish how Tinygrad \cite{tinygrad} as a software package can be used to create hardware agnostic \acrshort{ai} programs that are scalable across multiple accelerators without changing source code. 
+        \item \textbf{JudasNET}: An open-source repository with examples of autoencoders written in Julia \footnote{\url{github.com/Jafagervik/JudasNET}}.
     \end{itemize}
 \end{itemize}
 
-Overall, we seek to improve \acrshort{das} data processing and study the effectiveness of autoencoder models for anomaly detection on this data. In particular, we hope that members of \acrshort{cgf} can use and improve these tools to further \acrshort{das} research.
+Overall, we seek to improve \acrshort{das} data processing and compare the effectiveness of autoencoder models for anomaly detection on this data. In particular, we hope that members of \acrshort{cgf} can use and improve these tools to further \acrshort{das} research.

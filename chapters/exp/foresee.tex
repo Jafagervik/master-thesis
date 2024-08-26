@@ -1,4 +1,4 @@
-\section{Experiment 2: PUBDAS FORESEE}
+\section{FORESEE}
 
 \subsection{Dataset}
 
@@ -83,14 +83,43 @@ RESULT: SPEAK ABOUT 5 SECONDS FOR LIVE ENVIRONMENT.
 TODO: Inference data from 15042019!
 
 
-\subsection{Evaluation}
+\subsection{Experiment \rnum{1}: Median training and reconstruction}
+
+\begin{table}[!htbp]
+\centering
+%\small
+\begin{tabular}{@{}l*{4}{l}@{}}
+\toprule
+\textbf{Parameter} & \textbf{AE} & \textbf{VAE} & \textbf{CAE} & \textbf{CVAE}\\
+\midrule
+Files & \multicolumn{4}{c}{25600} \\
+Input Shape & \multicolumn{4}{c}{$625 \times 2137$} \\
+Validation Split & \multicolumn{4}{c}{0.2} \\
+Epochs & \multicolumn{4}{c}{100} \\
+Seed & \multicolumn{4}{c}{1337} \\
+Batch Size & 512 & 512 & 64 & 64 \\
+Optimizer & \multicolumn{4}{c}{ADAM} \\
+Learning rate & \multicolumn{4}{c}{0.0001} \\
+Loss function & \acrshort{mse} & \acrshort{elbo} & \acrshort{mse} & \acrshort{elbo} \\
+Layer sizes & \multicolumn{2}{c}{$[1024, 512, 128, 64]$}  & \multicolumn{2}{c}{[1, 16, 8, 8]}\\
+Latent dim & \multicolumn{4}{c}{32} \\
+Datatype & FP16 & FP32 & FP16 & FP32 \\
+Model Sizes (\si{\giga\byte})& 2.71 & \textbf{0.00001159} & 5.183 & 0.335 \\
+%Dropout (p) & \multicolumn{4}{c}{0.0} \\
+Early stopping patience & \multicolumn{4}{c}{5} \\
+Early stopping min delta & \multicolumn{4}{c}{0.000005} \\
+\bottomrule
+\end{tabular}
+\caption{Hyperparameters for all models}
+\label{tab:hyperparameters}
+\end{table}
+
+Seed 1337 is used after an interesting observation regarding its ability to make training converge faster \cite{picard2023torchmanualseed3407needinfluencerandom}. Even though we use Tinygrad and not Pytorch, we decide to try this.
+
+\subsection{Experiment \rnum{2}: Anomaly Detection}
 
 We will be separating the evaluation of \texttt{TinyDAS} into two sections. The first section will focus more on overall model training. Here is a list of points to be evaluated: 
 
-\begin{itemize}
-    \item \textbf{Experiment 1}: Median training time and model sizes, and losses
-    \item \textbf{Experiment 2}: Reconstruction Capabilities
-\end{itemize}
 
 The second section will revolve around anomaly detection based on the different architectures. There are several different methods to evaluate the effectiveness and accuracy of models designed for anomaly detection. A very common pattern is to measure predicted results up against some ground truths, and construct a confusion matrix based on the result. As we saw in listing \ref{code:thresh}. To be able to evaluate the model, we first label ground truths. This is done by iterating over files in a dataset, marking indices of anomalous data to a text file. Furthermore, we will be constructing a confusion 
 

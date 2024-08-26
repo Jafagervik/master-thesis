@@ -3,13 +3,20 @@
 
 \textit{Anomaly detection} is about identifying observations that can be deemed inconsistent with the rest of the dataset \cite{anomaly}. These anomalies can also be referred as outliers, surprises, exceptions, depending on domain. Anomaly detection can be used on all kinds of data, ranging from images to time-series data. There are 3 main types of anomalies, and those are \textit{point anomalies}, \textit{contextual anomalies} and \textit{collective anomalies}.
 
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.4]{figures/anolay_line.png}
+    \caption{Example of anomalies in a time series}
+    \label{fig:anomaly_example}
+\end{figure}
+
 While point anomalies target single instances that differ from the rest of the dataset, collective anomalies targets groups of instances that together form an anomaly. Contextual ones, as in the word, require context to determine whether or not an anomaly has been detected, and is typically found in time-series data.
 
 Anomaly detection can be performed in a lot of different ways. From common machine learning tasks such as K-means clustering \cite{7507933}, \Gls{svm} \cite{10.1007/978-3-540-28647-9_97}
 
-\subsection{Collective anomalies within \acrshort{das} data}
 
-Multivariate data analysis refers to statistical lookings from two or more variabels. In the case of sensor data, one often look at multiple sensors. 
+
+
 
 Given a matrix $a$ of data:
 

@@ -1,0 +1,16 @@
+\section{Judas}
+\label{disc:judas}
+
+Our general performance memory wise is quite good. We're able to load in large samples of data without experiencing any issues.
+The results from the parallel resampling function underscores the importance in the utilization of parallel techniques. Certain algorithms benefit greatly by simply introducing parallel techniques. By using \texttt{SharedArrays}, we're able to avoid unnecessary allocations, and let all processes share the same matrix. Additionally, we avoid having to gather the results after computation, we simply return the underlying array. Although we see almost linear scaling across all configurations, there are two potential alternatives to our current solution. The first one is to use multithreading instead of processes, which only yield better results for smaller matrices.
+
+Fine grained approach. \\
+
+We can clearly see that the current bottleneck of \texttt{Judas} is the first part of the program, more specifically, the \texttt{load\_DAS\_files} function. Even though we are successful at avoiding loading large arrays into memory, only a small part of the program is parallellizable. This does of course limit the effectiveness and scalability of the program, but compared to similar programs at \acrshort{cgf}, we can now find and load several \acrshort{das} files over larger durations overall. Additionally, this first part of the program could be run before resampling and denoising, thus circumventing having to wait for data to be pre processed. An alternative to our fine grained approach at parallellization would be to parallellize both the and \texttt{load\_DAS\_files} function. This more coarse grained approach distributes the files found by \texttt{find\_DAS\_files} across several processes, and decreases the overall run time of \texttt{load\_DAS\_files}. \\
+
+Deployment. \\ 
+
+Ease of use. \\ 
+Working on Judas with \acrshort{das} data has proven very meaningful. \\\
+
+There are still plenty of undiscovered methods on this kind of data. As mentioned in \cite{MALEKI2021107443}, "Anomaly detection in unlabelled Big Data is difficult and costly". We've seen this occur even after multiple different rounds of resampling, channel decimation, and so on. 

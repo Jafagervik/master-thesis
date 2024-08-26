@@ -1,8 +1,8 @@
-\section{Judas}
+\section{BANENOR}
 \label{res:Judas}
 
 
-\subsection{Experiment 1: HDF5 file processing and resampling}
+\subsection{Experiment \rnum{1}: HDF5 file processing and resampling}
 
 In this experiment, we will be processing $n$ amount of \acrshort{hdf5} files with $p$ processes, from the point of reading raw data gathered by \acrshort{cgf} from the OptoDAS, through pre-processing, resampling the signals and denoising the result. This will give an accurate view of what needs to happen from rawdata until they are ready to be trained on different \acrshort{ml} or \acrshort{dl} models. Full code example can be found in appendix \ref{app:judas}. \\
 
@@ -76,7 +76,7 @@ As we can see.
 \label{fig:efficiency}
 \end{figure}
 
-\subsection{Experiment 2: Parallel Resampling}
+\subsection{Experiment \rnum{2}: Parallel Resampling}
 
 For this experiment, we will be using the same signals as we did in our last experiment. The duration of the \acrshort{das} signal will be 5 minutes, meaning the input matrix will be of size $600000
 \times 261$ We will be resampling to $1000Hz, 500Hz, 250Hz, 100Hz$, utilizing 1, 2, 4 and 8 processes. For this operation \\

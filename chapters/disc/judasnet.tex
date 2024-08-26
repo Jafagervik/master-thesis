@@ -1,0 +1,10 @@
+\section{JudasNET}
+\label{disc:judasnet}
+
+After the creation of Judas, we were determined to continue the implementation of \acrshort{ai} models and anomaly detection in Julia. We wanted to train our models on the same dataset as described earlier \ref{met:judas}. Ultimately, there was two reasons for us turning away from Julia, and opting for Python instead. \\
+
+The first reason is the limited amount of \acrshort{gpu}s available at \acrshort{cgf}. With only a single consumer grade level \acrshort{gpu} with 11Gb VRAM available, we were failing to be able to train even small models. This constraint led us to switch to the IDUN cluster for computation, but we were now not allowed to continue our work on the BANENOR dataset, due to it being propietery and classified data. IDUN is a public server, and most of the data at \acrshort{cgf} is not allowed on public servers. This led us to working with the PubDAS dataset. \\
+
+Even after switching servers and dataset, we could still use Julia and \texttt{Flux.jl} to train our models. The issue here was the core support for multigpu training provided by \texttt{Flux.jl}. This issue is being discusssed by the maintainers \href{https://github.com/FluxML/Flux.jl/issues/1829}{in a forum}, but ultimately, only third party solutions exist as of now. Several of these packages are old, and are not compatible current versions of Julia, Flux or other packages. Instead of implementing this feature ourselves, we instead want to highlight how autoencoders can be used for anomaly detection on \acrshort{das} data, and thus we ended up going with Python in the end. 
+
+This work is collected in the \texttt{JudasNET} codebase, and serves as a guideline for how further development.
