@@ -71,14 +71,14 @@ This in-place calculation can be vectorized and broadcasted, resulting in improv
 
 \subsubsection{Parallel Resampling}
 
-One of the ways we're able to reduce memory consumption of our program is to resample the signal matrix. What we want to do, is to resample by each sensor, and then combining the results into a new resampled matrix. As we've seen, the original frequency is $2000Hz$, but we want to resample down to $100Hz$, thus only storing $5\%$ of the original data. The following code below shows the implementation of our \texttt{parallel\_resample} function. \\
+One way we can reduce the memory consumption of our program is to resample the signal matrix. We want to resample each channel and then combine the results into a new resampled matrix. As we've seen, the original frequency is $2000Hz$, but we want to resample down to $100Hz$, thus only storing $5\%$ of the original data. The following code below shows the implementation of our \texttt{parallel\_resample} function. \\
 
 \lstinputlisting[label={code:parres}, caption=Implementation of parallel resampling, language=Julia]{code/parallel_resample.jl}
 
 Our parallel resampling approach optimizes performance through memory management and parallel processing techniques. The algorithm proceeds as follows:
 
 \begin{enumerate}
-    \item \textbf{Memory Preallocation}: We begin by preallocating a \texttt{SharedMatrix}. This matrix can be accessed and modified by all processes, avoiding manual communication between processes. This is crucial for performance, as it also avoids dynamic memory allocations during the resampling process.
+    \item \textbf{Memory Preallocation}: We begin by preallocating a \texttt{SharedMatrix}. All processes can access and modify this matrix, avoiding manual communication between processes. This is crucial for performance, as it also avoids dynamic memory allocations during resampling.
     \item \textbf{Parallel Processing}: We utilize the \texttt{pmap} function from the \texttt{Distributed.jl} package to distribute the resampling workload across multiple processes. Each process is assigned a subset of columns from the input data, allowing for parallel resampling of multiple channels.
     \item \textbf{Resampling}: Within each process, we apply the \texttt{resample} function (from \texttt{DSP.jl}) to individual columns, resampling each channel independently.
     \item \textbf{Data Collection}: To gather the results from the processes, we employ an optimized loop structure. The \texttt{@inbounds} macro disables bounds checking, eliminating the overhead of boundary checks during array checks. The \texttt{@simd} macro is applied to hint to the compiler to allow for loop reordering, potentially enabling vectorization.

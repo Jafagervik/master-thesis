@@ -2,7 +2,7 @@
 
 \subsection{Dataset}
 
-For this project, we will be using datasets from the PubDAS \cite{spica2023pubdas} collection. PubDAS is described as "A PUBlic Distributed Acoustic Sensing Datasets Repository for Geosciences" and contains \acrshort{das} data from numerous location all across the globe. We will specifically be dealing with the FORESEE dataset, a \acrshort{das} dataset stored in \acrshort{hdf5} files from an area around Pennsylvania in the Valley and Ridge Appalachians region  as seen in \ref{fig:foresee}. \\
+For this project, we use datasets from the PubDAS \cite{spica2023pubdas} collection. PubDAS is described as "A PUBlic Distributed Acoustic Sensing Datasets Repository for Geosciences" and contains \acrshort{das} data from numerous locations all across the globe. We will specifically be dealing with the FORESEE dataset, a \acrshort{das} dataset stored in \acrshort{hdf5} files from an area around Pennsylvania in the Valley and Ridge Appalachians region as seen in \ref{fig:foresee}. \\
 
 \begin{figure}[!h]
     \centering
@@ -11,36 +11,36 @@ For this project, we will be using datasets from the PubDAS \cite{spica2023pubda
     \label{fig:foresee}
 \end{figure}
 
-\begin{table}[!htbp]
+\begin{table}[!h]
     \centering
     \small
-    \begin{tabular}{@{}p{0.3\textwidth}p{0.4\textwidth}p{0.2\textwidth}@{}}
+    \begin{tabular}{@{}p{0.3\textwidth}p{0.3\textwidth}@{}}
         \toprule
-        \textbf{Parameter} & \textbf{Value} & \textbf{Unit} \\
+        \textbf{Parameter} & \textbf{Value} \\
         \midrule
-        Experiment & Foresee & \\
-        Interrogator Unit (IU) & Silixa iDAS-v2 & \\
-        Gauge length & 10 & \si{\meter} \\
-        Cable length & 23300 & \si{\meter} \\
-        Channel spacing & 2 & \si{\meter} \\
+        Experiment & Foresee  \\
+        Interrogator Unit (IU) & Silixa iDAS-v2  \\
+        Gauge length & \qty{10}{\si{\meter}} \\
+        Cable length & \qty{23300}{\si{\meter}} \\
+        Channel spacing & \qty{2}{\si{\meter}} \\
         \midrule
-        \textbf{Original Data} & & \\
-        Format & TDMS & \\
-        Samples per second & 500 & \si{\hertz} \\
-        File duration & 10 & \si{\minute} \\
-        Data shape & 300000 \(\times\) 2137 & \\
+        \textbf{Original Data} &  \\
+        Format & TDMS  \\
+        Samples per second & \qty{500}{\si{\hertz}} \\
+        File duration & \qty{10}{\si{\minute}} \\
+        Data shape & 300000 \(\times\) 2137  \\
         \midrule
-        \textbf{After Preprocessing} & & \\
-        Format & HDF5 & \\
-        Samples per second & 125 & \si{\hertz} \\
-        File duration & 5 & \si{\second} \\
-        Data shape & 625 \(\times\) 2137 & \\
+        \textbf{After Preprocessing} & \\
+        Format & HDF5 \\
+        Samples per second & \qty{125}{\si{\hertz}} \\
+        File duration & \qty{5}{\si{\second}} \\
+        Data shape & 625 \(\times\) 2137  \\
         \midrule
-        \textbf{Dataset Information} & & \\
-        Train dataset size & 25690 files & \\
-        Train dataset span & 02 Mar 2020 08:10:15 to \newline 03 Mar 2020 20:40:10 & \\
-        Labeled dataset size & 600 files & \\
-        Labeled dataset span & 15 Apr 2019 03:17:35 to \newline 15 Apr 2019 04:07:30 & \\
+        \textbf{Dataset Information} &  \\
+        Train dataset size & \qty{25690}{files} \\
+        Train dataset span & 02 Mar 2020 08:10:15 to \newline 03 Mar 2020 20:40:10 \\
+        Labeled dataset size & \qty{600}{files} \\
+        Labeled dataset span & 15 Apr 2019 03:17:35 to \newline 15 Apr 2019 04:07:30 \\
         \bottomrule
     \end{tabular}
     \caption{FORESEE Experiment Data Summary}

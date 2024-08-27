@@ -1,12 +1,10 @@
 \section{Experiment 1: BANENOR}
 
-
 \subsection{Dataset}
 
+Our first experiment revolves around a \acrshort{das} dataset on a train route between Trondheim and Storen and is owned by BANENOR. The dataset spans the entirety of the 31st of August 2021\footnote{Working with national infrastructure requires security clearance; see \ref{app:conf} for more details}. The full route between Trondheim and Storen can be seen in appendix \ref{app:judas}. All the data is stored in \acrshort{hdf5} files.
 
-Our first experiment revolves around a \acrshort{das} dataset on a a train route between Trondheim and Storen, and is owned by BANENOR. The dataset spans the entirety of the 31st of August 2021\footnote{Working with national infrastructure requires security clearance, see \ref{app:conf} for more details}. The full route between Trondheim and Storen can be seen in appendix \ref{app:judas}. All the data is stored in hdf5 files.
-
-\begin{table}[!htbp]
+\begin{table}[!h]
     \centering
     \small
     \begin{tabular}{@{}p{0.3\textwidth}p{0.4\textwidth}@{}}
@@ -28,30 +26,36 @@ Our first experiment revolves around a \acrshort{das} dataset on a a train route
         Regions of interest (ROI) & 1:4:49996 \\
         \bottomrule
     \end{tabular}
-    \caption{BANENOR Experiment Data Summary}
+    \caption{BANENOR Experiment Data Summary from a file recorded the 31st of august 2021 at 10am}
     \label{tab:experiment_data}
 \end{table}
 
 
-As we can see in table \ref{tab:experiment_data}, the total distance of this dataset is approximately 50km, where data from every 4th sensor across the route is stored. Each file contains 10 seconds of data, storing a $20000 \times 12500$ alongside relevant metadata, where each element is of type \texttt{Float32}, giving us a total of \qty{8}{\giga\byte} to be stored for every 10 seconds.  \\
+As shown in Table \ref{tab:experiment_data}, the total distance covered by this dataset is approximately \qty{50000}{\meter}. Data is collected from sensors spaced at regular intervals along the route, with every fourth sensor's data stored. Each data file contains \qty{10}{\second} of recordings, stored as a matrix of size $20000 \times 12500$, alongside relevant metadata. Each matrix element is of type \texttt{Float32}, resulting in a base data size of approximately \qty{0.93}{\giga\byte} per file. \\
 
 \subsection{Experiment \rnum{1}: Finding and Loading \acrshort{das} files}
+
+One of the most common tasks for members at \acrshort{cgf} is to load \acrshort{das} files from disk for further processing or analysis. We conduct a full test here, loading different amounts of files into memory using different amounts of processes. The experiment code can be found in appendix \ref{app:judas}.
+
 \subsection{Experiment \rnum{2}: Parallel Resampling}
 
-In order to evaluate the improvements and additions to this package, we will be performing benchmarks both on individual functions, looking at the overall runtime of a realistic use-case.  
-\paragraph{Parallel Resample function}We compare the parallel resampling method to a serial approach. Our input matrix will be a 5 minute DAS dataframe, with an effective ROI of [1:124:12499] giving an effective channel distance of \qty{200}{\si{\meter}}. The benchmark code can be found in.
+Another common operation is performing channel decimation, also known as desampling, as described in section \ref{back:dsp}. We compare our parallel resampling method described in section \ref{code:parres}) to a serial approach. The input data will be a \qty{10}{\si{\minute}} \acrshort{das} data matrix, where the channel distance will be about 200m.
 
-\paragraph{Loading and Processing \acrshort{das} data}A full test from start to finish will be conducted. The experiment code can be found in \ref{app:judas}.
+\subsection{Evaluation Metrics and Setup}
 
-For both of these tests, speedups and parallel efficiency will be the main point of focus. We utilize different amounts of processes, and for the second benchmark, we compare
+We use speedup and efficiency as evaluation metrics for both experiments. Speedup ($S_p$) is defined as the ratio between the serial execution time ($T_1$) and the parallel execution time ($T_p$) and can be formulated as:
+\begin{equation}
+    S_p = \frac{T_1}{T_p}
+\end{equation}
 
+Efficiency is the speedup ($S_p$) divided by the number of processes used: 
+\begin{equation}
+    E_p = \frac{S_p}{p} = \frac{T_1}{p T_p}
+\end{equation}
 
-\subsection{Experiment Setup}
+We perform all benchmarks on local servers belonging to \acrshort{cgf}. The system specifications are all listed in the table below \ref{tab:cgfsetup}. \\
 
-Due to national regulations, we will be performing all benchmarks on local servers belonging to \acrshort{cgf}. The system specifications can are all listed in the table below. \\
-
-
-\begin{table}[htbp]
+\begin{table}[!h]
 \centering
 \begin{tabular}{@{}lll@{}}
 \toprule
