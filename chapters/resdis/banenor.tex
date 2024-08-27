@@ -1,12 +1,9 @@
 \section{BANENOR}
 \label{res:Judas}
 
+%We will be resampling the signals to $100Hz$ from $500Hz$, and the Channel ROI will be 250m. We will be utilizing 1, 2, 4 and 8 processes, and use of a different amount of \acrshort{das} data ranging from 10 seconds until 1 hour of \acrshort{das} data.
 
 \subsection{Experiment \rnum{1}: HDF5 file processing and resampling}
-
-In this experiment, we will be processing $n$ amount of \acrshort{hdf5} files with $p$ processes, from the point of reading raw data gathered by \acrshort{cgf} from the OptoDAS, through pre-processing, resampling the signals and denoising the result. This will give an accurate view of what needs to happen from rawdata until they are ready to be trained on different \acrshort{ml} or \acrshort{dl} models. Full code example can be found in appendix \ref{app:judas}. \\
-
-We will be resampling the signals to $100Hz$ from $500Hz$, and the Channel ROI will be 250m. We will be utilizing 1, 2, 4 and 8 processes, and use of a different amount of \acrshort{das} data ranging from 10 seconds until 1 hour of \acrshort{das} data.
 
 \begin{figure}[!h]
     \centering
@@ -14,8 +11,6 @@ We will be resampling the signals to $100Hz$ from $500Hz$, and the Channel ROI w
     \caption{Heatmap of the processed data before resampling and denoising}
     \label{fig:dasoutput}
 \end{figure}
-
-
 
 \begin{figure}[!htbp]
 \centering
@@ -143,7 +138,3 @@ For this experiment, we will be using the same signals as we did in our last exp
 \label{fig:resampling_efficiency}
 \end{figure}
 
-Figure \ref{fig:resampling-benchmark} clearly indicates how the addition of more processes decreases the overall runtime of the function. Lower resampling, and overall smaller resampling rate, obviously increase the overall time, yet even here, the average wall time for resampling to $100Hz$ using 8 threads only use about 0.8 seconds. \\
-
-
-As we can see from figure \ref{fig:resampling_efficiency}, we achieve high efficiency, and near-linear scaling for all rates and frequencies. The only notable drop happens at $100Hz$ using 8 threads, but we still achieve an efficiency of around 0.94. 

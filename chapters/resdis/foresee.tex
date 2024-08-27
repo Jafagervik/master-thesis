@@ -4,22 +4,18 @@
 
 \subsection{Experiment \rnum{1}: Model training and Reconstruction}
 
-As we can see in the table ...
-
-
-
-
 \begin{table}[!htbp]
     \centering
     \begin{tabular}{lcccc}
         \hline
         \textbf{Metric} & \textbf{AE} & \textbf{CAE} & \textbf{VAE} & \textbf{CVAE} \\
         \hline
-        Best loss & 1.3e-6 & 0.032 & 0.038 & 0.029 \\
+        Best Train loss & 1.3e-6 & 0.032 & 0.038 & 0.029 \\
+        Best Validation loss & 1.3e-6 & 0.032 & 0.038 & 0.029 \\
         Epochs before stop & 6 & 20 & 15 & 15 \\
         \hline
     \end{tabular}
-    \caption{Comparison of Autoencoder Performance\\ *The Reconstruciton error is the sum of all reconstruction errors across all batches.}
+    \caption{Comparison of Autoencoder Performance\\ *The reconstruction error is the sum of all reconstruction errors across all batches.}
     \label{tab:autoencoder_comparison}
 \end{table}
 
@@ -30,14 +26,10 @@ As we can see in the table ...
     \label{fig:traintimes}
 \end{figure}
 
-As we can see in figure \ref{fig:traintimes}, there is a huge difference between the max training time and the median training time. The max training time always happens during the first epoch, when the \texttt{train\_step} and \texttt{val\_step} kernels are being compiled. Total training times per model are all under \qty{6}{\si{\hour}} before the training is stopped early due to the \textit{early stopping} mechanism.
 
 \subsubsection{Loss Values}
 
-The following is a list of how the losses changed over time...
-
-
-\begin{figure}[!htbp]
+\begin{figure}[!h]
   \centering
   \begin{subfigure}[t]{.6\textwidth}
     \centering
@@ -191,7 +183,6 @@ Table \ref{tab:autoencoder_comparison} presents a comparative analysis of the fo
 
 
 
-% Confusion Matrix Components Table
 \begin{table}[!htbp]
 \centering
 \label{tab:confusion-matrix-results}
@@ -200,24 +191,20 @@ Table \ref{tab:autoencoder_comparison} presents a comparative analysis of the fo
     S[table-format=3.0]
     S[table-format=3.0]
     S[table-format=3.0]
-    S[table-format=3.2]
-    S[table-format=3.2]
 }
 \toprule
-\textbf{Model} & {\textbf{TP}} & {\textbf{FP}} & {\textbf{TN}} & {\textbf{FN}} & {\textbf{Precision (\%)}} & {\textbf{Recall (\%)}} \\
+\textbf{Model} & {\textbf{TP}} & {\textbf{FP}} & {\textbf{TN}} & {\textbf{FN}} \\
 \midrule
-\rowcolor{gray!10} AE   & 100 & 10 & 80 & 10 & 90.91 & 90.91 \\
-CAE  & 95 & 15 & 75 & 15 & 86.36 & 86.36 \\
-\rowcolor{gray!10} VAE  & 105 & 8 & 85 & 5 & 92.92 & 95.45 \\
-CVAE & 30 & 110 & 460 & 0 & 21.43 & 100.00 \\
+\rowcolor{gray!10} AE   & 100 & 10 & 80 & 10 \\
+CAE  & 95 & 15 & 75 & 15 \\
+\rowcolor{gray!10} VAE  & 105 & 8 & 85 & 5 \\
+CVAE & 30 & 110 & 460 & 0 \\
 \bottomrule
 \end{tabular}
-\caption{Confusion Matrix Components and Derived Metrics}
+\caption{Confusion Matrix Components}
 \end{table}
 
-
 % Performance Metrics Table
-
 \begin{table}[!htbp]
 \centering
 \label{tab:performance-metrics}
@@ -229,12 +216,12 @@ CVAE & 30 & 110 & 460 & 0 & 21.43 & 100.00 \\
     S[table-format=1.3]
 }
 \toprule
-\textbf{Model} & {\textbf{TPR}} & {\textbf{FPR}} & {\textbf{Precision}} & {\textbf{F1-Score}} & {\textbf{Accuracy}} \\
+\textbf{Model} & {\textbf{Precision}} & {\textbf{Recall (TPR)}} & {\textbf{F1-Score}} & {\textbf{FPR}} & {\textbf{PR AUC}} \\
 \midrule
-\rowcolor{gray!10} AE   & 0.909 & 0.111 & 0.909 & 0.909 & 0.900 \\
-CAE  & 0.864 & 0.167 & 0.864 & 0.864 & 0.850 \\
-\rowcolor{gray!10} VAE  & 0.955 & 0.086 & 0.929 & 0.942 & 0.941 \\
-CVAE & 0.910 & 0.128 & 0.910 & 0.900 & 0.817 \\
+\rowcolor{gray!10} AE   & 0.909 & 0.909 & 0.909 & 0.111 & 0.950 \\
+CAE  & 0.864 & 0.864 & 0.864 & 0.167 & 0.920 \\
+\rowcolor{gray!10} VAE  & 0.929 & 0.955 & 0.942 & 0.086 & 0.975 \\
+CVAE & 0.214 & 1.000 & 0.353 & 0.193 & 0.850 \\
 \bottomrule
 \end{tabular}
 \caption{Model Performance Metrics Comparison}

@@ -12,6 +12,7 @@ The \acrfull{vae} \cite{kingma2022autoencodingvariationalbayes} is a type of aut
 
 
 \subsubsection{Reparametrization Trick}
+\label{back:reparam}
 
 \acrshort{vae}s can be trained efficiently using backpropagation due to a technique known as the \textit{reparameterization trick} \cite{kingma2022autoencodingvariationalbayes}. This is necessary because \acrshort{vae}s involve sampling from a stochastic latent variable $z$, which would normally hinder gradient-based optimization.
 
@@ -34,6 +35,7 @@ This formulation makes training of \acrshort{vae} models feasable, even for grad
 
 
 \subsubsection{Evidence Lower Bound}
+\label{back:elbo}
 In the context of \acrshort{vae}s, \acrshort{elbo} is commonly used as a loss function. \cite{lygerakis2024edvaeentropydecompositionelbo}. It consists of two parts, the reconstruction likelihood $\mathcal{L}_{\text{rec}}$ and the prior constraint $\mathcal{L}_{\text{reg}}$:
 \begin{align}
 \mathcal{L}_{\text{ELBO}}(\theta, \phi; x) &= \mathcal{L}_{\text{rec}}(\theta, \phi; x) + \mathcal{L}_{\text{reg}}(\phi; x)  
