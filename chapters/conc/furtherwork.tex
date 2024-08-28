@@ -1,32 +1,36 @@
-\section{Further work}
+\section{Future work}
 \label{conc:further}
 
-\subsection{Judas}
+\subsection{Judas and \acrshort{das} processing}
 
-Our program Judas is more or less done. It fulfill's its task by taking in \acrshort{das} data provided by \acrshort{cgf}, and preprocissing the data ahead of analysis. Even so, there are still a couple of things that can be further improved upon. In the project thesis, we detailed how fourier transforms, a vital part of resampling with FIR filters, can be performed fast on \acrshort{gpu}s. \\
+Our program Judas is currently up to par, or even ahead, compared to existent programs for \acrshort{das} processing at \acrshort{cgf}. Even so, there is still much room for improvement and additions, including:
 
-As things stand, the complete duration
+\begin{itemize}
+    \item Optimizing the cumulative sum calculation to make it parallel, potentially using algorithms like parallel prefix sum [CITE], where GPU acceleration could be introduced.
+    \item Implementing a more flexible metadata handling system to accommodate datasets from other sources besides BANENOR.
+    \item Extending support for multiple file formats besides \acrshort{hdf5}, such as TDMS.
+    \item Developing a user-friendly interface for adjusting hardcoded values, making the program more adaptable to different experimental setups without requiring direct code modifications.
+    \item Implementing more advanced denoising and signal processing techniques.
+\end{itemize}
 
-This is however a small change to be done if found necessary. A bigger change would be to use \acrshort{hdf5} files for output data of the preprocessing, as compared to our currently memory mapped solution. This would allow us to use TinyDAS as is without modifications on the data provided by \acrshort{cgf}, without having to parse data from memory mapped files to \acrshort{hdf5} files. Additionally, these files can store timestamps or metadata in the same file as their processed data, instead of \texttt{struct} or other data structures. This is particularly of interest while we use TinyDAS instead of JudasNET for training and analysing data.
-
-\subsection{TinyDAS}
+\subsection{TinyDAS and Autoencoder-based Anomaly Detection}
 
 As we noted previously in the discussion section, we were unable to both continue using data provided by \acrshort{cgf}, as well as leveraging Julia due to an immature \acrshort{ai} framework lacking support for scalable \acrshort{gpu} training. \\
 
-We have already mentioned how the lack of proper test data hurts our chances of interpreting the results. Continuing the work of \Gls{pubdas} and adding proper test data based on findings from research papers CITE, would be in the interest of further analysing and finding better suited models for anomaly detection on \acrshort{das} data. A concrete example of this would be to provide a dataset similar to that of MNIST, where we have labeled data to test against. \\
+We have already mentioned how the lack of proper test data hurts our chances of interpreting the results. Continuing the work of \Gls{pubdas} and adding proper test data based on findings from research papers CITE would be in the interest of further analyzing and finding better-suited models for anomaly detection on \acrshort{das} data. A concrete example of this would be to provide a dataset similar to that of MNIST, where we have labeled data to test against. \\
 
-Right now, we only support reading in from \acrshort{hdf5} files, and no other fileformats provided by the \Gls{pubdas} data. Supporting all different files would be of great benefit for letting TinyDAS use any of the datasets provided by \acrshort{pubdas}. \\
+Right now, we only support reading in from \acrshort{hdf5} files, and no other file formats provided by the \Gls{pubdas} data. Supporting all different files would be of great benefit for letting TinyDAS use any of the datasets provided by \acrshort{pubdas}. \\
 
 Besides the data itself, the framework in which we train and analyse our models is still young, and instead of converting both the data and model weights into half precision floating point numbers, we could make use of mixed precision training, where the data is still trained in its original format, but the weights and biases are stored in their original format. \\
 
 We have presented a handful of useful models for analysing \acrshort{das} data, but further expanding on this, and even introducing models based on other architectures such as \acrshort{gan} would allow us to analyse different events. \\
 
-From the very point we introduced TinyDAS, utilizing \Gls{python} instead of \Gls{julia}, we've had the intention of converting all the models over to JudasNET in the future when multi-gpu training is part of Flux. Not only would this allow us to further compare python and Julia with regards to data analysis and \acrshort{ml}, but also keeping our entire ecosystem in a singular language, Julia, well suited for both \acrshort{hpc} tasks as well as \acrshort{ml}.  \\
+From the very point we introduced TinyDAS, utilizing \Gls{python} instead of \Gls{julia}, we've had the intention of converting all the models over to JudasNET in the future when multi-GPU training is part of Flux. Not only would this allow us to compare python further and Julia with regards to data analysis and \acrshort{ml}, but also keeping our entire ecosystem in a singular language, Julia, well suited for both \acrshort{hpc} tasks as well as \acrshort{ml}.  \\
 
-The intention of keeping input data in small time chunks has previously been  argued for by reducing the workload for each \acrshort{gpu}, and instead using several batches. Another reason is the ability to use our models in a live environment. Every $x$ amount of seconds \acrshort{das} data is recorded and stored in files, a program can be made to continuously analyse and notify whenever an anomaly is found. \\
+The intention of keeping input data in small time chunks has previously been argued for by reducing the workload for each \acrshort{gpu}, and instead using several batches. Another reason is the ability to use our models in a live environment. Every $x$ amount of seconds \acrshort{das} data is recorded and stored in files, a program can be made to continuously analyse and notify whenever an anomaly is found. \\
 
 Continuing to add several different models, both for anomaly detection and live classification or segmentation tasks will further the cause of analysing \acrshort{das} data and in an optimal scenario, prevent geophysical catastrophes.
 
 \subsection{Final Remarks}
 
-With all the key points of potential further work mentioned over, we are quite positive to the continuation of both Judas and TinyDAS/JudasNET. Whenver Flux adds multi-gpu training, JudasNET can easily be further extended to 
+We want to thank \acrfull{cgf}, and especially Robin, for providing data and computational resources. We hope both these programs can help all your current and future members further the field of \acrshort{das} research.

@@ -4,9 +4,9 @@
 
 \subsection{\acrshort{das} file loading and processing}
 
-One of the file formats used for storing \acrshort{das} data is \acrshort{hdf5}. Many of the implemented libraries for \acrshort{hdf5} files now allow for parallel loading of these files. Biddiscombe (et. al 2012) \cite{biddiscombe2012parallel} replaced the IO layer within a \acrshort{hdf5} library to allow for parallel loading between simulation and analysis. In later years, \texttt{HDF5.jl}, the HDF5 library in Julia, allows for parallel loading of files, utilizing the message-passing interface (MPI). This can potentially reduce \acrshort{das} file loading times. \\ 
+One of the file formats used for storing \acrshort{das} data is \acrshort{hdf5}. Many of the implemented libraries for \acrshort{hdf5} files now allow for parallel loading of these files. Biddiscombe (et. al 2012) replaced the IO layer within a \acrshort{hdf5} library ''to allow for parallel loading between simulation and analysis'' \cite{biddiscombe2012parallel}. In later years, \texttt{HDF5.jl}, the HDF5 library in Julia, allows for parallel loading of files, utilizing the message-passing interface (MPI). This can potentially reduce \acrshort{das} file loading times. \\ 
 
-An important aspect of \acrshort{das} processing revolves around frequency analysis, denoising, and other types of filtering. 2D \acrfull{fft}s within 2D linear band pass filtering, and one-dimensional adaptive filtering using \acrfull{fir} filters have all been studied and \cite{daspreproc}. We previously studied 2D FFTs on \acrshort{das} data using \acrshort{gpu}s, comparing Julia with Python, finding Julia to significantly outperform Python on this operation \cite{projthesis}. \\
+An important aspect of \acrshort{das} processing revolves around frequency analysis, denoising, and other types of filtering. 2D \acrfull{fft}s within 2D linear band pass filtering, and one-dimensional adaptive filtering using \acrfull{fir} filters have all been studied and \cite{daspreproc}. In our preliminary studies, we conducted a performance comparison between Julia and Python for computing 2D Fast Fourier Transforms (FFTs) on \acrshort{das} data using \acrshort{gpu}s. Our results demonstrated that Julia significantly outperformed Python in this specific operation \cite{projthesis}. \\
 
 Public \acrshort{das} datasets are often scarce and hard to find. PubDAS \cite{spica2023pubdas} is a public distribution of several \acrshort{das} datasets worldwide, stored in multiple file formats. Many of these datasets contain scripts containing preprocessing algorithms or visualization code. These techniques are sequential, preprocessing file by file and possibly removing erroneous files. These scripts are mainly single-file Python or MatLab scripts. \\ 
 
@@ -44,7 +44,7 @@ Label-free autoencoder-based anomaly detection on \acrshort{das} data has been c
 
 \subsection{Other Models}
 
-Zhu (et al. 2023) \cite{zhu2023seismic} use a pre-trained PhaseNet to generate noisy labels of P/S arrivals in \acrshort{das} data and applied the GaMMa method to refine noisy labels and build training datasets. A \acrshort{dl} model was then made to detect earthquakes. \\
+Zhu (et al. 2023) use ''a pre-trained PhaseNet to generate noisy labels of P/S arrivals in \acrshort{das} data'' and ''applied the GaMMa method to refine noisy labels and build training datasets'' \cite{zhu2023seismic}. A \acrshort{dl} model was then made to detect earthquakes. \\
 
 
 \acrshort{gan} is another type of generative nn, first proposed by Iain Goodfellow around 2016 \cite{goodfellow2016nips}. These networks have been utilized in models for specifically designed for anomaly detection. A \acrshort{lstm} \acrshort{vae} \acrshort{gan} model was built to detect anomalies within time series \cite{s20133738}. A modification of \acrshort{lstm} \acrshort{gan}, with the inclusion of the attention mechanism \cite{vaswani2017attention}, was built for time-series anomaly detection \cite{bashar2023algan}.ALGAN-DA?
@@ -57,12 +57,6 @@ One issue of concern is online long-distance distributed monitoring applications
 
 % Huang (et al. 2021) \cite{huang2021esad} semisupervised learning  kl
 
-
-\subsection{Summary}
-
-As we have seen in this chapter, anomaly detection has a long history with research and trial with many algorithms. From more well-known ML techniques such as Bayesian networks, knn and isolation forests to more novel deep learning algorithms utilizing LSTMs and \acrshort{gan} networks. \\
-
-The development and findings of several of these algorithms bring us directly to this project. We continue the research on anomaly detection by trying to improve unsupervised learning algorithms utilizing more novel deep learning algorithms, not only as sole models to solve a problem but also as a pre-processor model for supervised learning algorithms to be used on multi-sensor das data. We do so by improving and continuing \texttt{Judas} (formerly known as Emerald.jl), a processing and analysis package. We also distinguish our result by opting for a more novel language of choice, Julia, to not only demonstrate small examples of data science or data processing but as a serious contender for the language of choice when implementing libraries or applications dealing with big data, distributed computing and artificial intelligence
 
 Anomaly detection, sometimes referred to as outlier detection, is highly relevant within \acrshort{das} research. In 2017, several classical \acrshort{ml} techniques such as Gaussian Mixture Model (GMM), Hidden Markov Model (HMM), Naive Bayes (NB), and Restricted Boltzmann Machine (RBM) were compared to discriminative models, including \acrshort{ann}s \cite{app7080841}. Variations of isolation forests are shown to be able to perform fault detection for mining conveyors\cite{WIJAYA2022110330}. \\
 

@@ -1,17 +1,27 @@
 \section{BANENOR}
 \label{res:Judas}
 
-%We will be resampling the signals to $100Hz$ from $500Hz$, and the Channel ROI will be 250m. We will be utilizing 1, 2, 4 and 8 processes, and use of a different amount of \acrshort{das} data ranging from 10 seconds until 1 hour of \acrshort{das} data.
 
 \subsection{Experiment \rnum{1}: HDF5 file processing and resampling}
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[width=0.8\linewidth]{figures/heatmap_das_test.png}
-    \caption{Heatmap of the processed data before resampling and denoising}
+    \begin{subfigure}{0.45\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/heatmap_das_test.png}
+        \caption{Before resampling and normalization}
+        \label{fig:dasoutput1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.45\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/heatmap_das_test.png}
+        \caption{After resampling and normalization}
+        \label{fig:dasoutput2}
+    \end{subfigure}
+    \caption{Heatmaps of the processed data before and after }
     \label{fig:dasoutput}
 \end{figure}
-
 \begin{figure}[!htbp]
 \centering
 \begin{tikzpicture}
@@ -73,11 +83,6 @@ As we can see.
 
 \subsection{Experiment \rnum{2}: Parallel Resampling}
 
-For this experiment, we will be using the same signals as we did in our last experiment. The duration of the \acrshort{das} signal will be 5 minutes, meaning the input matrix will be of size $600000
-\times 261$ We will be resampling to $1000Hz, 500Hz, 250Hz, 100Hz$, utilizing 1, 2, 4 and 8 processes. For this operation \\
-
-
-
 \begin{figure}[!htbp]
 \centering
 \begin{tikzpicture}
@@ -89,7 +94,7 @@ For this experiment, we will be using the same signals as we did in our last exp
     legend pos=north west,
     ymajorgrids=true,
     grid style=dashed,
-    width=12cm,
+    width=13cm,
     height=8cm,
     bar width=10pt,
     ybar,
@@ -97,44 +102,52 @@ For this experiment, we will be using the same signals as we did in our last exp
     anchor=north,legend columns=-1},
     symbolic x coords={1000, 500, 250, 100},
     x dir=reverse,
-    ymin=0, ymax=6,
+    ymin=0, ymax=60,
 ]
-\addplot coordinates {(1000,1.448) (500,1.581) (250,2.563) (100,5.832)};
-\addplot coordinates {(1000,0.732) (500,0.817) (250,1.286) (100,2.928)};
-\addplot coordinates {(1000,0.363) (500,0.400) (250,0.650) (100,1.478)};
-\addplot coordinates {(1000,0.181) (500,0.200) (250,0.325) (100,0.772)};
-\legend{1 thread, 2 threads, 4 threads, 8 threads}
+\addplot coordinates {(1000,57.205) (500,30.970) (250,23.580) (100,21.695)};
+\addplot coordinates {(1000,56.351) (500,30.941) (250,22.491) (100,20.843)};
+\addplot coordinates {(1000,30.956) (500,17.998) (250,14.719) (100,13.556)};
+\addplot coordinates {(1000,20.125) (500,13.937) (250,12.698) (100,12.066)};
+\addplot coordinates {(1000,19.217) (500,16.173) (250,16.604) (100,15.619)};
+\legend{Serial, 1 $p$, 2 $p$, 4 $p$, 8 $p$}
 \end{axis}
 \end{tikzpicture}
-\caption{Execution times for different resampling rates and thread counts}
+\caption{Execution times for different resampling rates and process counts $p$}
 \label{fig:resampling-benchmark}
 \end{figure}
 
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.5]{figures/speedup_heatmap(1).png}
+    \caption{Heatmap of speedups compared to serial execution}
+    \label{fig:ex2heat}
+\end{figure}
 
 \begin{figure}[!htbp]
 \centering
 \begin{tikzpicture}
 \begin{axis}[
     ylabel={Efficiency},
-    xlabel={Number of Threads},
+    xlabel={Number of Processes},
     xticklabels={1,2,4,8},
     xtick={1,2,3,4},
-    legend pos=south east,
+    legend pos=south west,
     ymajorgrids=true,
     grid style=dashed,
     width=12cm,
     height=8cm,
-    ymax=1,
-    ymin=0.90,
+    ymax=1.05,
+    ymin=0,
 ]
-\addplot coordinates {(1,1) (2,0.99) (3,0.9975) (4,1.00)};
-\addplot coordinates {(1,1) (2,0.97) (3,0.9875) (4,0.98875)};
-\addplot coordinates {(1,1) (2,0.995) (3,0.985) (4,0.98625)};
-\addplot coordinates {(1,1) (2,0.995) (3,0.9875) (4,0.94375)};
+\addplot coordinates {(1,1.02) (2,0.925) (3,0.71) (4,0.3725)};
+\addplot coordinates {(1,1.00) (2,0.86) (3,0.555) (4,0.24)};
+\addplot coordinates {(1,1.05) (2,0.80) (3,0.465) (4,0.1775)};
+\addplot coordinates {(1,1.04) (2,0.80) (3,0.45) (4,0.17375)};
 \legend{1000 Hz, 500 Hz, 250 Hz, 100 Hz}
 \end{axis}
 \end{tikzpicture}
-\caption{Efficiency for different resampling rates and thread counts}
+\caption{Efficiency for different resampling rates and process counts}
 \label{fig:resampling_efficiency}
 \end{figure}
+
 

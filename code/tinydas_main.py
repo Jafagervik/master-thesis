@@ -1,37 +1,19 @@
-def get_data(devices: List[str], **config) -> DataLoader:
-    dataset = Dataset(
-        n=config["data"]["nfiles"],
-        normalize=Normalization.MINMAX,
-        dtype=dtypes.float16 if config["data"]["half_prec"] else dtypes.float32  
-    )
-    return DataLoader(
-        dataset, 
-        batch_size=config["data"]["batch_size"], 
-        devices=devices, 
-        num_workers=config["data"]["num_workers"])
-
 def train_mode(args):
     config = get_config(args.model)
     seed_all(config["data"]["seed"])
+    devices = get_gpus(args.gpus) 
 
-    devices = get_gpus(args.gpus)
-    for x in devices: Device[x]
-    
-    model = select_model(args.model, devices, **config)
-    if args.load: load_model(model)
+    dtypes.default_float = dtypes.half if config["data"]["half_prec"] else dtypes.float32
 
-    dataloader = get_data(devices, **config)
+    tl, vl = get_data(devices, **config)
 
-    if config["data"]["half_prec"]:
-        for x in nn.state.get_state_dict(model).values():
-            x = x.float().half()
+    model = select_model(args.model, **config)
+    if config["data"]["half_prec"]: model.half()
+    if args.load: model.load()
+    if len(devices) > 1: model.send_copy(devices)
 
-    if len(devices) > 1:
-        for x in nn.state.get_state_dict(model).values():
-            x.realize().to_(devices)
+    optim = select_optimizer(Opti.ADAM, model.parameters(), **config["opt"])
+    schedule = select_lr_scheduler(LRScheduler.REDUCE, optim, **config)
 
-    params = nn.state.get_parameters(model)
-    optim = select_optimizer(Opti.ADAM, params, **config["opt"])
-
-    trainer = Trainer(model, dataloader, optim, **config)
+    trainer = Trainer(model, tl, vl, optim, schedule, **config)
     trainer.train()

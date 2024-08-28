@@ -14,32 +14,30 @@ Our first experiment revolves around a \acrshort{das} dataset on a train route b
         Experiment & 210830\_NTNU\_Bane\_NOR\_GL8De4F2000  \\
         File timestamp & 2021-08-31 10:00:01  \\
         Type of data & Phase rate per distance (rad/m/s) \\
-        Sampling frequency & \qty{2000}{\si{\hertz}} \\
-        Window duration & \qty{10}{\si{\second}} \\
-        Channel distance & \qty{4.0852}{\si{\meter}} \\
+        Sampling frequency & \qty{2000}{\hertz} \\
+        Window duration & \qty{10}{\second} \\
+        Channel distance & \qty{4.0852}{\meter} \\
         \midrule
         Data shape & 20000 samples \(\times\) 12500 channels  \\
         \midrule
-        Gauge length & \qty{8.1704}{ \si{\meter}} \\
-        Sensitivities & \qty{9.3622e6}{\si{\radian}
-        }\\
+        Gauge length & \qty{8.1704}{\meter} \\
+        Sensitivities & \qty{9.3622e6}{\radian} \\
         Regions of interest (ROI) & 1:4:49996 \\
         \bottomrule
     \end{tabular}
-    \caption{BANENOR Experiment Data Summary from a file recorded the 31st of august 2021 at 10am}
+    \caption{BANENOR Experiment Data Summary from a single \acrshort{hdf5} file recorded on August 31, 2021 at 10:00 AM. The ROI parameter indicates that every 4th sensor's data is stored.}
     \label{tab:experiment_data}
 \end{table}
 
+Table \ref{tab:experiment_data} presents a summary of the experimental dataset, encompassing approximately \qty{50000}{\meter} of fiber-optic cable. Data acquisition occurs regularly along the route, with every fourth sensor's data retained, resulting in an effective inter-channel distance of \qty{4.0852}{\meter}. Each \acrshort{hdf5} file contains \qty{10}{\second} of recordings, represented as a matrix of dimensions $20000 \times 12500$, accompanied by important metadata. The element type of the matrix is \texttt{Float32}, yielding a base file size of approximately \qty{0.93}{\giga\byte}.
 
-As shown in Table \ref{tab:experiment_data}, the total distance covered by this dataset is approximately \qty{50000}{\meter}. Data is collected from sensors spaced at regular intervals along the route, with every fourth sensor's data stored. Each data file contains \qty{10}{\second} of recordings, stored as a matrix of size $20000 \times 12500$, alongside relevant metadata. Each matrix element is of type \texttt{Float32}, resulting in a base data size of approximately \qty{0.93}{\giga\byte} per file. \\
+\subsection{Experiment \rnum{1}: Finding and Loading \acrshort{das} Files}
+A fundamental challenge for members at \acrshort{cgf} involves efficiently retrieving and loading \acrshort{das} files from storage media for subsequent processing and analysis. This experiment assesses the performance of loading varying data volumes into memory using multiple parallel processes. The complete experiment code is detailed in Appendix \ref{app:judas}.
 
-\subsection{Experiment \rnum{1}: Finding and Loading \acrshort{das} files}
-
-One of the most common tasks for members at \acrshort{cgf} is to load \acrshort{das} files from disk for further processing or analysis. We conduct a full test here, loading different amounts of files into memory using different amounts of processes. The experiment code can be found in appendix \ref{app:judas}.
+We set the step parameter to 48 to enhance processing efficiency, effectively modifying the Region of Interest (ROI) to 1:192:49996. While reducing spatial resolution, this adjustment facilitates faster processing and analysis of extensive datasets. We evaluate loading times for \acrshort{das} data spanning 1, 10, 30, and 60 minutes to assess scalability and performance across diverse data volumes. The experiment uses 1, 2, 4, and 8 parallel processes for comparative analysis.
 
 \subsection{Experiment \rnum{2}: Parallel Resampling}
-
-Another common operation is performing channel decimation, also known as desampling, as described in section \ref{back:dsp}. We compare our parallel resampling method described in section \ref{code:parres}) to a serial approach. The input data will be a \qty{10}{\si{\minute}} \acrshort{das} data matrix, where the channel distance will be about 200m.
+Channel decimation, alternatively termed downsampling, represents another critical operation in \acrshort{das} data processing, as mentioned in Section \ref{back:dsp}. This experiment compares our parallel resampling method, shown in Code Listing \ref{code:parres}, with a conventional serial approach. The input dataset comprises a \qty{30}{\minute} \acrshort{das} file, maintaining consistent channel spacing with Experiment \rnum{1}. We perform signal resampling from the original \qty{2000}{\hertz} to a series of lower frequencies: \qty{1000}{\hertz}, \qty{500}{\hertz}, \qty{250}{\hertz}, and \qty{100}{\hertz}. The experiment utilizes the same process configurations (1, 2, 4, and 8 parallel processes) as described in Experiment \rnum{1}.
 
 \subsection{Evaluation Metrics and Setup}
 

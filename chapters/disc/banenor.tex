@@ -1,5 +1,18 @@
 \section{BANENOR}
 \label{disc:banenor}
 
-\subsection{Experiment \rnum{1}: }
-\subsection{Experiment \rnum{2}: }
+\subsection{Experiment \rnum{1}: File IO}
+
+
+Fine-grained approach. \\
+
+\subsection{Experiment \rnum{2}: Parallel Resampling}
+
+\label{fig:resampling-benchmark}
+The overall runtimes displayed in Figure \ref{fig:resampling-benchmark} show a significant improvement for all resampling rates and process counts compared to the serial execution. The runtime decreases by approximately a factor of 2 when moving from serial execution to our parallel version using 2 processes.
+
+Figure \ref{fig:ex2heat} indicates that higher resampling rates benefit more from parallelization compared to lower ones. As expected, using only a single process with our parallel solution introduces minimal overhead, primarily from allocating the shared matrix to the parent process.
+
+The sharp decline in efficiencies, shown in Figure \ref{fig:resampling_efficiency}, indicates strong diminishing returns as the number of processes increases. The most significant decline occurs between 4 and 8 processes, suggesting a potential bottleneck. Compared to the original \acrshort{das} signal matrix with 12500 channels, the overhead of spawning many processes for only 261 channels proves inefficient, particularly for lower resampling rates. This highlights that each process benefits from having a substantial workload, possibly due to Julia's function precompilation, as explained in Section \ref{meth:julia}.
+
+Overall, this experiment demonstrates that our implementation of parallel channel decimation is best suited for more compute-intensive tasks, such as higher resampling rates. For this particular example, the optimal process count appears to be 4 processes, balancing improved performance with efficient resource utilization. Tests across multiple matrix sizes are needed to evaluate the amount of processes necessary further.

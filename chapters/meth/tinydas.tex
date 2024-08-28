@@ -14,6 +14,7 @@ appendix \ref{app:tinypacks}.
 
 
 \subsection{Overview}
+\label{meth:tinyoverview}
 
 TinyDAS consists of two parts. The first part handles model construction and training, while the latter deals with anomaly detection of \acrshort{das} data. An overview of how TinyDAS works is shown in figure \ref{fig:dataflow}. The following list outlines the fundamental philosophies and criteria used to design and evaluate the framework:
 
@@ -50,21 +51,15 @@ The \texttt{Dataset} and \texttt{DataLoader} classes supports reading in \acrsho
 
 \subsubsection{Autoencoder Base Class}
 
-\lstinline{BaseAE} is the abstract class which all the different models inherit from. As long as all models inherits from this class, it will be run in the trainer. The \lstinline{criterion} method is the main method to call when training a model. It runs the \lstinline{__call__} method, applies the loss function of choice, and stores in a dictionary in case we'd like to save multiple losses across epochs. We define the class as follows:
+\lstinline{BaseAE} is the base model class from which all models are inherited. When training a model, the \lstinline{criterion} method is the main method to call. It runs the \lstinline{__call__} method and applies the loss function of choice. We define the class as follows:
 
 \lstinputlisting[language=Python, label={lst:baseae}, caption=Base Autoencoder class]{code/baseae.py}
 
-\subsubsection{Early Stopping}
-
-As of now, we do not use a validation dataset for our training, so we will instead be using the training loss as a trigger. This will of course not allow us to analyze our hyperparameters, but will 
-
-\lstinputlisting[language=Python, label={cods:es}, caption=Early Stopping Mechanism]{code/es.py}
-
-For each epoch in our training lop
+In addition to the methods shown in listing \ref{lst:baseae}, this class includes code for saving and loading, as well as different weight initialization methods such as \textit{He}- and \textit{Xavier} initialization \cite{kumar2017weight}.
 
 \subsubsection{Trainer}
 
-The Trainer class serves as the core component of our program. As demonstrated in listing \ref{fig:lstmcell}, it integrates a model, dataloader, and optimizer to execute the training process. Additionally, it handles early stopping, storing history of losses and saving the best model for further use. The core functions of the \texttt{Trainer} class is shown in code listing \ref{code:trainer}.
+The Trainer class serves as the core component of our program. As demonstrated in listing \ref{fig:lstmcell}, it integrates a model, dataloader, and optimizer to execute the training process. Additionally, it handles early stopping, stores history of losses, and saves the best model for further use. The \texttt{Trainer} class is shown in code listing \ref{code:trainer} in the appendix. Note that the \texttt{@TinyJIT} macro enables kernel replays on subsequent calls, speeding up training and validation. 
 
 \lstinputlisting[language=Python, caption=Core function snippets of the \texttt{Trainer} class, label={code:trainer}]{code/trainer.py}
 
@@ -75,20 +70,35 @@ One of the more important aspects of this class is the \texttt{train} function, 
 
 \subsubsection{Training}
 
-In the same way that \texttt{Judas} is designed, we want \texttt{TinyDAS} to be modular and easy to use. We've designed components in a way that is familiar to that of \texttt{Pytorch}. Models can be trained using the following script:
+In the same way that \texttt{Judas} is designed, we want \texttt{TinyDAS} to be modular and easy to use. We've designed components in a way that is familiar to that of \texttt{Pytorch}\cite{paszke2019pytorch}. Models can be trained using the following script:
 
 \lstinputlisting[caption=Example of how models within \texttt{TinyDAS} is trained, language=Python]{code/tinydas_main.py}
 
-We allow for \texttt{Float16} training by type casting all weights and biases in the model, which effectively halves the memory requirement.
+TinyDAS supports training with \texttt{Float16} precision to optimize computational efficiency. This feature, which can be activated through configuration files, converts all weights and biases in the model to half-precision floating-point format, effectively reducing memory requirements by half.
+
+For example, to initiate training of an autoencoder model using transfer learning on four \acrshort{gpu} devices, one would execute the following command:
+\begin{lstlisting}[style=shellcommand, language=bash]
+(*@\textcolor{promptcolor}{\$}@*) python main.py -m ae -t train -g 4 -l
+\end{lstlisting}
+
+where:
+\begin{description}
+\item[\texttt{-m ae}] specifies the autoencoder model
+\item[\texttt{-t train}] sets the task to training
+\item[\texttt{-g 4}] allocates four GPU devices
+\item[\texttt{-l}] enables loading of a pre-trained model for transfer learning
+\end{description}
+
+This approach allows for flexible training of all TinyDAS models, accommodating various hardware configurations and leveraging pre-trained models through transfer learning. The model parameters are stored in the \texttt{safetensors} fileformat \cite{safetensors}.
 
 \subsubsection{Hyperparameters and configurations}
 
-Hyperparameters for the different models are stored in separate YAML files. A full overview can be found in appendix \ref{app:configs}.
+Hyperparameters for the different models are stored in separate YAML files with the same name as the model. An example of a hyperparameter configuration can be found in appendix \ref{app:hyper}.
 
 
 \subsubsection{Anomaly Detection}
 
-After having trained the models on normal signal data, we move on to the anomaly detection section of our program. As mentioned in \ref{back:anomdet}, first decide which types of anomalies are to be found. We decided to first of all split the files into smaller files of \qty{5}{\si{\second}} files, partially to fascilitate for faster inference of our model. We decide to look at the whole array as whole, instead of finding segments. We will be calculating precisions, recalls and f1scores to find a threshold for reconstruction loss of our data to determine whether or not the data is anomalous. In code listing \ref{code:th}, a function for finding this threshold is presented.  \\
+After having trained the models on normal signal data, we move on to the anomaly detection section of our program. As mentioned in \ref{back:anomdet}, first decide which types of anomalies are to be found. We decided to first of all split the files into smaller files of \qty{5}{\si{\second}} files, partially to fascilitate for faster inference of our model. We decide to look at the whole array as whole, instead of finding segments. We will be calculating precisions, recalls and f1scores to find a threshold for reconstruction loss of our data to determine whether or not the data is anomalous. A function for finding this threshold is presented in code listing \ref{code:th}.  \\
 
 \lstinputlisting[language=Python, caption=Code for finding the best threshold, label={code:th}]{code/bestth.py}
 
