@@ -41,6 +41,10 @@ In general, autoencoders with linear, convolutional, or recurrent layers, cluste
 \cite{wang2024deep} 
 
 
+%Over the years, several supervised methods have been studied to detect anomalies. Some of the cluster-based methods used for anomaly detection include K-MEANS \cite{hartigan1979k} and DBSCAN \cite{ester1996density}. In more recent years, advancements in \acrfull{dl} have provided several supervised \acrshort{dnn}s models specifically intended for anomaly detection in \acrshort{das} data CITE. These models typically scale better compared to traditional \acrshort{ml} algorithms and can thus be scaled to large-volume \acrshort{das} data more effectively. However, supervised learning includes manual feature engineering, requiring labeled datasets, potentially hindering them from detecting novel anomalies. 
+
+
+
 
 Label-free autoencoder-based anomaly detection on \acrshort{das} data has been conducted as late as in 2023 \cite{xie2023label}. A combination of a convolutional autoencoder trained on normal-range \acrshort{das} data and a clustering algorithm to locate the feature center was found to beat state-of-the-art supervised networks. Another interesting aspect of this research is the emphasis on model size, creating a sufficient \acrshort{cae} model with only \qty{1.34}{\si{\kilo}} parameters. This research, in particular, has led the ground for our research and the creation of a program for training and comparing several types of autoencoders. \\
 
