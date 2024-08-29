@@ -1,13 +1,31 @@
 \section{Conclusion}
 
-In this thesis, four different autoencoders were trained on \acrshort{das} data on the task of anomaly detection. Additionally, a local package for loading and preprocessing \acrshort{das} data in parallel was developed for use for \acrfull{cgf}. We believe that our work, along the research provided, lay grounds for further development and improvements of both \texttt{Judas.jl} and \texttt{TinyDAS} at \acrshort{cgf}. \\ 
+Importance of big data processing and DAS data processing techniques
+parallelization techniques 
+Contributing to open-source das research
+
+Open-source \acrshort{das} datasets are currently limited. 
 
 
-\textbf{G1: Evaluate the effectiveness in detecting anomalies within \acrshort{das} data}. With our autoencoder based approach, we're able to effectively detecting anomalies within \acrshort{das} data. With even bigger datasets, and more image labeling of \acrshort{das} data, we believe one can achieve even greater results. \\
+Even though we have highlighted the \textit{spatio-temporal} aspects of \acrshort{das} data, the presented models do not cover more than the spatial dimension of \acrshort{das} data. Our comparisons try to prove the need for more complex network architectures, combining both time and space dimensions of \acrshort{das} data. The computation of these networks 
 
-\textbf{G2: Contribute to the open source community, particularly with tools and resources that are beneficial to members of \acrshort{cgf}.} Throughout our work, we've always maintained a strong stance on developing tools that are both beneficial and easy to use. We firmly believe that both of our tools can be of use, specifically for members at \acrshort{cgf}.  \\ 
 
-\textbf{G3: Determine whether Julia is a suitable programming language for 
- high performance data processing, analysis and \acrshort{ai}, specifically aimed at \acrshort{das} data}. Overall, we find Julia satisfactory in developing novel, high performance algorithms, as well as working with data science in general, yet lacking when it comes to training \acrshort{ai} models across multiple \acrshort{gpu}s. We believe it to be an effective language of choice for members at \acrshort{cgf}.\\
 
-\textbf{RQ 2: Can we reduce the precision of \acrshort{das} data to enable faster model training and inference without sacrificing performance?} The results suggests that we indeed can train and analyze \acrshort{das} data on smaller datatypes. Although we don't encounter many errors with the results of the detections, we encounter small errors when training using \texttt{Float16} data. \\
+\acrshort{das} signal processing is becoming increasingly more important, highlighting the potential for \acrshort{hpc}
+
+In this thesis, we've presented several ways of dealing with the increasing amounts of \acrshort{das} data. From 
+
+Unsupervised autoencoders still prove important  . Their ability to capture novel anomalies, as highlighted in Section \ref{back:anomdet}, 
+
+
+
+The topics of this thesis have been broad 
+
+In this thesis, we have covered multiple aspects of \acrshort{das} signal processing, from preprocessing of data, to
+
+\begin{itemize}
+    \item An extensive comparison betwe , further highlighting the importance of capturing spatio-temporal features of \acrshort{das} signal data
+    \item 
+\end{itemize}
+
+

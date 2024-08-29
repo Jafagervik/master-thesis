@@ -91,7 +91,7 @@ This window becomes a rectangle when $\alpha = 0$.
 
 \subsection{Resampling}
 
-Resampling, also known as sampling-frequency conversion, is the act of modifying the sampling rate of a discrete signal to obtain a new discrete representation of this data. In many applications, particularly those involving \acrshort{dsp}, data is often initially collected at a very high sampling rate to capture fine details. However, for subsequent analysis, or storage, this high sampling rate may not be necessary or efficient. Down-sampling, also known as decimation, is a form of resampling where the sampling rate is reduced, can be applied to:
+''Resampling methods are statistical procedures that reuse the sample data for the purpose of statistical inference''\cite{https://doi.org/10.1002/widm.1054}. In many applications, particularly those involving \acrshort{dsp}, data is often initially collected at a very high sampling rate to capture fine details. However, this high sampling rate may not be necessary or efficient for analytical purposes or storage. Down-sampling, also known as decimation, is a form of resampling where the sampling rate is reduced, can be applied to:
 
 \begin{itemize}
     \item Decrease memory consumption for data storage
@@ -99,11 +99,11 @@ Resampling, also known as sampling-frequency conversion, is the act of modifying
     \item Balance the trade-off between processing efficiency and data resolution
 \end{itemize}
 
-By reducing the sampling rate, one may retain the essential characteristics of the data while reducing data volume and computational requirements. However, one must be careful to avoid aliasing, and ensure that the resampled data represents the phenomena of interest. 
+By reducing the sampling rate, one may retain the essential characteristics of the data while reducing data volume and computational requirements. However, one must be careful to avoid aliasing and ensure that the resampled data accurately represents the phenomena of interest. 
 
 \subsubsection{Parallel Channel Decimation}
 
-\acrshort{das} data is a prime candidate for down-sampling due to its often high sampling rate. This operation is often referred to as \textit{channel decimation}. Channel decimation applies down-sampling on a per-channel level to decrease memory consumption. This operation can be deemed \textit{trivial parallizable} by the fact that each channel can be down-sampled independently. By introducing $P$ workers, each worker $P_i$ can down-sample a chunk of channels in parallel. Consequentially, the resulting outputs can be concatenated into a new matrix. This operation can be described as follows:
+\acrshort{das} data is a prime candidate for down-sampling due to its often high sampling rate. This operation is often referred to as \textit{channel decimation}. Channel decimation applies down-sampling on a per-channel level to decrease memory consumption. This operation can be deemed \textit{trivial parallizable} because each channel can be down-sampled independently. By introducing $P$ workers, each worker $P_i$ can down-sample a chunk of channels in parallel. Consequentially, the resulting outputs can be concatenated into a new matrix. This operation can be described as follows:
 
 \[
 A = \begin{bmatrix}

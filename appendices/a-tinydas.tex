@@ -39,113 +39,119 @@ matplotlib & Data visualization \\
 \subsection{AE}
 \label{app:a-ae}
 
-\begin{table}[h]
+\begin{table}[!h]
     \centering
     \begin{tabular}{lrr}
         \toprule
         Layer & Output Shape & Parameters \\
         \midrule
-        Input & (1,335,625,) & 0 \\
-        Dense (Encoder) & (1024,) & 1,367,680,000 \\
+        Input & (1,1,335,625) & 0 \\
+        Dense (Encoder) & (1024,) & 1,368,064,000 \\
         Dense (Encoder) & (512,) & 524,800 \\
-        Dense (Encoder) & (128,) & 65,664 \\
-        Dense (Encoder) & (64,) & 8,256 \\
-        Dense (Latent) & (32,) & 2,080 \\
-        Dense (Decoder) & (64,) & 2,112 \\
-        Dense (Decoder) & (128,) & 8,320 \\
+        Dense (Latent) & (128,) & 65,664 \\
         Dense (Decoder) & (512,) & 66,048 \\
         Dense (Decoder) & (1024,) & 525,312 \\
-        Dense (Output) & (1,335,625,) & 1,367,680,000 \\
+        Dense (Output) & (1,1,335,625) & 1,368,064,000 \\
         \midrule
-        Total Parameters & & 2,735,562,592 \\
+        Total Parameters & & 2,737,309,824 \\
         \bottomrule
     \end{tabular}
-    \caption{Linear Autoencoder Architecture}
-    \label{tab:a-ae}
+    \caption{Autoencoder Architecture}
+    \label{tab:ae}
 \end{table}
+
 
 \subsection{CAE}
 \label{app:a-cae}
 
-\begin{table}[h]
+\begin{table}[!h]
     \centering
     \begin{tabular}{lrr}
         \toprule
         Layer & Output Shape & Parameters \\
         \midrule
-        Input & (1,335,625,) & 0 \\
-        Dense (Encoder) & (1024,) & 1,367,680,000 \\
-        Dense (Encoder) & (512,) & 524,800 \\
-        Dense (Encoder) & (128,) & 65,664 \\
-        Dense (Encoder) & (64,) & 8,256 \\
-        Dense (Latent) & (32,) & 2,080 \\
-        Dense (Decoder) & (64,) & 2,112 \\
-        Dense (Decoder) & (128,) & 8,320 \\
-        Dense (Decoder) & (512,) & 66,048 \\
-        Dense (Decoder) & (1024,) & 525,312 \\
-        Dense (Output) & (1,335,625,) & 1,367,680,000 \\
+        Input & (1,625,2137) & 0 \\
+        Conv2d (Encoder) & (16,313,1069) & 160 \\
+        BatchNorm2d & (16,313,1069) & 32 \\
+        Conv2d (Encoder) & (32,157,534) & 4,640 \\
+        BatchNorm2d & (32,157,534) & 64 \\
+        Conv2d (Encoder) & (64,79,267) & 18,496 \\
+        BatchNorm2d & (64,79,267) & 128 \\
+        ConvTranspose2d (Decoder) & (32,157,534) & 18,496 \\
+        BatchNorm2d & (32,157,534) & 64 \\
+        ConvTranspose2d (Decoder) & (16,313,1069) & 4,640 \\
+        BatchNorm2d & (16,313,1069) & 32 \\
+        ConvTranspose2d (Decoder) & (1,625,2137) & 160 \\
         \midrule
-        Total Parameters & & 2,735,562,592 \\
+        Total Parameters & & 47,832 \\
         \bottomrule
     \end{tabular}
     \caption{Convolutional Autoencoder Architecture}
-    \label{tab:a-cae}
+    \label{tab:cae}
 \end{table}
+
 
 \subsection{VAE}
 \label{app:a-vae}
 
-\begin{table}[h]
+\begin{table}[!h]
     \centering
     \begin{tabular}{lrr}
         \toprule
         Layer & Output Shape & Parameters \\
         \midrule
-        Input & (1,335,625,) & 0 \\
+        Input & (1,625,2137) & 0 \\
         Dense (Encoder) & (1024,) & 1,367,680,000 \\
         Dense (Encoder) & (512,) & 524,800 \\
-        Dense (Encoder) & (128,) & 65,664 \\
-        Dense (Encoder) & (64,) & 8,256 \\
-        Dense (Latent) & (32,) & 2,080 \\
-        Dense (Decoder) & (64,) & 2,112 \\
-        Dense (Decoder) & (128,) & 8,320 \\
+        Dense (Mean) & (128,) & 65,664 \\
+        Dense (Logvar) & (128,) & 65,664 \\
         Dense (Decoder) & (512,) & 66,048 \\
         Dense (Decoder) & (1024,) & 525,312 \\
-        Dense (Output) & (1,335,625,) & 1,367,680,000 \\
+        Dense (Output) & (1,625,2137) & 1,367,680,000 \\
         \midrule
-        Total Parameters & & 2,735,562,592 \\
+        Total Parameters & & 2,925,484,488 \\
         \bottomrule
     \end{tabular}
     \caption{Variational Autoencoder Architecture}
-    \label{tab:a-vae}
+    \label{tab:vae}
 \end{table}
+
+
 
 \subsection{CNN VAE}
 \label{app:a-cvae}
 
-\begin{table}[h]
+\begin{table}[!h]
     \centering
     \begin{tabular}{lrr}
         \toprule
         Layer & Output Shape & Parameters \\
         \midrule
-        Input & (1,335,625,) & 0 \\
-        Dense (Encoder) & (1024,) & 1,367,680,000 \\
-        Dense (Encoder) & (512,) & 524,800 \\
-        Dense (Encoder) & (128,) & 65,664 \\
-        Dense (Encoder) & (64,) & 8,256 \\
-        Dense (Latent) & (32,) & 2,080 \\
-        Dense (Decoder) & (64,) & 2,112 \\
-        Dense (Decoder) & (128,) & 8,320 \\
-        Dense (Decoder) & (512,) & 66,048 \\
-        Dense (Decoder) & (1024,) & 525,312 \\
-        Dense (Output) & (1,335,625,) & 1,367,680,000 \\
+        Input & (1,625,2137) & 0 \\
+        Conv2d (Encoder) & (16,313,1069) & 160 \\
+        BatchNorm2d & (16,313,1069) & 32 \\
+        Conv2d (Encoder) & (32,157,534) & 4,640 \\
+        BatchNorm2d & (32,157,534) & 64 \\
+        Conv2d (Encoder) & (64,79,267) & 18,496 \\
+        BatchNorm2d & (64,79,267) & 128 \\
+        Conv2d (Encoder) & (64,39,134) & 36,928 \\
+        BatchNorm2d & (64,39,134) & 128 \\
+        Linear (FC Mu) & (128,) & 2,048,000 \\
+        Linear (FC Logvar) & (128,) & 2,048,000 \\
+        Linear (Decoder Input) & (64,39,134) & 8,192,000 \\
+        ConvTranspose2d (Decoder) & (64,79,267) & 36,928 \\
+        BatchNorm2d & (64,79,267) & 128 \\
+        ConvTranspose2d (Decoder) & (32,157,534) & 18,496 \\
+        BatchNorm2d & (32,157,534) & 64 \\
+        ConvTranspose2d (Decoder) & (16,313,1069) & 4,640 \\
+        BatchNorm2d & (16,313,1069) & 32 \\
+        ConvTranspose2d (Final) & (1,625,2137) & 160 \\
         \midrule
-        Total Parameters & & 2,735,562,592 \\
+        Total Parameters & & 12,273,640 \\
         \bottomrule
     \end{tabular}
-    \caption{CNN Variational Autoencoder}
-    \label{tab:a-cnnvae}
+    \caption{Conditional Variational Autoencoder Architecture}
+    \label{tab:cvae}
 \end{table}
 
 

@@ -6,30 +6,28 @@
 Our program Judas is currently up to par, or even ahead, compared to existent programs for \acrshort{das} processing at \acrshort{cgf}. Even so, there is still much room for improvement and additions, including:
 
 \begin{itemize}
-    \item Optimizing the cumulative sum calculation to make it parallel, potentially using algorithms like parallel prefix sum [CITE], where GPU acceleration could be introduced.
+    \item Optimizing the cumulative sum calculation to make it parallel, potentially using algorithms like parallel prefix sum \cite{harris2007parallel}, where \acrshort{gpu} acceleration could be introduced.
     \item Implementing a more flexible metadata handling system to accommodate datasets from other sources besides BANENOR.
     \item Extending support for multiple file formats besides \acrshort{hdf5}, such as TDMS.
     \item Developing a user-friendly interface for adjusting hardcoded values, making the program more adaptable to different experimental setups without requiring direct code modifications.
-    \item Implementing more advanced denoising and signal processing techniques.
+    \item Implementing more advanced denoising and signal processing techniques, potentially utilizing \acrshort{gpu} acceleration.
 \end{itemize}
 
 \subsection{TinyDAS and Autoencoder-based Anomaly Detection}
 
-As we noted previously in the discussion section, we were unable to both continue using data provided by \acrshort{cgf}, as well as leveraging Julia due to an immature \acrshort{ai} framework lacking support for scalable \acrshort{gpu} training. \\
+As discussed in Section \ref{disc:tinydas}, we have succeeded in many of our goals with TinyDAS. However, it is still in its early stages, and there are plenty of aspects to work on. The following is a list of further areas of improvement:
 
-We have already mentioned how the lack of proper test data hurts our chances of interpreting the results. Continuing the work of \Gls{pubdas} and adding proper test data based on findings from research papers CITE would be in the interest of further analyzing and finding better-suited models for anomaly detection on \acrshort{das} data. A concrete example of this would be to provide a dataset similar to that of MNIST, where we have labeled data to test against. \\
-
-Right now, we only support reading in from \acrshort{hdf5} files, and no other file formats provided by the \Gls{pubdas} data. Supporting all different files would be of great benefit for letting TinyDAS use any of the datasets provided by \acrshort{pubdas}. \\
-
-Besides the data itself, the framework in which we train and analyse our models is still young, and instead of converting both the data and model weights into half precision floating point numbers, we could make use of mixed precision training, where the data is still trained in its original format, but the weights and biases are stored in their original format. \\
-
-We have presented a handful of useful models for analysing \acrshort{das} data, but further expanding on this, and even introducing models based on other architectures such as \acrshort{gan} would allow us to analyse different events. \\
-
-From the very point we introduced TinyDAS, utilizing \Gls{python} instead of \Gls{julia}, we've had the intention of converting all the models over to JudasNET in the future when multi-GPU training is part of Flux. Not only would this allow us to compare python further and Julia with regards to data analysis and \acrshort{ml}, but also keeping our entire ecosystem in a singular language, Julia, well suited for both \acrshort{hpc} tasks as well as \acrshort{ml}.  \\
-
-The intention of keeping input data in small time chunks has previously been argued for by reducing the workload for each \acrshort{gpu}, and instead using several batches. Another reason is the ability to use our models in a live environment. Every $x$ amount of seconds \acrshort{das} data is recorded and stored in files, a program can be made to continuously analyse and notify whenever an anomaly is found. \\
-
-Continuing to add several different models, both for anomaly detection and live classification or segmentation tasks will further the cause of analysing \acrshort{das} data and in an optimal scenario, prevent geophysical catastrophes.
+\begin{itemize}
+    \item  Half-precision training has been a heavy area of attention. For now, TinyDAS supports half-precision training, inference, loss-scaling, and gradient clipping. Further improving on these to ensure gradients are within range is an important aspect of reducing runtime and memory consumption. 
+    \item Implementing support for mixed precision training.
+    \item Expanding support for other \acrshort{das} datasets, both from PubDAS and other public sources. This could be achieved through a more customizable format of our DataLoader class. Furthermore, implementing functionality for downloading DAS datasets directly from Globus would lower the user entry barrier.
+    \item Extending the collection of models for broader comparisons between different types of models.
+    \item Implementation of test datasets for supervised learning.
+    \item Implementing support for distributed parallel training, enabling large-scale model training. 
+    \item Expanding beyond autoencoder architectures to support other model types such as \acrshort{cnn}s and transformers.
+    \item Support for recurrent layers such as LSTM, RNN, and GRU. These exist in the Tinygrad official repository but do not currently support data- or model-parallel training.
+    \item Developing hybrid models that combine the temporal and spatial aspects of \acrshort{das} signals, such as CNN-LSTM architectures, or even transformer-based ones, to process and analyze \acrshort{das} data more effectively.
+\end{itemize}
 
 \subsection{Final Remarks}
 

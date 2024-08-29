@@ -22,37 +22,16 @@
     \caption{Heatmaps of the processed data before and after }
     \label{fig:dasoutput}
 \end{figure}
-\begin{figure}[!htbp]
-\centering
-\begin{tikzpicture}
-\begin{axis}[
-    ylabel={Execution Time (seconds)},
-    xlabel={Signal duration (m)},
-    xticklabels={1,10, 30, 60},
-    xtick={1,10,30,60},
-    legend pos=north west,
-    ymajorgrids=true,
-    grid style=dashed,
-    width=12cm,
-    height=8cm,
-    bar width=10pt,
-    ybar,
-    legend style={at={(0.5,-0.20)},
-    anchor=north,legend columns=-1},
-    symbolic x coords={1, 10, 30, 60},
-]
-\addplot coordinates {(1,100)(10,100)(30,100)(60,100) };
-\addplot coordinates {(1,50) (10,50) (30,50) (60,50) };
-\addplot coordinates {(1,25) (10,25) (30,25) (60,25) };
-\addplot coordinates {(1,10) (10,10) (30,10) (60,10) };
-\legend{p = 1, p = 2, p = 4, p = 8}
-\end{axis}
-\end{tikzpicture}
-\caption{Execution times for different problem sizes and process counts}
-\label{fig:judas-benchmark}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.50]{figures/judasex.png}
+    \caption{Loading and total processing execution times for different durations and processes. The red bars highlight the total time for processing, while the other bars just show the load times.}
+    \label{fig:judasextime}
 \end{figure}
 
-As we can see.
+Figure \ref{fig:judasextime} highlights the load section's portion. This is the most resource-intensive portion of the program for all processes and file duration except the 5-minute block. 
+
 
 \begin{figure}[!htbp]
 \centering
@@ -61,8 +40,9 @@ As we can see.
     ylabel={Efficiency},
     xlabel={Number of Processes (p)},
     xticklabels={1,2,4,8},
-    xtick={1,2,3,4},
-    legend pos=south east,
+    xtick={1,2,4,8},
+    ytick={0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0},
+    legend pos=north east,
     ymajorgrids=true,
     grid style=dashed,
     width=12cm,
@@ -70,16 +50,24 @@ As we can see.
     ymax=1,
     ymin=0,
 ]
-\addplot coordinates {(1,1) (2,0.95) (3,0.85) (4,0.70)};
-\addplot coordinates {(1,1) (2,0.98) (3,0.92) (4,0.82)};
-\addplot coordinates {(1,1) (2,0.99) (3,0.95) (4,0.88)};
-\addplot coordinates {(1,1) (2,0.99) (3,0.97) (4,0.93)};
+\addplot coordinates {(1,1) (2,0.517) (4,0.263) (8,0.128)};
+\addplot coordinates {(1,1) (2,0.497) (4,0.242) (8,0.123)};
+\addplot coordinates {(1,1) (2,0.500) (4,0.252) (8,0.127)};
+\addplot coordinates {(1,1) (2,0.501) (4,0.257) (8,0.129)};
 \legend{$t$ = 1, $t$ = 10, $t$ = 30, $t$ = 60}
 \end{axis}
 \end{tikzpicture}
-\caption{Efficiency for different problem sizes and process counts. $m$ is the amount of minutes of data we want to process.}
-\label{fig:efficiency}
+\caption{Efficiency for different problem sizes and process counts. $t$ is the amount of minutes of data we want to process.}
+\label{fig:judasefficiency}
 \end{figure}
+
+%\begin{figure}[!h]
+%    \centering
+%    \includegraphics[scale=0.5]{figures/speedup_judas.png}
+%    \caption{Heatmap of speedups with Judas compared to serial execution}
+%    \label{fig:ex2judheat}
+%\end{figure}
+
 
 \subsection{Experiment \rnum{2}: Parallel Resampling}
 
@@ -119,7 +107,7 @@ As we can see.
 \begin{figure}[!h]
     \centering
     \includegraphics[scale=0.5]{figures/speedup_heatmap(1).png}
-    \caption{Heatmap of speedups compared to serial execution}
+    \caption{Speedups of the parallel resample function compared to serial execution}
     \label{fig:ex2heat}
 \end{figure}
 
