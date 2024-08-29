@@ -1,31 +1,26 @@
 \section{Conclusion}
+\label{conc:conc}
 
-Importance of big data processing and DAS data processing techniques
-parallelization techniques 
-Contributing to open-source das research
+\acrshort{das} processing is a complex task requiring many precise calculations. The massive amounts of stored data have also highlighted the need for more efficient algorithms for file loading, processing, and analysis. In this thesis, we provide tools for improved efficiency in processing and analyzing \acrshort{das} data and a comparative analysis of different autoencoder architectures. By developing
+Judas and TinyDAS, we bridge the gap between \acrshort{das} pre-processing and detection by providing a direct pipeline between the two as shown in Figure \ref{fig:ove}.' Furthermore, we provide tools that can be used for further research, both by members at \acrshort{cgf} and other researchers.
 
-Open-source \acrshort{das} datasets are currently limited. 
+For Judas, we argue the case for looking at recent advancements in programming language design and parallel techniques further to enhance efficiency in \acrshort{das} processing. Although our current file loading is still slow, the reduced memory requirements and temporary file storage allow for more efficient use by members at \acrshort{cgf}.
 
+As for TinyDAS, we reached our goals in terms of providing software for comparative analysis of autoencoder-based anomaly detection and hardware-agnostic model training, as discussed in Section \ref{disc:tinydas}. Our comparisons demonstrate the need for more complex network architectures for enhanced accuracy in anomaly detection of \acrshort{das}. Furthermore, we stress the usefulness of smaller architectures as viable options compared to larger ones.
 
-Even though we have highlighted the \textit{spatio-temporal} aspects of \acrshort{das} data, the presented models do not cover more than the spatial dimension of \acrshort{das} data. Our comparisons try to prove the need for more complex network architectures, combining both time and space dimensions of \acrshort{das} data. The computation of these networks 
+Even though the topic of this thesis has been broad and contains several aspects, we were able to condense our research into three main questions. Following are the answers to these questions, as mentioned in Section \ref{intro:contribs}:
 
+\textbf{How do the spatial characteristics of \acrshort{das} data impact the anomaly detection performance using autoencoders?}
+The distinct difference in especially reconstruction capabilities, as well as anomaly metrics (e.g., F1 score and precision) between the linear and convolutional models, further indicates the importance of capturing spatial characteristics within \acrshort{das} data for enhanced performance in anomaly detection. Our results show that convolutional autoencoders consistently outperform the dense autoencoders, highlighting the critical role of spatial characteristics in \acrshort{das} anomaly detection.
 
+\textbf{What autoencoder architectures are most effective for anomaly detection in \acrshort{das} data when computational resources can be limited?}
 
-\acrshort{das} signal processing is becoming increasingly more important, highlighting the potential for \acrshort{hpc}
+Although the convolutional models require a smaller batch size as of now, thus leading to higher training, based on median epoch duration and the epoch count seen in Table \ref{tab:modelresinfo}, combined with the significantly smaller model sizes, improved anomaly scores, and overall reconstruction capabilities, we find simpler convolutional models, such as our CAE model, to be sufficiently effective. These models balance computational efficiency and detection performance, making them well-suited for scenarios where computational resources are scarce.
 
-In this thesis, we've presented several ways of dealing with the increasing amounts of \acrshort{das} data. From 
+\textbf{What preprocessing techniques can optimize the efficiency-accuracy trade-off in \acrshort{das} data processing for anomaly detection?}
 
-Unsupervised autoencoders still prove important  . Their ability to capture novel anomalies, as highlighted in Section \ref{back:anomdet}, 
+Dividing \acrshort{das} data into smaller matrices, followed by normalization, allows for faster processing, model training, and improved inference speed, which is crucial in real-time environments. Furthermore, by not manually selecting non-anomalous datasets for model training, we achieve good results with more diverse data, enhancing the model's ability to detect a wider range of anomalies. Additionally, by using half-precision floating point numbers for inference, we effectively reduce inference time cost by a mean factor of \texit{170} across our models. These techniques collectively optimize the efficiency-accuracy trade-off, significantly improving processing speed while maintaining robust anomaly detection capabilities.
 
-
-
-The topics of this thesis have been broad 
-
-In this thesis, we have covered multiple aspects of \acrshort{das} signal processing, from preprocessing of data, to
-
-\begin{itemize}
-    \item An extensive comparison betwe , further highlighting the importance of capturing spatio-temporal features of \acrshort{das} signal data
-    \item 
-\end{itemize}
+In conclusion, our research has contributed to the field of \acrshort{das} data analysis by developing efficient tools and identifying effective strategies for anomaly detection. We've demonstrated the importance of considering spatial characteristics, compact convolutional architectures' potential, and the benefits of strategic preprocessing techniques. As the field continues to evolve, the tools and insights provided by this thesis offer a solid foundation for ongoing advancements in \acrshort{das} data processing and analysis.
 
 

@@ -1,10 +1,9 @@
 \subsection{Experiment \rnum{2}: Anomaly Detection}
 
-Table \ref{tab:autoencoder_comparison} presents a comparative analysis of the four autoencoder types: dense, convolutional, variational dense, and variational convolutional.
+Table \ref{tab:confusion-matrix-results} presents a comparative analysis of all four models. The $\beta-CVAE$ has the highest values for the positives and the lowest of the negatives.
 
 \begin{table}[!htbp]
 \centering
-\label{tab:confusion-matrix-results}
 \begin{tabular}{l
     S[table-format=3.0]
     S[table-format=3.0]
@@ -20,8 +19,11 @@ $\beta$-VAE  & 101 & 2 & 458 & 39 \\
 $\beta$-CVAE & \textbf{103} & \textbf{5} & \textbf{455} & \textbf{37} \\
 \bottomrule
 \end{tabular}
-\caption{Confusion Matrix Components}
+\label{tab:confusion-matrix-results}
+\caption{Confusion Matrix Values for all four models}
 \end{table}
+
+
 \begin{table}[!htbp]
 \centering
 \label{tab:performance-metrics}
@@ -41,51 +43,58 @@ $\beta$-VAE  & \textbf{0.981} & 0.721 & \textbf{0.831} & \textbf{0.004} & \textb
 $\beta$-CVAE & 0.954 & \textbf{0.736} & \textbf{0.831} & 0.011 & 0.924 \\
 \bottomrule
 \end{tabular}
-\caption{Model Performance Metrics Comparison}
+\label{tab:auto}
+\caption{Anomaly Detection Performance Metrics Comparison}
 \end{table}
 
-\begin{figure}[!h]
+
+
+\begin{figure}[!htbp]
     \centering
-    \includegraphics[scale=0.6]{figures/anomalies/combined_roc_curve.png}
-    \caption{Combined ROC curve for all models}
-    \label{fig:roccurve}
+    \begin{subfigure}[b]{\textwidth}
+        \centering
+        \includegraphics[width=0.8\textwidth]{figures/anomalies/combined_roc_curve.png}
+        \caption{Combined ROC Curve for all models}
+        \label{fig:roccurve}
+    \end{subfigure}
+    \vspace{1em}
+    \begin{subfigure}[b]{\textwidth}
+        \centering
+        \includegraphics[width=0.8\textwidth]{figures/anomalies/combined_pr_curve.png}
+        \caption{Combined PR Curve for all models}
+        \label{fig:prcurve}
+    \end{subfigure}
+    \caption{Performance curves for all models}
+    \label{fig:combined_curves}
 \end{figure}
-
-\begin{figure}[!h]
-    \centering
-    \includegraphics[scale=0.6]{figures/anomalies/combined_pr_curve.png}
-    \caption{Combined PR curve for all models}
-    \label{fig:prcurve}
-\end{figure}
-
-
+\clearpage
 
 \subsubsection{Threshold Analysis}
 
 \begin{figure}[!h]
   \centering
   \includegraphics[scale=0.5]{figures/anomalies/ae/threshold.png}
-  \caption{AE}
+  \caption{Threshhold analysis for the AE model}
   \label{fig:threshold_ae}
 \end{figure}
 
 \begin{figure}[!h]
   \centering
   \includegraphics[scale=0.5]{figures/anomalies/vae/threshold.png}
-  \caption{$\beta$-VAE}
+  \caption{Threshhold analysis for the $\beta$-VAE model}
   \label{fig:threshold_vae}
 \end{figure}
 
 \begin{figure}[!h]
   \centering
   \includegraphics[scale=0.5]{figures/anomalies/cae/threshold.png}
-  \caption{CAE}
+  \caption{Threshhold analysis for the CAE model}
   \label{fig:threshold_cae}
 \end{figure}
 
 \begin{figure}[!h]
   \centering
   \includegraphics[scale=0.5]{figures/anomalies/cvae/threshold.png}
-  \caption{$\beta$-CVAE}
+  \caption{Threshhold analysis for the $\beta$-CVAE model}
   \label{fig:threshold_vae}
 \end{figure}

@@ -1,6 +1,4 @@
-function denoise(
-    data::Matrix{Float32},
-    hz::Integer;
+function denoise(data::Matrix{Float32}, hz::Integer;
     tpr_rate::Float32=0.05f0,
     taper::Bool=true,
     bp_order::Int=4,

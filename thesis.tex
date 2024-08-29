@@ -28,17 +28,16 @@
 \usepackage{xcolor}
 \usepackage{caption}
 
-% Define a custom color for the caption background
 \definecolor{captionbg}{RGB}{240,240,240}
 \definecolor{captiontext}{RGB}{0,0,0}
 \definecolor{captionframe}{RGB}{100,100,100}
-
 \newcommand{\mycomment}[1]{}
-% Define a custom caption style
+
+% Define a custom caption style with reduced width
 \DeclareCaptionFormat{thesiscaption}{%
     \begin{tikzpicture}
     \node[inner sep=10pt, fill=captionbg, draw=captionframe, line width=0.5pt, rounded corners] {%
-        \parbox{\dimexpr\textwidth-20pt\relax}{%
+        \parbox{0.8\textwidth}{%
             \textbf{\color{captiontext}#1#2}%
             \par\vskip2pt%
             \color{captiontext}#3%

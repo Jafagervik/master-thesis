@@ -11,20 +11,18 @@ To further reduce memory consumption, half-precision or even mixed-precision tra
 The highest epoch durations, as displayed in Figure \ref{fig:traintimes} always happen on the first epoch due to \texttt{Tinygrad}s \textit{just-in-time} compilation, as discussed in Section \ref{meth:tinyoverview}. 
 
 
-\ref{fig:losses}. 
+asd \ref{fig:losses}. 
       
-The reconstruction capabilities of the different models differ drastically (cf. Figure \ref{fig:aereconstruct}). As per the theory discussed in Section \ref{back:linear}, the limited feature extraction capabilities of dense layers compared to convolutional . This is highlighted by how the AE model is able to capture the average values across the signal, but fails. The inclusion of the AE model was not to try to outperform networks of greater capabilities, but rather highlight the importance of  context when constructing \acrshort{das}. 
+The reconstruction capabilities of the different models differ drastically as per Figure \ref{fig:aereconstruct}). As per the theory discussed in Section \ref{back:linear}, the limited feature extraction capabilities of dense layers compared to convolutional proves big, especially for \acrshort{das} data. This is highlighted by how the AE model is able to capture the average values across the signal but fails to capture essential features. The inclusion of the AE model in our comparison was not to try to outperform networks of greater capabilities, but rather underscore the importance of context when constructing \acrshort{das}. We do not 
 
-Talk more about the spatio-temporal aspect of \acrshort{das}.
+The $\beta-VAE$ mo
 
-
+Even though we have highlighted the \textit{spatio-temporal} aspects of \acrshort{das} data, the selected models for comparisons try to underscore  \acrshort{das} data. 
 
 \subsection{Experiment \rnum{2}: Anomaly detection}
 
-\subsubsection{AE}
-\subsubsection{$\beta$-VAE}
-\subsubsection{CAE}
-\subsubsection{$\beta$-CVAE}
+Failed models? 
+\subsection{Limitations} 
 
-
-Normal data 
+Dataset
+Float16

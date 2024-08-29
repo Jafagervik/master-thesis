@@ -1,24 +1,26 @@
 \section{Further work}
 \label{conc:further}
 
+While our work has addressed several key challenges, both Judas and TinyDAS are in their first iterations. Further research and development can address the current limitations discussed in this thesis.
+
 \subsection{Judas and \acrshort{das} processing}
 
-Our program Judas is currently up to par, or even ahead, compared to existent programs for \acrshort{das} processing at \acrshort{cgf}. Even so, there is still much room for improvement and additions, including:
+While Judas serves task of loading and processing \acrshort{das} data, the following list provides an overview over further advancements that can enhance its computational effectiveness, specifically targeting file loading:
 
 \begin{itemize}
-    \item Optimizing the cumulative sum calculation to make it parallel, potentially using algorithms like parallel prefix sum \cite{harris2007parallel}, where \acrshort{gpu} acceleration could be introduced.
+    \item Designing a parallel version of the column-wise cumulative sum function, potentially using algorithms like parallel prefix sum \cite{harris2007parallel}, where \acrshort{gpu} acceleration could be introduced. 
     \item Implementing a more flexible metadata handling system to accommodate datasets from other sources besides BANENOR.
-    \item Extending support for multiple file formats besides \acrshort{hdf5}, such as TDMS.
-    \item Developing a user-friendly interface for adjusting hardcoded values, making the program more adaptable to different experimental setups without requiring direct code modifications.
-    \item Implementing more advanced denoising and signal processing techniques, potentially utilizing \acrshort{gpu} acceleration.
+    \item Extending support for multiple file formats besides \acrshort{hdf5} and binary files, such as TDMS.
+    \item Implementing more advanced denoising and signal processing techniques, potentially utilizing \acrshort{gpu} acceleration and denoising autoencoders as done by \cite{denoise}.
 \end{itemize}
 
 \subsection{TinyDAS and Autoencoder-based Anomaly Detection}
 
-As discussed in Section \ref{disc:tinydas}, we have succeeded in many of our goals with TinyDAS. However, it is still in its early stages, and there are plenty of aspects to work on. The following is a list of further areas of improvement:
+As discussed in Section \ref{disc:tinydas}, we have succeeded in many of our goals with TinyDAS. However, as seen by the poor results from the variational autoencoders, there is still much room left for tuning current models. The following list presents multiple avenues for further development and research, both for current models, and TinyDAS as an extension of the TinyGrad \acrshort{ai} framework:
 
 \begin{itemize}
     \item  Half-precision training has been a heavy area of attention. For now, TinyDAS supports half-precision training, inference, loss-scaling, and gradient clipping. Further improving on these to ensure gradients are within range is an important aspect of reducing runtime and memory consumption. 
+    \item Extend support for $\mathcal{L}_1$ and $\mathcal{L}_2$ regularization.
     \item Implementing support for mixed precision training.
     \item Expanding support for other \acrshort{das} datasets, both from PubDAS and other public sources. This could be achieved through a more customizable format of our DataLoader class. Furthermore, implementing functionality for downloading DAS datasets directly from Globus would lower the user entry barrier.
     \item Extending the collection of models for broader comparisons between different types of models.
@@ -31,4 +33,4 @@ As discussed in Section \ref{disc:tinydas}, we have succeeded in many of our goa
 
 \subsection{Final Remarks}
 
-We want to thank \acrfull{cgf}, and especially Robin, for providing data and computational resources. We hope both these programs can help all your current and future members further the field of \acrshort{das} research.
+We want to thank \acrfull{cgf} for providing data and computational resources. We hope both these programs can help all their current and future members further the field of \acrshort{das} research.

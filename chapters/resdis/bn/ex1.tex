@@ -1,21 +1,24 @@
-\subsection{Experiment \rnum{1}: HDF5 file processing and resampling}
+\subsection{Experiment \rnum{1}: File Loading and Data Processing}
+
+
+\subsubsection{\acrshort{das} signal heatmaps}
 
 \begin{figure}[!h]
     \centering
     \begin{subfigure}{0.45\linewidth}
         \centering
         \includegraphics[width=\linewidth]{figures/heatmap_das_test.png}
-        \caption{Before resampling and normalization}
+        \caption{Before}
         \label{fig:dasoutput1}
     \end{subfigure}
     \hfill
     \begin{subfigure}{0.45\linewidth}
         \centering
         \includegraphics[width=\linewidth]{figures/heatmap_das_test.png}
-        \caption{After resampling and normalization}
+        \caption{After}
         \label{fig:dasoutput2}
     \end{subfigure}
-    \caption{Heatmaps of the processed data before and after }
+    \caption{Heatmaps of the processed data before and after resampling}
     \label{fig:dasoutput}
 \end{figure}
 
@@ -50,10 +53,10 @@ Figure \ref{fig:judasextime} highlights the load section's portion. This is the 
 \addplot coordinates {(1,1) (2,0.497) (4,0.242) (8,0.123)};
 \addplot coordinates {(1,1) (2,0.500) (4,0.252) (8,0.127)};
 \addplot coordinates {(1,1) (2,0.501) (4,0.257) (8,0.129)};
-\legend{$t$ = 1, $t$ = 10, $t$ = 30, $t$ = 60}
+\legend{$d$ = 5, $d$ = 10, $d$ = 30, $d$ = 60}
 \end{axis}
 \end{tikzpicture}
-\caption{Efficiency for different problem sizes and process counts. $t$ is the amount of minutes of data we want to process.}
+\caption{Efficiency for different problem sizes and process counts. $d$ is the loaded signal duration in minutes.}
 \label{fig:judasefficiency}
 \end{figure}
 

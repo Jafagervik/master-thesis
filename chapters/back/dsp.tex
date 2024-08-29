@@ -4,35 +4,32 @@
 \subsection{Distributed Acoustic Sensing}
 \label{back:das}
 
-\acrfull{das} is a type of sensing technology that uses fiber optic cables to measure strain and vibrations along their length. By employing specialized optoelectronic devices, \acrshort{das} systems can detect and measure acoustic disturbances over vast distances with high spatial and temporal resolution. This technology is widely used for monitoring conditions within geophysical environments. Some of the usecases of \acrshort{das} at \acrshort{cgf} include
+\acrfull{das} is a type of sensing technology that uses fiber optic cables to measure strain and vibrations along their length. By employing specialized optoelectronic devices, such as the OptoDAS \cite{asn_optodas}, \acrshort{das} systems can detect and measure acoustic disturbances with high spatial and temporal resolution over distances up to 70-80km. This technology is widely used for monitoring conditions within geophysical environments. Some of the use cases of \acrshort{das} at \acrshort{cgf} include:
 
 \begin{itemize}
     \item Movement of traffic
     \item Detection of landslides
-    \item Observation of Whales outside Svalbard
-    \item Seismic activity detection
+    \item Whale monitoring outside Svalbard
+    \item General seismic activity detection
 \end{itemize}
 
+\textbf{Gauge length} is the spatial resolution of measurements
+
+\textbf{Channel distance} stores information on spatial sampling. Not all channels along the total measurement are stored, so to understand the location of a signal, the gauge length, combined with the channel distance, tells us the exact distance from the start of the measurement.
+
+\textbf{Sample Rate} is the temporal resolution of the data and is measured in hertz. \\
+
+\acrshort{das} data can be seen as a multi-channel time series, where each channel (sensor) stores signal values for different sample times.   \acrshort{das} data can be stored in different file formats, but due to the hierarchical nature of the data, formats such as TDMS \cite{10.1145/800196.805973} or \acrshort{hdf5} are commonly used. Their hierarchical nature is ideal for complex datasets, which often require additional metadata. Regardless of the chosen format, certain metadata are crucial for effectively handling and interpreting \acrshort{das} signal data:
+The \textit{spatio-temporal} aspects of \acrshort{das} come from how the data is represented. This data can be represented as a one-channel image, as shown by the seismic heatmap in Figure \ref{fig:dasframe-ex}. 
 
 \begin{figure}[!h]
     \centering
     \includegraphics[width=0.7\linewidth]{figures/das_example.png}
-    \caption{DAS data frame example}
+    \caption{Example of \acrshort{das} signals as a heatmap}
     \label{fig:dasframe-ex}
 \end{figure}
 
-\acrshort{das} data can be stored in several different file formats. Data stored in \acrshort{hdf5} files have the advantage of storing additional metadata beside it and is ideal for complex datasets requiring extensive contextual information. Other formats such as TDMS are also structured around hierarchical data \cite{10.1145/800196.805973}, and is often used for storing \acrshort{das} data. Regardless of the chosen format, certain metadata are crucial for effectively handling and interpreting DAS data:
-
-\textbf{Timestamps} is used for temporal alignment and analysis
-
-\textbf{Gauge length} is the spatial resolution of measurements
-
-\textbf{Channel decimation} stores information on spatial sampling. Not all channels along the total measurement is stored, and so to understand the location of a signal, the gauge length in combination with the channel decimation tells us the exact distance from the start of the measurement.
-
-\textbf{Sample Rate} is the temporal resolution of the data, and is measured in hertz.
-
-\acrshort{das} data itself is stored as a matrix, usually where the axis represent time and signal channels.
-
+\mycomment{
 \begin{table}[!h]
 \centering
 \begin{equation*}
@@ -48,6 +45,7 @@ x_{t,1} & x_{t,2} & \cdots & x_{t,n-1} & x_{t,n}
 \end{table}
 
 In the matrix $\textbf{X}$ above, $t$ denotes the number of recordings for the file; for one second this would be equal to the sample rate. $n$ is the amount of channels stored. To process this data as fast as possible, it is important to consider which memory alignment the programming language of choice uses. In Julia, MatLab and Fortran, memory is stored in column-major order, while in most other languages, memory is stored in a row-major order. 
+}
 
 \subsection{Radio Frequency Filtering}
 
@@ -75,7 +73,7 @@ A common approach to preprocessing \acrshort{das} data usually involves applying
 \subsection{Tukey Window}
 \label{dsp:tukey}
 
-Window functions are function often used in \acrshort{dsp} to avoid artifacts. This is done by setting values outside a pre-defined interval to zero and apply a taper from the pass-band to the first zero-value. The Tukey window \cite{tukey1967introduction}, also known as the \textit{cosine-tapered window} is a common approach to reduce edge effects, and is defined as follows:
+Window functions are function often used in \acrshort{dsp} to avoid artifacts. This is done by setting values outside a pre-defined interval to zero and applying a taper from the passband to the first zero value. The Tukey window \cite{tukey1967introduction}, also known as the \textit{cosine-tapered window} is a common approach to reduce edge effects, and is defined as follows:
 
 \[
     w(x)= 
@@ -86,12 +84,17 @@ Window functions are function often used in \acrshort{dsp} to avoid artifacts. T
 \end{cases}
 \]
 
-This window becomes a rectangle when $\alpha = 0$.
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.6\linewidth]{figures/tukey_windows_high_res.jpg}
+    \caption{Tukey window across different $\alpha$ values. The window becomes a rectangle when $\alpha = 0$}
+    \label{fig:tukeywindow}
+\end{figure}
 
-
+\clearpage
 \subsection{Resampling}
 
-''Resampling methods are statistical procedures that reuse the sample data for the purpose of statistical inference''\cite{https://doi.org/10.1002/widm.1054}. In many applications, particularly those involving \acrshort{dsp}, data is often initially collected at a very high sampling rate to capture fine details. However, this high sampling rate may not be necessary or efficient for analytical purposes or storage. Down-sampling, also known as decimation, is a form of resampling where the sampling rate is reduced, can be applied to:
+''Resampling methods are statistical procedures that reuse the sample data for the purpose of statistical inference''\cite{https://doi.org/10.1002/widm.1054}. In many applications, data is often initially collected at a very high sampling rate to capture fine details. However, this high sampling rate is not computationally efficient or even necessary for all analytical purposes. Down-sampling, also referred to as decimation within the \acrshort{dsp} field, is a form of resampling where the sampling rate is reduced, can be applied to:
 
 \begin{itemize}
     \item Decrease memory consumption for data storage
@@ -99,11 +102,11 @@ This window becomes a rectangle when $\alpha = 0$.
     \item Balance the trade-off between processing efficiency and data resolution
 \end{itemize}
 
-By reducing the sampling rate, one may retain the essential characteristics of the data while reducing data volume and computational requirements. However, one must be careful to avoid aliasing and ensure that the resampled data accurately represents the phenomena of interest. 
+By reducing the sampling rate, one may retain the essential characteristics of the data while reducing data volume and computational requirements. However, one must be careful to avoid aliasing and ensure that the resampled data accurately represents the phenomena of interest. For \acrshort{das} data, this can differ drastically from one experiment to another. 
 
 \subsubsection{Parallel Channel Decimation}
 
-\acrshort{das} data is a prime candidate for down-sampling due to its often high sampling rate. This operation is often referred to as \textit{channel decimation}. Channel decimation applies down-sampling on a per-channel level to decrease memory consumption. This operation can be deemed \textit{trivial parallizable} because each channel can be down-sampled independently. By introducing $P$ workers, each worker $P_i$ can down-sample a chunk of channels in parallel. Consequentially, the resulting outputs can be concatenated into a new matrix. This operation can be described as follows:
+\acrshort{das} data is a prime candidate for down-sampling due to its often high sampling rate. This operation is often referred to as \textit{channel decimation}. Channel decimation applies down-sampling on a per-channel level to decrease memory consumption. This operation can be deemed \textit{embarrasingly parallel} because each channel can be down-sampled independently. By introducing $P$ workers, each worker $P_i$ can down-sample a chunk of channels in parallel. Consequentially, the resulting outputs can be concatenated into a new matrix. This operation can be described as follows:
 
 \[
 A = \begin{bmatrix}

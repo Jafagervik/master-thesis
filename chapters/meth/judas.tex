@@ -4,15 +4,14 @@
 \subsection{Julia - High-Performance Data-Driven Scientific Computing}
 \label{met:Julia}
 
-Created in 2009, first released in 2012 as part of a master thesis \cite{juliaMs} and further a doctoral thesis \cite{juliaPHD}, Julia is a high-performance, dynamically typed programming language with the goal of being a fast and performant language like C, the simplicity of Python, linear algebra extensions like Matlab, and statistics like R \cite{julia}. Like Python, Julia can be used in a script-like fashion through its \acrfull{repl}. Notebook-style programming has been a standard way for data analysts to write their code, and Jupyter notebooks also support Julia through the \texttt{IJulia.jl} package. 
-Julia's fluent type system, accompanied by easy syntax, high performance, \acrshort{repl} tools, makes it a great contender for data analysis. We've previously proven how Julia effectively deals with I/O operations, \cite{projthesis}.
+Created in 2009, first released in 2012 as part of a master thesis \cite{juliaMs} and further a doctoral thesis \cite{juliaPHD}, Julia is a high-performance, dynamically typed programming language with the goal of being a language ''fast and performant language like C, with syntax as simple as Python's, linear algebra extensions like Matlab, and statistics like R'' \cite{julia}. Like Python, Julia can be used in a script-like fashion through its \acrfull{repl}. Notebook-style programming has been a standard way for data analysts to write their code, and Jupyter notebooks also support Julia through the \texttt{IJulia.jl} package. Julia's fluent type system, accompanied by easy syntax, high performance, \acrshort{repl} tools, makes it a viable language for data science. We've previously discussed Julia in preliminary studies \cite{projthesis}.
 
 \subsection{Overview}
 \label{met:judasoverview}
 
 Judas, formerly known as Emerald from the project thesis \cite{projthesis}, is a Julia package we've created for internal use for members at \acrshort{cgf}. Our work started last fall when we saw a limitation of current applications at \acrshort{cgf} for loading \acrshort{das} data from local servers into programs to be able to process and further analyze these data. We wrote this package in Julia due to its high performance and members' familiarity with similar languages such as MatLab and Python. With Julia, we could draw strengths from its ecosystem and build systems to create an easy-to-use library with which members can familiarize themselves. We started with a simple Python program that read multiple \acrshort{hdf5} files storing \acrshort{das} data into data frames. We parallelized certain parts of the code from here and stored processed data in one memory-mapped file instead of loading large matrices into memory. This allowed us to work with more data at the same time, as well as decreasing the overall wall time and memory consumption.  
 In this section, we will look at what changes have been made ever since, from improvements of existing code to new methods added and the availability of the library for members at \acrshort{cgf}. \\
-Judas is designed in a data-oriented manner without object-oriented features. We split our program into 4 parts: loading \acrshort{das} data from \acrshort{hdf5} files, signal processing, matrix operations, and utilities for plotting. A full overview of the file structure can be seen in figure \ref{fig:judasoverview}.\\
+We split our program into 4 parts: loading \acrshort{das} data from \acrshort{hdf5} files, signal processing, matrix operations, and utilities for plotting. A full overview of the file structure can be seen in figure \ref{fig:judasoverview}.\\
 
 \begin{figure}[!h]
     \centering
@@ -21,22 +20,21 @@ Judas is designed in a data-oriented manner without object-oriented features. We
     \label{fig:judasoverview}
 \end{figure}
 
-Figre \ref{fig:apiflow} shows which core functions have been changed or added to our program. Aside from these, all other utility functions are completely new. Compared to Emerald, Judas now contains more signal-processing methods and general utilities for plotting and loading files. Finding and loading files has also been improved or extended, aiming to reducing overall memory usage and processing time.
-\\
+Figure \ref{fig:apiflow} shows which core functions have been changed or added to our program. Aside from these, all other utility functions are completely new. Compared to Emerald, Judas now contains more signal-processing methods and general utilities for plotting and loading files. Finding and loading files has also been improved or extended, aiming to reduce overall memory usage and processing time.
 
 \begin{figure}[!h]
     \centering
     \includegraphics[scale=0.5]{figures/dataflow.png}
-    \caption{Dataflow from we read HDF5 files to we are ready to train}
+    \caption{Overview of }
     \label{fig:apiflow}
 \end{figure}
 
 
-\subsection{Preprocessing functions}
+\subsection{Core Functionality}
 
 \subsubsection{Finding \acrshort{das} files}
 
-The \texttt{find\_DAS\_files} function now allows for modifying the \acrfull{roi}, which determines which channels are included when loading the data. To enhance flexibility, we introduced a \texttt{step} parameter for channel selection. As shown in Table \ref{tab:experiment_data}, every 4th sensor is stored in the original data. The \texttt{step} parameter allows users to adjust the interval between selected channels, effectively controlling the scale of \acrshort{das} data analysis. For instance, if the original channel distance was approximately \qty{4}{\meter}, setting \texttt{step} to 25 would result in loading data every \qty{100}{\meter}. This feature enables users to easily adapt the spatial resolution of their analysis to suit their specific needs.
+The \texttt{find\_DAS\_files} function now allows for modifying the \acrfull{roi}, which determines which channels are included when loading the data. We introduced a \texttt{step} parameter for channel selection to enhance flexibility. As shown in Table \ref{tab:experiment_data}, every 4th sensor is stored in the original data. The \texttt{step} parameter allows users to adjust the interval between selected channels, effectively controlling the scale of \acrshort{das} data analysis. For instance, if the original channel distance was approximately \qty{4}{\meter}, setting \texttt{step} to 25 would result in loading data every \qty{100}{\meter}. This feature enables users to easily adapt the spatial resolution of their analysis to suit their specific needs.
 
 \subsubsection{Loading \acrshort{das} data}
 
@@ -52,13 +50,16 @@ The decision to distribute the selected \acrshort{das} data across multiple file
 
 \lstinputlisting[label={code:ccds},caption=Columnwise Cumsum Delta Scaling, language=Julia]{code/ccds.jl}
 
-The process begins with memory-mapping of the submatrix $M_i$ from its respective file, where $i$ denotes the iteration index. Subsequently, the final row of the preceding matrix, represented as $prev_{i-1}$, is added to the initial row of the current submatrix: $M_i[1,:] \leftarrow M_i[1,:] + prev_{i-1}$. Following this, a column-wise cumulative sum operation is executed on $M_i$, such that $M_i[j,:] \leftarrow \sum_{k=1}^j M_i[k,:]$ for each column. The entire submatrix is then multiplied by the scaling factor $\Delta t$: $M_i \leftarrow \Delta t \cdot M_i$. Finally, the $prev_i$ variable is updated with the final row of the current submatrix to ensure continuity: $prev_i \leftarrow M_i[end,:]$. This $prev_i$ will be utilized in the subsequent iteration $i+1$, maintaining the cumulative nature of the operation across all submatrices. It is worth noting that $M_1$ has no previous row to add, and thus only computes the columnwise cumulative sum and gets scaled by $\Delta$t.
+The process begins with memory mapping of the submatrix $M_i$ from its respective file, where $i$ denotes the iteration index. Subsequently, the final row of the preceding matrix, represented as $prev_{i-1}$, is added to the initial row of the current submatrix: $M_i[1,:] \leftarrow M_i[1,:] + prev_{i-1}$. Following this, a column-wise cumulative sum operation is executed on $M_i$, such that $M_i[j,:] \leftarrow \sum_{k=1}^j M_i[k,:]$ for each column. The entire submatrix is then multiplied by the scaling factor $\Delta t$: $M_i \leftarrow \Delta t \cdot M_i$. Finally, the $prev_i$ variable is updated with the final row of the current submatrix to ensure continuity: $prev_i \leftarrow M_i[end,:]$. This $prev_i$ will be utilized in the subsequent iteration $i+1$, maintaining the cumulative nature of the operation across all submatrices. It is worth noting that $M_1$ has no previous row to add, and thus only computes the columnwise cumulative sum and gets scaled by $\Delta$t.
 
-This methodology enables the implementation of a column-wise cumulative sum operation across the entirety of the \acrshort{das} data, despite its distribution across multiple files. The iterative nature of this approach leverages Julia's compilation process; the initial function call triggers compilation, while subsequent calls utilize the compiled version, thereby enhancing computational efficiency.
+Our methodology enables the implementation of a column-wise cumulative sum operation across the entirety of the \acrshort{das} data, despite its distribution across multiple files. The iterative nature of this approach leverages Julia's compilation process; the initial function call triggers compilation, while subsequent calls utilize the compiled version, thereby enhancing computational efficiency.
 
-The return type of the \texttt{load\_DAS\_files} function has also been slightly modified. In the previous implementation, a \texttt{DASDataFrame}, a vector of timestamps was stored for each sample, which proved to be redundant. The revised approach leverages the inherent regularity of the sampling process. By storing only the initial timestamp and the sampling rate $T$, subsequent timestamps can be efficiently calculated using the formula:
+The return type of the \texttt{load\_DAS\_files} function has also been slightly modified. In the previous implementation, a \texttt{DASDataFrame}, a vector of timestamps was stored for each sample, which proved to be redundant. The revised approach leverages the inherent regularity of the sampling process. By storing only the initial timestamp and the sampling rate $T$, subsequent timestamps can be efficiently calculated using the following equation:
 
-$$timestamp = start\_time + MilliSecond(idx \times T \times 1000)$$
+\begin{equation}
+    timestamp = T_{\text{start}} + MilliSecond(idx \times T \times 1000)
+\end{equation}
+
 
 This in-place calculation can be vectorized and broadcasted, improving computational efficiency. This modification reduces memory usage and maintains all essential temporal information required for subsequent data processing. Additionally, we store the number of rows in a single file, the number of files processed, and the \texttt{step} parameter we defined earlier to get an accurate channel distance after channel decimation.\\
 
@@ -77,7 +78,7 @@ This in-place calculation can be vectorized and broadcasted, improving computati
   \caption{New \texttt{DASDataFrame} struct}
   \label{fig:newdasstc}
 \end{subfigure}
-\caption{Comparison between different versions of the DAS struct}
+\caption{Comparison between previous and current version of the \texttt{DASDataFrame} struct}
 \label{fig:dasstccmp}
 \end{figure}
 
@@ -85,34 +86,34 @@ This in-place calculation can be vectorized and broadcasted, improving computati
 
 \subsubsection{Parallel Resampling}
 
-One effective method to reduce the memory consumption of \acrshort{das} signals is through resampling. Our approach involves parallel channel decimation followed by the consolidation of results into a new resampled matrix. For instance, given an initial sampling frequency of \qty{2000}{\hertz} and a target frequency of \qty{100}{\hertz}, we can achieve a 20-fold reduction in memory consumption. This process is implemented in our \texttt{das\_resample} function, as demonstrated in the following code snippet:
+
+One effective method to reduce the memory consumption of \acrshort{das} signals is through resampling. Our approach utilizes the \texttt{SharedMatrix} datatype to allocate an output matrix $M_o$ that is accessible by all processes. Each process $p_i$ is assigned a subset of columns from the input matrix $M$ and performs the \texttt{resample} function (provided by the \texttt{DSP.jl} package) on its designated columns. For instance, given an initial sampling frequency of \qty{2000}{\hertz} and a target frequency of \qty{100}{\hertz}, we can achieve a 20-fold reduction in memory consumption. This process is implemented in our \texttt{das\_resample} function, as demonstrated in Listing \ref{code:parres}:
 
 \lstinputlisting[label={code:parres}, caption=Parallel Columnwise Matrix Resample, language=Julia]{code/parallel_resample.jl}
 
-Implementing our \texttt{DAS\_resample} function utilizes the \texttt{SharedArrays.jl} package to allocate an output matrix $M_o$ that is accessible by all processes. Each process $p_i$ is assigned a subset of columns from the input matrix $M$ and performs the \textit{resample} operation (provided by the \texttt{DSP.jl} package) on its designated columns. This column-wise resampling approach allows for efficient parallelization of the task.
-
-
+\clearpage
 \subsubsection{Denoising \acrshort{das} signals}
 
-\lstinputlisting[caption=Denoise function, language=Julia]{code/denoise.jl}
+\lstinputlisting[caption=Denoise function, language=Julia, label={code:denoise}]{code/denoise.jl}
 
-The last addition to \texttt{Judas.jl} is the \texttt{denoise} function. It combines tapering and digital filtering techniques, producing an efficient algorithm for \acrshort{das} signal denoising. Some of the more important aspects include: 
+The last addition to \texttt{Judas.jl} is the \texttt{denoise} function as seen in Listing \ref{code:denoise}. It combines tapering and digital filtering techniques, producing an efficient algorithm for \acrshort{das} signal denoising. Some of the more important aspects include: 
 
 \begin{itemize}
-    \item A Tukey window, as described in section \ref{dsp:tukey}, is applied to mitigate edge effects. 
+    \item A Tukey window, as described in section \ref{dsp:tukey}, to mitigate edge effects.
     \item Cutoff frequencies are normalized by the Nyquist frequency \cite{schmogrow2012nyquist}.
-    \item The \texttt{filtfilt} function applies a zero-phase filter, preserving the original signal. This filter is by default set as a bandpass. 
+    \item The \texttt{filtfilt} function applies a zero-phase filter, preserving the original signal. This filter type is, by default, set as a bandpass. 
 \end{itemize}
 
+\clearpage
 \subsection{General Usage and Distribution}
 
 Through these functionalities, users may now find and load data, perform channel decimation, and finally denoise the signals. To illustrate the ease of use, the following code listing \ref{code:judas} showcases its simplicity and how users can easily use it alongside other packages. \\
 
-\lstinputlisting[label={code:judas}, caption=run.jl, language=Julia]{code/judas_usage.jl}
+\lstinputlisting[label={code:judas}, caption=This codesnippet showcases a typical usecase for Judas, language=Julia]{code/judas_usage.jl}
 
 To run this code, we can either add processes within the program with the \texttt{addprocs(amount::Int)} function, or start Julia in a distributed environment, as shown below.
 
-\begin{lstlisting}[style=shellcommand, language=bash, caption=How to run a simple script containing Judas snippets]
+\begin{lstlisting}[style=shellcommand, language=bash, label={code:judasrun}]
 (*@\textcolor{promptcolor}{\$}@*) julia -p 4 run.jl
 \end{lstlisting}
 
