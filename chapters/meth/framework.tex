@@ -12,9 +12,7 @@ Due to these constraints, we believe Tinygrad \cite{tinygrad} will be a well sui
 
 \subsection{TinyGrad}
 
-Tinygrad is a neural network framework created by George Hotz in October 2020 \cite{tinygrad2020}. It is based on Andrej Karpathys library \texttt{Micrograd} \cite{micrograd}, which aims to serve as an introduction to understand neural networks at its core. Tinygrad was introduced as an alternative to other popular frameworks such as \texttt{Pytorch} \cite{paszke2019pytorch} and \texttt{TensorFlow} \cite{abadi2016tensorflow}. The main goal is to \textquote{Build an equally performance stack to Pytorch on NVIDIA and AMD} \footnote{As stated in a conversation between George Hotz and Lex Friedman \cite{LexClipsYouTube2023}}. Unlike its alternatives, Tinygrad strives towards being hardware agnostic, where writing codes for different accelerators should be as similar as possible. For organizations, such as \acrshort{cgf} with limited hardware resources, this allows for an overall cheaper entry into scalable \acrshort{ml}, without sacrificing performance. \\
 
-All operations in \texttt{Tinygrad} are lazy \cite{tinygrad}. This means that a binary operation tensors, such as $a+b$, is not computed until the \texttt{realize()} method is called. Additionally, \texttt{Tinygrad} strives to a more functional design pattern, with a limited amount of classes. Furthermore, \texttt{Tinygrad} has a built in \acrfull{jit} compiler, in which a kernel can be replayed, allowing for faster operations such as a \texttt{train} function. \\
 
 
 
@@ -25,13 +23,7 @@ All operations in \texttt{Tinygrad} are lazy \cite{tinygrad}. This means that a 
 
 
 \mycomment{
-\subsection{Julia - High Performance Data Driven Scientific Computing}
 
-Created in 2009, first released in 2012 as part of a master thesis \cite{juliaMs} and further a doctoral thesis \cite{juliaPHD}, Julia is a high performance, dynamically typed programming language with the goal of being a fast and performant language like C, the simplicity of Python, linear algebra extensions like matlab, and statistics like R \cite{julia}.  \\ 
-
-Like Python, Julia can be used in a script-like fashion through its \acrfull{repl}. Notebook style programming has been a standard way for data analysts to write their code, and Jupyter notebooks support Julia as well through the \texttt{IJulia.jl} package. 
-
-Julias fluent type system, accompanied by easy syntax, high performance, \acrshort{repl} tools makes it a great contender for data analysis. We've previously proven how Julia effectively deals with I/O operations, \cite{projthesis}.
 
 
 DOI \cite{doi:10.1137/141000671}
@@ -39,7 +31,7 @@ DOI \cite{doi:10.1137/141000671}
 \subsection{Flux.jl}
 \label{back:flux}
 
-Flux is a machine learning library written entirely in Julia released and published in 2018 \cite{Flux.jl-2018, Innes2018}. It allows the user to write their own machine learning libraries. \acrshort{gpu} support is also native, through the inclusion of \texttt{CUDA.jl} \cite{Besard_2019}. We will be writing all of our models using Flux, or \texttt{Zygote.jl}, which \texttt{Flux.jl} is based on. 
+Flux is a machine learning library written entirely in Julia released and published in 2018 \cite{Flux.jl-2018, Innes2018}. It allows the user to write their own machine-learning libraries. \acrshort{gpu} support is also native, through the inclusion of \texttt{CUDA.jl} \cite{Besard_2019}. We will be writing all of our models using Flux, or \texttt{Zygote.jl}, which \texttt{Flux.jl} is based on. 
 
 Although \texttt{Flux.jl} is the preferred way to work with \acrshort{ai} in Julia, other prominent alternatives exists as well. \texttt{MLJ.jl} \cite{blaom2020flexible} \cite{Blaom2020} is a framework provided by the Alan Turing Institute\texttrademark, providing interfaces and functions for working with about 200 machine learning models. 
 

@@ -2,12 +2,12 @@
 
 \subsection{Dataset}
 
-In this experiment, we use datasets from the PubDAS \cite{spica2023pubdas} collection. PubDAS is described as "A PUBlic Distributed Acoustic Sensing Datasets Repository for Geosciences" and contains \acrshort{das} data from numerous locations worldwide. We will specifically be dealing with the FORESEE \cite{zhu2019penn} dataset, a \acrshort{das} dataset from an area around Pennsylvania in the Valley and Ridge Appalachians region as seen in figure \ref{fig:foresee}. \\
+We use datasets from the PubDAS \cite{spica2023pubdas} collection in this experiment. PubDAS is described as "A PUBlic Distributed Acoustic Sensing Datasets Repository for Geosciences" and contains \acrshort{das} data from numerous locations worldwide. We will specifically be dealing with the FORESEE \cite{zhu2019penn} dataset, a \acrshort{das} dataset from an area around Pennsylvania in the Valley and Ridge Appalachians region as seen in figure \ref{fig:foresee}. \\
 
 \begin{figure}[!h]
     \centering
     \includegraphics[width=0.5\linewidth]{figures/foresee.png}
-    \caption{Map of the FORESEE Array. Photo is taken the PubDAS paper \cite{spica2023pubdas}}
+    \caption{Map of the FORESEE Array. Source: \cite{spica2023pubdas}}
     \label{fig:foresee}
 \end{figure}
 
@@ -38,9 +38,9 @@ In this experiment, we use datasets from the PubDAS \cite{spica2023pubdas} colle
         \midrule
         \textbf{Dataset Information} & \multicolumn{2}{l}{} \\
         Train dataset size & \multicolumn{2}{l}{\qty{25690}{files}} \\
-        Train dataset span & \multicolumn{2}{l}{02 Mar 2020 08:10:15 to 03 Mar 2020 20:40:10} \\
+        Train dataset span & \multicolumn{2}{l}{2020-03-02 08:10:15 to 2020-03-03 20:40:10} \\
         Anomalous dataset size & \multicolumn{2}{l}{\qty{600}{files}} \\
-        Anomalous dataset span & \multicolumn{2}{l}{15 Apr 2019 03:17:35 to 15 Apr 2019 04:07:30} \\
+        Anomalous dataset span & \multicolumn{2}{l}{2019-04-15 03:17:35 to 2019-04-15 04:07:30} \\
         \bottomrule
     \end{tabular}
     \caption{FORESEE Experiment Data Summary}
@@ -118,7 +118,7 @@ To evaluate and compare the reconstruction capabilities of these models, we will
 
 
 \subsection{Experiment \rnum{2}: Anomaly Detection}
-Without a real-time feed of \acrshort{das} data, we use a labeled dataset to evaluate the different models' capabilities for anomaly detection, as described in section \ref{exp:fordata}. From this, we compute a confusion matrix and evaluate the models based on the following metrics:
+Without a real-time feed of \acrshort{das} data, we use a labeled dataset to evaluate the different models' capabilities for anomaly detection, as described in section \ref{exp:fordata}. Subsequentially, we compute the confusion matrix and evaluate the models based on the following metrics:
 
 \begin{itemize}
     \item Precision: The percentage of correct anomalies out of all predicted anomalies.
@@ -142,17 +142,17 @@ Without a real-time feed of \acrshort{das} data, we use a labeled dataset to eva
     \end{equation}
 \end{itemize}
 
-In addition to these metrics, we will also use the \acrfull{pr} curve and the \acrshort{pr} \acrfull{auc}. The PR curve is particularly useful for imbalanced datasets, which are common in anomaly detection tasks.
+Additionally, we compute the \acrfull{pr} curve as well as the \acrshort{pr} \acrfull{auc}. The PR curve is particularly useful for imbalanced datasets, which are common in anomaly detection tasks.
 
-As seen in Figure~\ref{fig:dataflow}, we ultimately want to find our models' optimal threshold score $\epsilon^*$. To find $\epsilon^*$, we analyze how precision, recall, and F1-score change across different threshold values, identifying the best anomaly score threshold. This operation is highlighted in \ref{alg:thresh}.  
+As seen in Figure~\ref{fig:dataflow}, we ultimately want to find our models' optimal threshold score $\epsilon^*$. To find $\epsilon^*$, we analyze how precision, recall, and F1-score change across different threshold values, identifying the best anomaly score threshold. This operation is described in Algorithm \ref{alg:thresh}. After $\epsilon^*$ is found it can be used to flag incoming data as normal or anomalous, as per Figure \ref{meth:tinyoverview}.
 
 \begin{algorithm}[!h]
-\caption{Optimal Threshold Selection Algorithm}
+\caption{$\epsilon^*$ Selection}
 \label{alg:thresh}
 \begin{algorithmic}[1]
 \Require Model $\mathcal{M}$, Dataset $\mathcal{Y} = \{y_1, \ldots, y_N\}$, Anomaly Indices $\mathcal{I} = \{i : y_i \text{ is anomalous}\}$
 \Ensure Optimal Threshold $\epsilon^*$
-\State $\mathbf{e} \gets \mathcal{L}_{\text{MSE}}(\mathcal{Y}, \mathcal{M}(\mathcal{Y}))$ \Comment{MSE reconstruction errors}
+\State $\mathbf{e} \gets \mathcal{L}_{\text{Rec}}(\mathcal{Y}, \mathcal{M}(\mathcal{Y}))$ \Comment{Reconstruction errors}
 \State $\mathbf{a} \gets \mathbf{0}_N$ \Comment{Initialize true anomaly bitvector}
 \For{$i \in \mathcal{I}$}
     \State $a_i \gets 1$
@@ -166,28 +166,5 @@ As seen in Figure~\ref{fig:dataflow}, we ultimately want to find our models' opt
 
 \subsection{Experiment Setup}
 
-All the models were trained and tested on \gls{idun} computers made for \acrshort{hpc}. Details of the machines used can be found in the table below. \\
+Model training and anomaly detection are performed on \gls{idun}. Table \ref{tab:system-specs} in Appendix \ref{app:idun} shows details of the machines used. \\
 
-
-\begin{table}[!htbp]
-\centering
-\caption{Specifications for Model Training and Testing Environment}
-\label{tab:system-specs}
-\begin{tabular}{@{}llr@{}}
-\toprule
-\textbf{Component} & \textbf{Description} & \textbf{Quantity} \\
-\midrule
-Operating System & Ubuntu Linux 22.04 LTS & 1 machine \\
-GPU Model & NVIDIA H100 PCIe & 4 units \\
-GPU Memory & HBM3 & 80 GB per GPU \\
-CUDA Cores & & 14,592 per GPU \\
-Tensor Cores & & 576 per GPU \\
-GPU Clock Speed & Boost Clock & 1.67 GHz \\
-GPU TDP & & 350 W \\
-FP16 & & 204.9 TFLOPS \\
-FP32 & & 51.22 TFLOPS \\
-\midrule
-\multicolumn{3}{@{}l@{}}{\textit{Note:} 1 \acrshort{gpu} dedicated for testing, 4 for training.} \\
-\bottomrule
-\end{tabular}
-\end{table}

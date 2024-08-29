@@ -2,9 +2,9 @@
 \label{relwork:anomaly}
 
 
-\subsection{\acrshort{das} file loading and processing}
+\subsection{\acrshort{das} processing Techniques}
 
-One of the file formats used for storing \acrshort{das} data is \acrshort{hdf5}. Many of the implemented libraries for \acrshort{hdf5} files now allow for parallel loading of these files. Biddiscombe (et. al 2012) replaced the IO layer within a \acrshort{hdf5} library ''to allow for parallel loading between simulation and analysis'' \cite{biddiscombe2012parallel}. In later years, \texttt{HDF5.jl}, the HDF5 library in Julia, allows for parallel loading of files, utilizing the message-passing interface (MPI). This can potentially reduce \acrshort{das} file loading times. \\ 
+One of the file formats used for storing \acrshort{das} data is \acrshort{hdf5}. Many of the implemented libraries for \acrshort{hdf5} files now allow for parallel loading of these files. Biddiscombe (et. al 2012) replaced the IO layer within a \acrshort{hdf5} library ''to allow for parallel loading between simulation and analysis'' \cite{biddiscombe2012parallel}. In later years, \texttt{HDF5.jl}, the HDF5 library in Julia, allows for parallel file loading, utilizing the message-passing interface (MPI). This can potentially reduce \acrshort{das} file loading times. \\ 
 
 An important aspect of \acrshort{das} processing revolves around frequency analysis, denoising, and other types of filtering. 2D \acrfull{fft}s within 2D linear band pass filtering, and one-dimensional adaptive filtering using \acrfull{fir} filters have all been studied and \cite{daspreproc}. In our preliminary studies, we conducted a performance comparison between Julia and Python for computing 2D Fast Fourier Transforms (FFTs) on \acrshort{das} data using \acrshort{gpu}s. Our results demonstrated that Julia significantly outperformed Python in this specific operation \cite{projthesis}. \\
 
@@ -12,12 +12,16 @@ Public \acrshort{das} datasets are often scarce and hard to find. PubDAS \cite{s
 
 One key aspect of \acrshort{ann}s is the necessity of larger train datasets. Data augmentation techniques such as cropping, resizing, or color grading can increase the available datasets for more vision-based tasks. Another way to increase the total amount of train data is by leveraging \acrshort{gan}s. After training a \acrshort{gan} model, the generator can produce data similar to already collected data. This has yielded great results on \acrshort{das} data \cite{Shiloh:19}, and can be a great way to provide more train data, which in turn can help models detect anomalies more accurately by being trained on a wider variety of data. \\
 
-\subsection{Anomaly detection algorithms for \acrshort{das} data analysis}
 
-The most commonly used algorithms regarding machine learning have traditionally been centered around Kmeans clustering, K nearest neighbors, and  Support Vector machines \cite{10.14778/3538598.3538602, 10.1145/3444690}. These have proven to be efficient, especially when dealing with unlabeled data. These clustering techniques are good at outlining groups grouping them, and finding outliers while dealing with them. One article found k means to be a great choice when dealing with traffic analysis and detection \cite{7507933}. Others have looked at svms as another solid option when dealing with anomaly detection \cite{10.1007/978-3-540-28647-9_97}. Omar (et al 2013) \cite{omar2013machine} looked in general at machine learning techniques such as SVMs, k means, decision trees and bayesian networks, and found that supervised ones generally outperforms their unsupervised counterparts when the types of anomalies where known beforehand, but struggle with novel anomalies. \\ 
+TODO: Remove this and focus on more relevant research?
+\subsection{Machine \acrshort{das} data analysis}
+
+The most commonly used algorithms regarding machine learning have traditionally been centered around Kmeans clustering, K nearest neighbors, and  Support Vector machines \cite{10.14778/3538598.3538602, 10.1145/3444690}. These have proven to be efficient, especially when dealing with unlabeled data. These clustering techniques are good at outlining groups grouping them, and finding outliers while dealing with them. One article found k means to be a great choice when dealing with traffic analysis and detection \cite{7507933}. Others have looked at svms as another solid option when dealing with anomaly detection \cite{10.1007/978-3-540-28647-9_97}. Omar (et al. 2013) (Omar et. al 2013) \cite{omar2013machine} looked at machine learning techniques such as SVMs, K-means, decision trees, and Bayesian networks finding that supervised ones generally outperform their unsupervised counterparts when the types of anomalies were known beforehand, but struggle with novel anomalies where many of \acrshort{das} anomalies lie. \\ 
 
 Alongside well-known clustering techniques such as k means and knn, \acrfull{dbscan}, first published in 1996 \cite{10.5555/3001460.3001507} is a well-known clustering technique suited for outlier detection in multidimensional datasets. It's still being researched and improved as of this date for multivariate time series \cite{waltz2024time}, and has numerous implementations in different frameworks and languages.  
 
+
+\subsection{Autoencoder based Anomaly detection on DAS data}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% AE DAS $$$$$ 
@@ -31,28 +35,38 @@ Ball2017 - dl in remote sensing
 
 apSensingo2019railwaydas - powerpoint
 s21196627 - dnn microseismic , das
-sensors - mdpi ???
 
-In general, autoencoders with linear, convolutional, or recurrent layers, clustering algorithms, and more traditional \acrshort{ml} methods have seen many use-cases within \acrshort{das} research. However, in later years with the later additions of both attention layers, or even \acrshort{gan}s \cite{goodfellow2014generative, goodfellow2016nips}, more novel approaches are being researched. By introducing channel attention and spatial attention to \acrshort{cnn}, one article \cite{eage:/content/journals/10.1111/1365-2478.13355} finds good results for denoising \acrshort{das} signals. 
+In general, autoencoders with linear, convolutional, or recurrent layers, clustering algorithms, and more traditional \acrshort{ml} methods have seen many use cases within \acrshort{das} research. However, in later years with the later additions of both attention layers, or even \acrshort{gan}s \cite{goodfellow2014generative, goodfellow2016nips}, more novel approaches are being researched.  
+
+\cite{wang2024deep} 
+
 
 
 Label-free autoencoder-based anomaly detection on \acrshort{das} data has been conducted as late as in 2023 \cite{xie2023label}. A combination of a convolutional autoencoder trained on normal-range \acrshort{das} data and a clustering algorithm to locate the feature center was found to beat state-of-the-art supervised networks. Another interesting aspect of this research is the emphasis on model size, creating a sufficient \acrshort{cae} model with only \qty{1.34}{\si{\kilo}} parameters. This research, in particular, has led the ground for our research and the creation of a program for training and comparing several types of autoencoders. \\
 
 
+\subsection{State-of-the-art Spatio-temporal Networks}
+
+CDIL-CBAM-BiLSTM, introduced by Wang (et. al 2024) \cite{wang2024deep}, tries to ''address the problem of low recognition accuracy of high-sampling-rate long-sequence signal data''. They combine \acrshort{lstm}s with convolutional attention blocks, achieving a recognition accuracy of 99 percent. These novel architectures underline the importance of capturing the entire spatiotemporal aspect of \acrshort{das} data, leveraging both neural network layers used to extract spatial (\acrshort{cnn}) and temporal (\acrshort{lstm}) features.
 
 
 
 \subsection{Other Models}
 
+Researchers at NTNU constructed a \acrshort{lstm} \acrshort{vae} model for fault detection on a multi-sensor system for maritime systems \cite{9514856} with good success, finding an accuracy of .. . Deep \acrshort{lstm}-based autoencoders have also been found to be able to detect anomalies within multivariate time-series forecasting problems \cite{alaaDeepLstm2019}.
+
 Zhu (et al. 2023) use ''a pre-trained PhaseNet to generate noisy labels of P/S arrivals in \acrshort{das} data'' and ''applied the GaMMa method to refine noisy labels and build training datasets'' \cite{zhu2023seismic}. A \acrshort{dl} model was then made to detect earthquakes. \\
 
+Rahman (et. al 2024) \cite{10.1115/JRC2024-124137} introduces DLSTM-SW, a deep \acrfull{lstm} based sliding-window model that highlights the temporal effect of \acrshort{das} data. They tested their models on railway health monitoring in, detecting with an accuracy around 97 percent, showing promising results of a sliding-window based model compared to autoencoders.
 
-\acrshort{gan} is another type of generative nn, first proposed by Iain Goodfellow around 2016 \cite{goodfellow2016nips}. These networks have been utilized in models for specifically designed for anomaly detection. A \acrshort{lstm} \acrshort{vae} \acrshort{gan} model was built to detect anomalies within time series \cite{s20133738}. A modification of \acrshort{lstm} \acrshort{gan}, with the inclusion of the attention mechanism \cite{vaswani2017attention}, was built for time-series anomaly detection \cite{bashar2023algan}.ALGAN-DA?
-AEGAN-AD \cite{jiang2023unsupervised} uses a \acrshort{gan} based approach to detect anomalies within audio.
+\acrshort{gan}, first proposed by Goodfellow (et. al 2016) \cite{goodfellow2016nips}, similar to \acrshort{vae}s, are generative models that can learn to generate new data. By setting a generator $G$ and discriminator $D$ up against each other, $D$ can potentially learn to discern anomalous inputs from normal signals. \acrshort{gan} have been utilized in models specifically designed for anomaly detection. A \acrshort{lstm} \acrshort{vae} \acrshort{gan} model was built to detect anomalies within time series \cite{s20133738}, .  A modification of \acrshort{lstm} \acrshort{gan}, with the inclusion of the attention mechanism \cite{vaswani2017attention}, was built for time-series anomaly detection. By introducing channel and spatial attention to \acrshort{cnn}, Someone (et. al 2022) \cite{eage:/content/journals/10.1111/1365-2478.13355} finds good results for denoising \acrshort{das} signals, highlighting how \acrshort{dl} models can be used for \acrshort{das} data processing, not just anomaly detection or traditional \acrshort{ai} tasks. 
 
-Researchers at NTNU constructed a \acrshort{lstm} \acrshort{vae} model for fault detection on a multi-sensor system for maritime systems \cite{9514856} with good success. Deep \acrshort{lstm}-based autoencoders have also been found to be able to detect anomalies within multivariate time-series forecasting problems \cite{alaaDeepLstm2019}.
+The  \cite{bashar2023algan}.ALGAN-DA?
 
-One issue of concern is online long-distance distributed monitoring applications. By using a combination of a ResNET with a convolutional block attention module (CBAM), one paper is able to achieve real-time inference time cost as low as 3.3ms per sample \cite{photonics9100677}, while still averaging a high accuracy, even for multi-scenario scenes. 
+AEGAN-AD \cite{jiang2023unsupervised} uses a \acrshort{gan} based approach to detect anomalies within audio. By training the generator $G$ to generate samples closed. 
+
+
+One issue of concern is online long-distance distributed monitoring applications. By using a combination of a ResNET with a convolutional block attention module (CBAM), one paper is able to achieve real-time inference time cost as low as 3.3ms per sample \cite{photonics9100677}, while still averaging a high accuracy, even for multi-scenario scenes. The focus on time cost is of paramount importance in \acrshort{das} systems, where TTD (time to detect) needs to be as low as possible.
 
 
 % Huang (et al. 2021) \cite{huang2021esad} semisupervised learning  kl

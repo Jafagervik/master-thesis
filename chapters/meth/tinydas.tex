@@ -3,13 +3,12 @@
 In this section, we introduce TinyDAS, a Python program aimed at training autoencoder models and detecting anomalies within \acrshort{das} data. 
 
 \subsection{Tools}
-\mycomment{
-Python is a dynamically typed, weak language famously known for it's \textit{easy-to-learn} syntax. Created by Guido Van Rossum in the late 80-s \cite{python}, Python has slowly emerged as one of the fastest growing programming languages ever created \cite{srinath2017python}. 
 
-Virtually all of the larger libraries for data science and \acrlong{ml} have bindings to \gls{python}, or are written in Python from scratch. Some examples include \texttt{Pandas}, \texttt{NumPy}, \texttt{SciKit Learn}, \texttt{Pytorch} and \texttt{TensorFlow}. Many of these rely on code written in C or C++ to be fast, sincc
-}
+Tinygrad is a neural network framework created by George Hotz in October 2020 \cite{tinygrad2020}. It is based on Andrej Karpathys library \texttt{Micrograd} \cite{micrograd}, which aims to serve as an introduction to understand neural networks at its core. Tinygrad was introduced as an alternative to other popular frameworks such as \texttt{Pytorch} \cite{paszke2019pytorch} and \texttt{TensorFlow} \cite{abadi2016tensorflow}. The main goal is to \textquote{Build an equally performance stack to Pytorch on NVIDIA and AMD} \footnote{As stated in a conversation between George Hotz and Lex Friedman \cite{LexClipsYouTube2023}}. Unlike its alternatives, Tinygrad strives towards being hardware agnostic, where writing codes for different accelerators should be as similar as possible. For organizations, such as \acrshort{cgf} with limited hardware resources, this allows for an overall cheaper entry into scalable \acrshort{ml}, without sacrificing performance. \\
 
-In addition to \texttt{Tinygrad}, we will also be utilizing \texttt{Pytorch} for certain models, as \texttt{Float16} calculations appear to be a bit more stable for certain models. For anomaly detection, we utilize several popular Python packages such as \texttt{numpy}, \texttt{scikit-learn} and \texttt{seaborn} for evaluation metrics, and \texttt{matplotlib} for visualization and plots. A full list of packages used can be found in 
+All operations in \texttt{Tinygrad} are lazy \cite{tinygrad}. This means that a binary operation tensors, such as $a+b$, is not computed until the \texttt{realize()} method is called. Additionally, \texttt{Tinygrad} strives to a more functional design pattern, with a limited amount of classes. Furthermore, \texttt{Tinygrad} has a built in \acrfull{jit} compiler, in which a kernel can be replayed, allowing for faster operations such as a \texttt{train} function. \\
+
+For anomaly detection, we utilize several popular Python packages such as \texttt{numpy}, \texttt{scikit-learn} and \texttt{seaborn} for evaluation metrics, and \texttt{matplotlib} for visualization and plots. A full list of packages used can be found in 
 appendix \ref{app:tinypacks}.
 
 
@@ -39,7 +38,7 @@ TinyDAS consists of two parts. The first part handles model construction and tra
 
 \subsection{Models} 
 
-We implementing four types of autoencoders: a linear autoencoder (AE), a convolutional autoencoder (CAE), a variational autoencoder (VAE), and a convolutional variational autoencoder (CVAE). The first model serves as a baseline to test against. In AE models, the latent space $Z$ can become disjoint and non-continuous, which VAE models try to solve. Additionally, we introduce convolutional layers in an attempt to improve the model's feature extraction capabilities. Based on this, these models serve as a baseline for what is to be expected by autoencoders for anomaly detection. A full list of layers and parameter sizes can be found in the appendix \ref{app:archs}. \\
+We implement four types of autoencoders: a linear autoencoder (AE), a convolutional autoencoder (CAE), a variational autoencoder ($\beta$-VAE), and a convolutional variational autoencoder ($\beta$-CVAE). The first model serves as a baseline against which to test. The latent space $Z$ can become disjoint and non-continuous in AE models, which $\beta$-VAE models try to solve. Additionally, we introduce convolutional layers in an attempt to improve the model's feature extraction capabilities. Based on this, these models serve as a baseline for what is to be expected by autoencoders for anomaly detection. Appendix \ref{app:archs} comprehensively describes layers and parameter sizes. \\
 
 \subsection{\acrshort{api} design}
 
@@ -47,7 +46,14 @@ Due to Tinygrad being a relatively simple framework, we implement components to 
 
 \subsubsection{Datasets and Dataloaders}
 
-The \texttt{Dataset} and \texttt{DataLoader} classes supports reading in \acrshort{hdf5} in batches, with support for data normalization and type casting. The former handles information about the dataset to be trained on, as well as logic for loading a single file from a \acrshort{hdf5} file, or whatever other format might be sent in later on. The latter one handles loading of batches in parallel, loading $n$ samples into the model.
+The \texttt{Dataset} and \texttt{DataLoader} classes support reading in \acrshort{hdf5} in batches, with support for data normalization and type casting. The former handles information about the dataset to be trained on and logic for loading a single file from a \acrshort{hdf5} file, or whatever other format might be sent in later on. The latter one handles the loading of batches in parallel, loading $n$ samples into the model.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{figures/sharding.png}
+    \caption{Example of data parallel training}
+    \label{fig:dataparallel}
+\end{figure}
 
 \subsubsection{Autoencoder Base Class}
 

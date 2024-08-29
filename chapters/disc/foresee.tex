@@ -8,12 +8,14 @@ Reducing model parameters, as discussed by \cite{s23021009} .
 
 To further reduce memory consumption, half-precision or even mixed-precision training could be introduced to reduce the overall model and batch data size, and speed up training. Distributed dataparallel training could also be introduced, to distribute \acrshort{cpu} requirements, where each \acrshort{gpu} is owned by a \acrshort{cpu}.
 
-The highest epoch durations, as displayed in Figure \ref{fig:traintimes} always happen on the first epoch due to \texttt{Tinygrad}s \textit{just-in-time} compilation, as discussed in \ref{meth:tinyoverview}. 
+The highest epoch durations, as displayed in Figure \ref{fig:traintimes} always happen on the first epoch due to \texttt{Tinygrad}s \textit{just-in-time} compilation, as discussed in Section \ref{meth:tinyoverview}. 
 
 
 \ref{fig:losses}. 
       
-The reconstruction capabilities of the different models differ drastically (cf. Figure \ref{fig:aereconstruct}). As per the theory discussed in Section \ref{back:linear}, the limited feature extraction capabilities of dense neural networks, compared  . This is highlighted by how the AE model is able to capture the average values across the signal, but fails. The inclusion of the AE model was not to try to outperform networks of greater capabilities, but rather highlight the importance of  context when constructing \acrshort{das}. 
+The reconstruction capabilities of the different models differ drastically (cf. Figure \ref{fig:aereconstruct}). As per the theory discussed in Section \ref{back:linear}, the limited feature extraction capabilities of dense layers compared to convolutional . This is highlighted by how the AE model is able to capture the average values across the signal, but fails. The inclusion of the AE model was not to try to outperform networks of greater capabilities, but rather highlight the importance of  context when constructing \acrshort{das}. 
+
+Talk more about the spatio-temporal aspect of \acrshort{das}.
 
 
 

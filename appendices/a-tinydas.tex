@@ -7,9 +7,35 @@
 
 \lstinputlisting[language=Python, caption=Experiment setup for measuring Autoencoders, label={app:adreport}]{code/ad.py}
 
+\section{IDUN System Specifications}
+\label{app:idun}
+
+\begin{table}[!htbp]
+\centering
+\caption{Specifications for Model Training and Testing Environment}
+\label{tab:system-specs}
+\begin{tabular}{@{}llr@{}}
+\toprule
+\textbf{Component} & \textbf{Description} & \textbf{Quantity} \\
+\midrule
+Operating System & Ubuntu Linux 22.04 LTS & 1 machine \\
+GPU Model & NVIDIA H100 PCIe & 4 units \\
+GPU Memory & HBM3 & 80 GB per GPU \\
+CUDA Cores & & 14,592 per GPU \\
+Tensor Cores & & 576 per GPU \\
+GPU Clock Speed & Boost Clock & 1.67 GHz \\
+GPU TDP & & 350 W \\
+FP16 & & 204.9 TFLOPS \\
+FP32 & & 51.22 TFLOPS \\
+\midrule
+\multicolumn{3}{@{}l@{}}{\textit{Note:} 1 \acrshort{gpu} dedicated for testing, 4 for training.} \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \section{Packages used}
 \label{app:tinypacks}
+
 
 \begin{table}[!htbp]
 \centering
