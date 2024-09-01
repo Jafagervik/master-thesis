@@ -4,7 +4,7 @@
 \subsection{Tools}
 \label{met:Julia}
 
-Created in 2009, first released in 2012 as part of a master thesis \cite{juliaMs} and further a doctoral thesis \cite{juliaPHD}, Julia is a high-performance, dynamically typed programming language with the goal of being a language ''fast and performant language like C, with syntax as simple as Python's, linear algebra extensions like Matlab, and statistics like R'' \cite{julia}. Like Python, Julia can be used in a script-like fashion through its \acrfull{repl}. Notebook-style programming has been a standard way for data analysts to write their code, and Jupyter notebooks also support Julia through the \texttt{IJulia.jl} package. Julia's fluent type system, accompanied by easy syntax, high performance, \acrshort{repl} tools, makes it a viable language for data science. We've previously discussed Julia in preliminary studies \cite{projthesis}. A full list of packages is detailed in Table in Appendix 
+Created in 2009, first released in 2012 as part of a master thesis \cite{juliaMs} and further a doctoral thesis \cite{juliaPHD}, Julia is a high-performance, dynamically typed programming language with the goal of being a language ''fast and performant language like C, with syntax as simple as Python's, linear algebra extensions like Matlab, and statistics like R'' \cite{julia}. Like Python, Julia can be used in a script-like fashion through its \acrfull{repl}. Notebook-style programming has been a standard way for data analysts to write their code, and Jupyter notebooks also support Julia through the \texttt{IJulia.jl} package. Julia's fluent type system, accompanied by easy syntax, high performance, and \acrshort{repl} tools, makes it a viable language for data science. We've previously discussed Julia and parallelization in preliminary studies \cite{projthesis}, and the reader will benefit from reading this work. A full list of packages is detailed in Table in Appendix \ref{app:jupacks}.
 
 \subsection{Overview}
 \label{met:judasoverview}
@@ -36,59 +36,114 @@ The \texttt{find\_DAS\_files} function now allows for modifying the \acrfull{roi
 The function returns the file paths of the \acrshort{hdf5} files, a list of channel indices to be loaded, and alternatively, which samples to load.
 
 \subsubsection{Loading \acrshort{das} data}
+The \texttt{load\_DAS\_files} function serves as the core component of Judas, managing data loading, metadata processing, and numeric integration. Table \ref{tab:das-comparison} details distinctions between current code, our old approach, and similar existent programs at \acrshort{cgf}:
 
-The \lstinline{load_DAS_files} is the largest part of this , handling loading, metadata processing and numeric integration. 
+\begin{table}[htbp]
+\centering
+\begin{tabular}{p{0.3\textwidth}|p{0.3\textwidth}|p{0.3\textwidth}}
+\hline
+\textbf{Our Old Approach} & \textbf{Our Current Approach} & \textbf{Current \acrshort{cgf} Approach} \\
+\hline
+\begin{itemize}[leftmargin=*]
+    \item Single memory-mapped file
+    \item Limited specific timeframe loading
+    \item Potential race conditions in threaded operations, leading to program crashes
+\end{itemize}
+&
+\begin{itemize}[leftmargin=*]
+    \item Multiple processes
+    \item Multiple memory-mapped files
+    \item Returns \texttt{DASDataFrame} struct with essential metadata
+    \item Enables specific timeframe loading
+    \item Proper synchronization to avoid race conditions
+\end{itemize}
+&
+\begin{itemize}[leftmargin=*]
+    \item Returns entire dataset as a pandas DataFrame
+    \item Higher memory requirements for large datasets
+\end{itemize} \\
+\hline
+\end{tabular}
+\caption{Comparison of DAS Data Processing Approaches}
+\label{tab:das-comparison}
+\end{table}
 
-The \texttt{DAS.jl} file has undergone massive changes. The primary modifications revolve around the \texttt{DASDataFrame} structure and parallelization. Previously, we wrote all \acrshort{das} data to a single memory-mapped binary file. This data is now distributed across multiple binary files, which can be loaded \textit{on-demand}. This new method optimizes data retrieval and storage efficiency. Furthermore, we handle some potential race conditions and use processes instead of threads to the parallelized section by synchronizing every process after they're done with local work. 
 
+\begin{algorithm}[!h]
+\caption{DAS Data Processing}
+\begin{algorithmic}[1]
+\Require HDF5 file paths, \texttt{sensitivity\_select} parameter, \texttt{integration} flag
+\Ensure Processed DAS data and metadata
+\State Process metadata from recordings
+\State Set sensitivity values based on \texttt{sensitivity\_select}
+\If{single HDF5 filepath}
+    \State Process and Memory map \acrs{DAS} signal matrix $M$ to a binary file
+\Else
+    \If{multple processes}
+        \State Distribute HDF5 file paths among available processes
+        \For{each process}
+            \State Call \texttt{process\_DAS\_chunk} function
+        \EndFor
+    \Else 
+        \For{each filepath in file paths}
+            \State Load data from a single file sequentially
+        \EndFor
+    \EndIf
+\EndIf
+\If{\texttt{integration} flag is set}
+    \State Perform channel-wise cumulative summation
+\EndIf
+\State Collect important metadata into a new \texttt{Dict}
+\State Store file paths and other data information
+\State \Return \texttt{DASDataFrame} struct with path to processed data and metadata
+\end{algorithmic}
+\label{alg:loaddas}
+\end{algorithm}
+The return type of the \texttt{load\_DAS\_files} function has also been modified. Previously, a \texttt{DASDataFrame} stored a vector of timestamps, which proved to be redundant. This revised approach leverages the inherent regularity of the sampling process. By storing only the initial timestamp $t_{\text{start}}$ and the sampling rate $F$, subsequent timestamps can be efficiently calculated using the following equation:
+\begin{equation}
+    t_{\text{now}} = t_{\text{start}} + \text{MilliSecond}(\text{row index} \times F \times 1000)
+\end{equation}
+%
+This in-place calculation can be vectorized and broadcasted, improving computational efficiency. This modification reduces memory usage and maintains all essential temporal information required for subsequent data processing. 
+\clearpage
+\lstinputlisting[label={code:parproc},caption=Parallel processing of \acrshort{das} signal matrices. This is called upon by the processes as shown in Algorithm \ref{alg:loaddas}. Note that matrices are transposed, allowing Julia to vectorize calculations as seen in Figure \ref{fig:rowcol}, language=Julia]{code/load_das_files.jl}
 
-\lstinputlisting[label={code:parproc},caption=Parallel processing of \acrshort{das} signal matrices, language=Julia]{code/load_das_files.jl}
+Code Listing \ref{code:parproc} and Algorithm \ref{alg:loaddas} detail our new approach to \acrshort{das} data processing. By synchronizing the processes and distributing files in a load-balanced manner, we avoid problems of \acrshort{das} files not being processed before further subsequent processing. Instead of letting all threads write to one large binary file, we utilize memory mapping \cite{mmap_article} to processed data before synchronizing the processed matrix with the file loaded in memory.
+%
+Additionally, we store the number of rows in a single file, the number of files processed, and the \texttt{step} parameter we defined earlier to get an accurate channel distance after channel decimation.\\
+%\begin{figure}[!h]
+%\centering
+%\begin{subfigure}{.45\textwidth}
+%  \centering
+%  \lstinputlisting[language=Julia]{code/dasstructold.jl}
+%  \caption{Old \texttt{DASDataFrame} struct}
+%  \label{fig:olddasstc}
+%\end{subfigure}%
+%\hfill
+%\begin{subfigure}{.45\textwidth}
+%  \centering
+%  \lstinputlisting[language=Julia]{code/dasstruct.jl}
+%  \caption{New \texttt{DASDataFrame} struct}
+%  \label{fig:newdasstc}
+%\end{subfigure}
+%\caption{Comparison between previous and current version of the \texttt{DASDataFrame} struct}
+%\label{fig:dasstccmp}
+%\end{figure}
 
-In code listing \ref{code:parproc}, we see how the function \texttt{process\_DAS\_chunk} is changed. By synchronizing the entire for-loop, we avoid problems of \acrshort{das} files not being processed before further loading them. Instead of directly writing to a binary file, we memory map the processed data before synchronizing the processed matrix with the file loaded in memory.
-
+\clearpage
 \textbf{Columnwise Cumulative Summation}
 
-The decision to distribute the selected \acrshort{das} data across multiple files necessitated modifying a crucial function. Specifically, when the integrated parameter is enabled, a cumulative sum operation along the channel axis may be required. To address this requirement, we implemented a sequential operation denoted as \texttt{ccds!}, as illustrated in the following code snippet:
+The decision to distribute the selected \acrshort{das} data across multiple files necessitated modifying a crucial function. Specifically, when the integrated parameter is enabled, as shown in Algorithm \ref{alg:loaddas}, a cumulative sum operation along the channel axis may be required. To address this requirement, we implemented a sequential operation denoted as \texttt{ccds!}, as illustrated in Code Listing \ref{code:ccds}:
 
 \lstinputlisting[label={code:ccds},caption=Columnwise Cumsum Delta Scaling, language=Julia]{code/ccds.jl}
 
-The process begins with memory mapping of the submatrix $M_i$ from its respective file, where $i$ denotes the iteration index. Subsequently, the final row of the preceding matrix, represented as $prev_{i-1}$, is added to the initial row of the current submatrix: $M_i[1,:] \leftarrow M_i[1,:] + prev_{i-1}$. Following this, a column-wise cumulative sum operation is executed on $M_i$, such that $M_i[j,:] \leftarrow \sum_{k=1}^j M_i[k,:]$ for each column. The entire submatrix is then multiplied by the scaling factor $\Delta t$: $M_i \leftarrow \Delta t \cdot M_i$. Finally, the $prev_i$ variable is updated with the final row of the current submatrix to ensure continuity: $prev_i \leftarrow M_i[end,:]$. This $prev_i$ will be utilized in the subsequent iteration $i+1$, maintaining the cumulative nature of the operation across all submatrices. It is worth noting that $M_1$ has no previous row to add, and thus only computes the columnwise cumulative sum and gets scaled by $\Delta$t.
+The process begins with memory mapping of the submatrix $M_i$ from its respective file, where $i$ denotes the iteration index. Subsequently, the final row of the preceding matrix, represented as $prev_{i-1}$, is added to the initial row of the current submatrix: $M_i[1,:] \leftarrow M_i[1,:] + prev_{i-1}$. Following this, a column-wise cumulative sum operation is executed on $M_i$, such that $M_i[j,:] \leftarrow \sum_{k=1}^j M_i[k,:]$ for each column. The entire submatrix is then multiplied by the scaling factor $\Delta t$: $M_i \leftarrow \Delta t \cdot M_i$. Finally, the $\text{prev}_i$ variable is updated with the final row of the current submatrix to ensure continuity: $\text{prev}_i \leftarrow M_i[end,:]$. This $\text{prev}_i$ will be utilized in the subsequent iteration $i+1$, maintaining the cumulative nature of the operation across all submatrices. It is worth noting that $M_1$ has no previous row to add and thus only computes the column-wise cumulative sum and gets scaled by $\Delta$t.
 
-Our methodology enables the implementation of a column-wise cumulative sum operation across the entirety of the \acrshort{das} data, despite its distribution across multiple files. The iterative nature of this approach leverages Julia's compilation process; the initial function call triggers compilation, while subsequent calls utilize the compiled version, thereby enhancing computational efficiency.
-
-The return type of the \texttt{load\_DAS\_files} function has also been slightly modified. In the previous implementation, a \texttt{DASDataFrame}, a vector of timestamps, was stored for each sample, which proved to be redundant. The revised approach leverages the inherent regularity of the sampling process. By storing only the initial timestamp and the sampling rate $F$, subsequent timestamps can be efficiently calculated using the following equation:
-%
-\begin{equation}
-    t_{\text{now}} = t_{\text{start}} + MilliSecond(idx \times F \times 1000)
-\end{equation}
-%
-This in-place calculation can be vectorized and broadcasted, improving computational efficiency. This modification reduces memory usage and maintains all essential temporal information required for subsequent data processing. Additionally, we store the number of rows in a single file, the number of files processed, and the \texttt{step} parameter we defined earlier to get an accurate channel distance after channel decimation.\\
-\begin{figure}[!h]
-\centering
-\begin{subfigure}{.45\textwidth}
-  \centering
-  \lstinputlisting[language=Julia]{code/dasstructold.jl}
-  \caption{Old \texttt{DASDataFrame} struct}
-  \label{fig:olddasstc}
-\end{subfigure}%
-\hfill
-\begin{subfigure}{.45\textwidth}
-  \centering
-  \lstinputlisting[language=Julia]{code/dasstruct.jl}
-  \caption{New \texttt{DASDataFrame} struct}
-  \label{fig:newdasstc}
-\end{subfigure}
-\caption{Comparison between previous and current version of the \texttt{DASDataFrame} struct}
-\label{fig:dasstccmp}
-\end{figure}
-The entire \lstinline{load_DAS_files} is shown in the Appendix in Code Listing \ref{loaddas}.
-
-
+Our methodology enables the implementation of a column-wise cumulative sum operation across the entirety of the \acrshort{das} data, despite its distribution across multiple files. The iterative nature of this approach leverages Julia's compilation process; the initial function call triggers compilation, while subsequent calls utilize the compiled version, thereby enhancing computational efficiency \footnote{As mentioned in project thesis  \cite{projthesis}}. The entire \lstinline{load_DAS_files} function is detailed in the Appendix in Code Listing \ref{loaddas}.
 
 \subsubsection{Parallel Resampling}
 
-
-One effective method to reduce the memory consumption of \acrshort{das} signals is through resampling. Our approach utilizes the \texttt{SharedMatrix} datatype to allocate an output matrix $M_o$ that is accessible by all processes. Each process $p_i$ is assigned a subset of columns from the input matrix $M$ and performs the \texttt{resample} function (provided by the \texttt{DSP.jl} package) on its designated columns. For instance, given an initial sampling frequency of \qty{2000}{\hertz} and a target frequency of \qty{100}{\hertz}, we can achieve a 20-fold reduction in memory consumption. This process is implemented in our \texttt{das\_resample} function, as demonstrated in Listing \ref{code:parres}:
+One effective method to reduce the memory consumption of \acrshort{das} signals is through resampling. Our approach utilizes the \texttt{SharedMatrix} datatype to allocate an output matrix $M_o$ that is accessible by all processes. Each process $p_i$ is assigned a subset of columns from the input matrix $M$ and performs the \texttt{resample} function (provided by the \texttt{DSP.jl} package) on its designated columns. For instance, given an initial sampling frequency of \qty{2000}{\hertz} and a target frequency of \qty{100}{\hertz}, we can achieve a 20-fold reduction in memory consumption. This process is implemented in our \texttt{das\_resample} function, as demonstrated in Code Listing \ref{code:parres}:
 
 \lstinputlisting[label={code:parres}, caption=Parallel Columnwise Matrix Resample, language=Julia]{code/parallel_resample.jl}
 
@@ -97,7 +152,7 @@ One effective method to reduce the memory consumption of \acrshort{das} signals 
 
 \lstinputlisting[caption=Denoise function, language=Julia, label={code:denoise}]{code/denoise.jl}
 
-The last addition to \texttt{Judas.jl} is the \texttt{denoise} function as seen in Code Listing \ref{code:denoise}. It combines tapering and digital filtering techniques, producing an efficient algorithm for \acrshort{das} signal denoising. Some of the more important aspects include: 
+The last addition to Judas is the \texttt{denoise} function as seen in Code Listing \ref{code:denoise}. It combines tapering and digital filtering techniques mentioned in Section \ref{back:dsp}, producing an efficient algorithm for \acrshort{das} signal denoising. Some of the more important aspects include: 
 
 \begin{itemize}
     \item A Tukey window, as described in Section \ref{dsp:tukey}, to mitigate edge effects.
@@ -108,9 +163,9 @@ The last addition to \texttt{Judas.jl} is the \texttt{denoise} function as seen 
 \clearpage
 \subsection{General Usage and Distribution}
 
-Through these functionalities, users may find and load data, perform channel decimation, and denoise the signals. To illustrate the ease of use, the following code listing \ref{code:judas} showcases its simplicity and how users can easily use it alongside other packages. \\
+Users may find and load data through all the functions mentioned before, perform channel decimation and denoise the signals. To illustrate the ease of use, the following Code Listing \ref{code:judas} showcases its simplicity and how users can easily use it alongside other packages. \\
 
-\lstinputlisting[label={code:judas}, caption=This codesnippet showcases a typical usecase for Judas, language=Julia]{code/judas_usage.jl}
+\lstinputlisting[label={code:judas}, caption=Typical Judas usecase, language=Julia]{code/judas_usage.jl}
 
 To run this code, we can either add processes within the program with the \texttt{addprocs(amount::Int)} function or start Julia in a distributed environment, as shown below.
 
@@ -118,5 +173,5 @@ To run this code, we can either add processes within the program with the \textt
 (*@\textcolor{promptcolor}{\$}@*) julia -p 4 run.jl
 \end{lstlisting}
 
-In addition to the methods we've described in detail, multiple helper methods exist for plotting and reading/writing \acrshort{das} data. \texttt{Judas.jl} v1.1.0 is currently available for use for members at \acrshort{cgf}. 
+In addition to the methods we've described in detail, multiple helper methods exist for plotting and normalizing \acrshort{das} data. \texttt{Judas.jl} v1.1.0 is currently available for use for members at \acrshort{cgf}. 
 

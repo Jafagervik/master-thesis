@@ -23,13 +23,3 @@ function process_DAS_chunk(
         end
     end
 end
-
-@sync begin
-    for (pid, chunk) in zip(workers(), chunks)
-        @async begin
-            remotecall_fetch(
-                process_DAS_chunk, pid, n_samples, ch_index, filepaths, chunk, scale
-            )
-        end
-    end
-end
