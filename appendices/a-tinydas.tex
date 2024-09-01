@@ -1,41 +1,10 @@
-\chapter{TinyDAS: Experiment Setup}
+\chapter{TinyDAS}
 \label{app:tinydas-exp}
-
-\section{Hyperparameters}
-\label{app:hyper}
-\lstinputlisting[label={code:hypers},caption=Hyperparameters Example Config, language=Yaml]{code/hyper.yaml}
-
-\lstinputlisting[language=Python, caption=Experiment setup for measuring Autoencoders, label={app:adreport}]{code/ad.py}
-
-\section{IDUN System Specifications}
-\label{app:idun}
-
-\begin{table}[!htbp]
-\centering
-\caption{Specifications for Model Training and Testing Environment}
-\label{tab:system-specs}
-\begin{tabular}{@{}llr@{}}
-\toprule
-\textbf{Component} & \textbf{Description} & \textbf{Quantity} \\
-\midrule
-Operating System & Ubuntu Linux 22.04 LTS & 1 machine \\
-GPU Model & NVIDIA H100 PCIe & 4 units \\
-GPU Memory & HBM3 & 80 GB per GPU \\
-CUDA Cores & & 14,592 per GPU \\
-Tensor Cores & & 576 per GPU \\
-GPU Clock Speed & Boost Clock & 1.67 GHz \\
-GPU TDP & & 350 W \\
-FP16 & & 204.9 TFLOPS \\
-FP32 & & 51.22 TFLOPS \\
-\midrule
-\multicolumn{3}{@{}l@{}}{\textit{Note:} 1 \acrshort{gpu} dedicated for testing, 4 for training.} \\
-\bottomrule
-\end{tabular}
-\end{table}
 
 \section{Packages used}
 \label{app:tinypacks}
 
+\lstinputlisting[language=Python, label={code:trainer}]{code/trainer.py}
 
 \begin{table}[!htbp]
 \centering
@@ -58,7 +27,39 @@ matplotlib & Data visualization \\
 \end{tabular}
 \end{table}
 
+\section{Experiment Hyperparameters}
+\label{app:hyper}
+\lstinputlisting[label={code:hypers},caption=Hyperparameters Example Config, language=Yaml]{code/hyper.yaml}
 
+%\lstinputlisting[language=Python, caption=Experiment setup for measuring Autoencoders, label={app:adreport}]{code/ad.py}
+
+\section{IDUN System Specifications}
+\label{app:idun}
+
+\begin{table}[!htbp]
+\centering
+\caption{Specifications for Model Training and Testing Environment}
+\label{tab:system-specs}
+\begin{tabular}{@{}llrr@{}}
+\toprule
+\textbf{Component} & \textbf{Description} & \textbf{Training} & \textbf{Inference} \\
+\midrule
+Operating System & Ubuntu Linux 22.04 LTS & \multicolumn{2}{c}{1 machine} \\
+GPU Model & NVIDIA A100 PCIe & 4 x 80GB & 1 x 40GB \\
+GPU Memory & HBM2 & 80 GB & 40 GB \\
+CUDA Cores & & 6,912 & 6,912 \\
+Tensor Cores & & 432 & 432 \\
+GPU Clock Speed & Boost Clock & 1.41 GHz & 1.41 GHz \\
+GPU TDP & & 300 W & 250 W \\
+FP16 & & 312 TFLOPS & 77.97 TFLOPS \\
+FP32 & & 19.5 TFLOPS & 19.49 TFLOPS \\
+\midrule
+\multicolumn{4}{@{}l@{}}{\textit{Note:} Training uses 4 x A100 80GB GPUs, inference uses 1 x A100 40GB GPU.} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\clearpage
 \section{TinyDAS Model Architectures}
 \label{app:archs}
 
@@ -71,19 +72,58 @@ matplotlib & Data visualization \\
         \toprule
         Layer & Output Shape & Parameters \\
         \midrule
-        Input & (1,1,335,625) & 0 \\
-        Dense (Encoder) & (1024,) & 1,368,064,000 \\
+        Input & (1, 625, 2137) & 0 \\
+        Flatten & (1335625,) & 0 \\
+        Dense (Encoder) & (1024,) & 1,367,680,000 \\
+        ReLU & (1024,) & 0 \\
         Dense (Encoder) & (512,) & 524,800 \\
+        ReLU & (512,) & 0 \\
         Dense (Latent) & (128,) & 65,664 \\
         Dense (Decoder) & (512,) & 66,048 \\
+        ReLU & (512,) & 0 \\
         Dense (Decoder) & (1024,) & 525,312 \\
-        Dense (Output) & (1,1,335,625) & 1,368,064,000 \\
+        ReLU & (1024,) & 0 \\
+        Dense (Decoder) & (1335625,) & 1,367,680,025 \\
+        Output & (1, 625, 2137) & 0 \\
         \midrule
-        Total Parameters & & 2,737,309,824 \\
+        Total Parameters & & 2,736,541,849 \\
         \bottomrule
     \end{tabular}
     \caption{Autoencoder Architecture}
     \label{tab:ae}
+\end{table}
+
+
+\subsection{$\beta$-VAE}
+\label{app:a-vae}
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{lrr}
+        \toprule
+        Layer & Output Shape & Parameters \\
+        \midrule
+        Input & (1, 625, 2137) & 0 \\
+        Flatten & (1335625,) & 0 \\
+        Dense (Encoder) & (1024,) & 1,367,680,000 \\
+        LeakyReLU & (1024,) & 0 \\
+        Dense (Encoder) & (512,) & 524,800 \\
+        LeakyReLU & (512,) & 0 \\
+        Dense (Encoder Mean) & (256,) & 131,328 \\
+        Dense (Encoder LogVar) & (256,) & 131,328 \\
+        Sampling & (256,) & 0 \\
+        Dense (Decoder) & (512,) & 131,584 \\
+        LeakyReLU & (512,) & 0 \\
+        Dense (Decoder) & (1024,) & 525,312 \\
+        LeakyReLU & (1024,) & 0 \\
+        Dense (Output) & (1335625,) & 1,367,680,025 \\
+        Sigmoid & (1, 625, 2137) & 0 \\
+        \midrule
+        Total Parameters & & 2,736,804,377 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Variational Autoencoder Architecture}
+    \label{tab:vae}
 \end{table}
 
 
@@ -96,20 +136,28 @@ matplotlib & Data visualization \\
         \toprule
         Layer & Output Shape & Parameters \\
         \midrule
-        Input & (1,625,2137) & 0 \\
-        Conv2d (Encoder) & (16,313,1069) & 160 \\
-        BatchNorm2d & (16,313,1069) & 32 \\
-        Conv2d (Encoder) & (32,157,534) & 4,640 \\
-        BatchNorm2d & (32,157,534) & 64 \\
-        Conv2d (Encoder) & (64,79,267) & 18,496 \\
-        BatchNorm2d & (64,79,267) & 128 \\
-        ConvTranspose2d (Decoder) & (32,157,534) & 18,496 \\
-        BatchNorm2d & (32,157,534) & 64 \\
-        ConvTranspose2d (Decoder) & (16,313,1069) & 4,640 \\
-        BatchNorm2d & (16,313,1069) & 32 \\
-        ConvTranspose2d (Decoder) & (1,625,2137) & 160 \\
+        Input & (1, 1, 625, 2137) & 0 \\
+        \multicolumn{3}{l}{\textbf{Encoder}} \\
+        Conv2d & (1, 16, 313, 1069) & 160 \\
+        BatchNorm2d & (1, 16, 313, 1069) & 32 \\
+        ReLU & (1, 16, 313, 1069) & 0 \\
+        Conv2d & (1, 32, 157, 535) & 4,640 \\
+        BatchNorm2d & (1, 32, 157, 535) & 64 \\
+        ReLU & (1, 32, 157, 535) & 0 \\
+        Conv2d & (1, 64, 79, 268) & 18,496 \\
+        BatchNorm2d & (1, 64, 79, 268) & 128 \\
+        ReLU & (1, 64, 79, 268) & 0 \\
+        \multicolumn{3}{l}{\textbf{Decoder}} \\
+        ConvTranspose2d & (1, 32, 157, 535) & 18,464 \\
+        BatchNorm2d & (1, 32, 157, 535) & 64 \\
+        ReLU & (1, 32, 157, 535) & 0 \\
+        ConvTranspose2d & (1, 16, 313, 1069) & 4,624 \\
+        BatchNorm2d & (1, 16, 313, 1069) & 32 \\
+        ReLU & (1, 16, 313, 1069) & 0 \\
+        ConvTranspose2d & (1, 1, 625, 2137) & 145 \\
+        Sigmoid & (1, 1, 625, 2137) & 0 \\
         \midrule
-        Total Parameters & & 47,832 \\
+        Total Parameters & & 46,849 \\
         \bottomrule
     \end{tabular}
     \caption{Convolutional Autoencoder Architecture}
@@ -117,34 +165,7 @@ matplotlib & Data visualization \\
 \end{table}
 
 
-\subsection{VAE}
-\label{app:a-vae}
-
-\begin{table}[!h]
-    \centering
-    \begin{tabular}{lrr}
-        \toprule
-        Layer & Output Shape & Parameters \\
-        \midrule
-        Input & (1,625,2137) & 0 \\
-        Dense (Encoder) & (1024,) & 1,367,680,000 \\
-        Dense (Encoder) & (512,) & 524,800 \\
-        Dense (Mean) & (128,) & 65,664 \\
-        Dense (Logvar) & (128,) & 65,664 \\
-        Dense (Decoder) & (512,) & 66,048 \\
-        Dense (Decoder) & (1024,) & 525,312 \\
-        Dense (Output) & (1,625,2137) & 1,367,680,000 \\
-        \midrule
-        Total Parameters & & 2,925,484,488 \\
-        \bottomrule
-    \end{tabular}
-    \caption{Variational Autoencoder Architecture}
-    \label{tab:vae}
-\end{table}
-
-
-
-\subsection{CNN VAE}
+\subsection{$\beta$-\acrshort{cvae}}
 \label{app:a-cvae}
 
 \begin{table}[!h]
@@ -153,30 +174,48 @@ matplotlib & Data visualization \\
         \toprule
         Layer & Output Shape & Parameters \\
         \midrule
-        Input & (1,625,2137) & 0 \\
-        Conv2d (Encoder) & (16,313,1069) & 160 \\
-        BatchNorm2d & (16,313,1069) & 32 \\
-        Conv2d (Encoder) & (32,157,534) & 4,640 \\
-        BatchNorm2d & (32,157,534) & 64 \\
-        Conv2d (Encoder) & (64,79,267) & 18,496 \\
-        BatchNorm2d & (64,79,267) & 128 \\
-        Conv2d (Encoder) & (64,39,134) & 36,928 \\
-        BatchNorm2d & (64,39,134) & 128 \\
-        Linear (FC Mu) & (128,) & 2,048,000 \\
-        Linear (FC Logvar) & (128,) & 2,048,000 \\
-        Linear (Decoder Input) & (64,39,134) & 8,192,000 \\
-        ConvTranspose2d (Decoder) & (64,79,267) & 36,928 \\
-        BatchNorm2d & (64,79,267) & 128 \\
-        ConvTranspose2d (Decoder) & (32,157,534) & 18,496 \\
-        BatchNorm2d & (32,157,534) & 64 \\
-        ConvTranspose2d (Decoder) & (16,313,1069) & 4,640 \\
-        BatchNorm2d & (16,313,1069) & 32 \\
-        ConvTranspose2d (Final) & (1,625,2137) & 160 \\
+        Input & (1, 1, 625, 2137) & 0 \\
+        \multicolumn{3}{l}{\textbf{Encoder}} \\
+        Conv2d & (1, 16, 313, 1069) & 160 \\
+        BatchNorm2d & (1, 16, 313, 1069) & 32 \\
+        LeakyReLU & (1, 16, 313, 1069) & 0 \\
+        Conv2d & (1, 32, 157, 535) & 4,640 \\
+        BatchNorm2d & (1, 32, 157, 535) & 64 \\
+        LeakyReLU & (1, 32, 157, 535) & 0 \\
+        Conv2d & (1, 64, 79, 268) & 18,496 \\
+        BatchNorm2d & (1, 64, 79, 268) & 128 \\
+        LeakyReLU & (1, 64, 79, 268) & 0 \\
+        Conv2d & (1, 128, 40, 134) & 73,856 \\
+        BatchNorm2d & (1, 128, 40, 134) & 256 \\
+        LeakyReLU & (1, 128, 40, 134) & 0 \\
+        Conv2d & (1, 128, 20, 67) & 147,584 \\
+        BatchNorm2d & (1, 128, 20, 67) & 256 \\
+        LeakyReLU & (1, 128, 20, 67) & 0 \\
+        Flatten & (1, 171520) & 0 \\
+        Linear (fc\_mu) & (1, 128) & 21,954,688 \\
+        Linear (fc\_logvar) & (1, 128) & 21,954,688 \\
+        \multicolumn{3}{l}{\textbf{Decoder}} \\
+        Linear & (1, 171520) & 21,954,816 \\
+        Reshape & (1, 128, 20, 67) & 0 \\
+        ConvTranspose2d & (1, 128, 40, 134) & 147,584 \\
+        BatchNorm2d & (1, 128, 40, 134) & 256 \\
+        LeakyReLU & (1, 128, 40, 134) & 0 \\
+        ConvTranspose2d & (1, 64, 79, 267) & 73,792 \\
+        BatchNorm2d & (1, 64, 79, 267) & 128 \\
+        LeakyReLU & (1, 64, 79, 267) & 0 \\
+        ConvTranspose2d & (1, 32, 157, 533) & 18,464 \\
+        BatchNorm2d & (1, 32, 157, 533) & 64 \\
+        LeakyReLU & (1, 32, 157, 533) & 0 \\
+        ConvTranspose2d & (1, 16, 313, 1065) & 4,624 \\
+        BatchNorm2d & (1, 16, 313, 1065) & 32 \\
+        LeakyReLU & (1, 16, 313, 1065) & 0 \\
+        ConvTranspose2d & (1, 1, 625, 2129) & 145 \\
+        Sigmoid & (1, 1, 625, 2129) & 0 \\
         \midrule
-        Total Parameters & & 12,273,640 \\
+        Total Parameters & & 66,354,753 \\
         \bottomrule
     \end{tabular}
-    \caption{Conditional Variational Autoencoder Architecture}
+    \caption{Convolutional Variational Autoencoder Architecture}
     \label{tab:cvae}
 \end{table}
 

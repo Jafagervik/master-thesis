@@ -1,23 +1,22 @@
-\section{Unsupervised Deep Learning}
+\section{Deep Learning}
 
 % Deep Learning
-\acrfull{dl} is a subset of \acrshort{ml} and \acrshort{ai}, where the objective is to try to process information like the human mind CITE. 
-Deep learning aims at 
+\acrfull{dl} is a subset of \acrshort{ml} and \acrshort{ai}, where the objective is to learn underlying representations of data \cite{lecun2015deep}. In \acrshort{dnn}s, neurons act as the fundamental building blocks. Layers of neurons are grouped into three categories of layers: input-, output- and \textit{hidden layers}.  
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[width=0.5\linewidth]{figures/linearlayer.png}
-    \caption{Example of a dense neural network}
+    \includegraphics[width=0.5\linewidth]{figures/dnn.png}
+    \caption{Example of a dense neural network with one input layer, two hidden layers and one output layer}
     \label{fig:densenn}
 \end{figure}
 
+We mainly differentiate between three subcategories of \acrshort{dl}:
 
-% Unsupervised Deep Learning
-Unsupervised deep learning refers to algorithms that learn patterns exclusively from unlabeled data, compared to their supervised alternatives. These algorithms aim at learning the underlying structure of the input vectors \cite{KARHUNEN2015125}. \\
-
-Deep neural networks work on a layer to layer basis. MORE. \\
-
-
+\begin{itemize}
+    \item \textit{Supervised learning}: Data is labeled, and the goal of the network is trained to make sure the outputs match these labels.
+    \item \textit{Unsupervised learning}: The network learns patterns exclusively from unlabeled data and tries to learn the underlying structure of the input vectors \cite{KARHUNEN2015125}. 
+    \item \textit{Self-supervised learning}: Some of the data may be labeled, 
+\end{itemize}
 
 
 

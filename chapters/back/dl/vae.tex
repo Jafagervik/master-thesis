@@ -29,9 +29,7 @@ The reparameterization trick transforms the optimization problem from one involv
     \mathbb{E}_{z \sim q_\phi(z|x)}[f(z)] = \mathbb{E}_{\epsilon \sim \mathcal{N}(0,I)}[f(\mu + \sigma \odot \epsilon)]
 \end{equation}
 
-This formulation makes training of \acrshort{vae} models feasable, even for gradient based optimizers, such as \acrshort{adam} or \acrshort{sgd}.
-
-
+This formulation makes training of \acrshort{vae} models feasible, even for gradient-based optimizers, such as \acrshort{adam} or \acrshort{sgd}.
 
 
 \subsubsection{Evidence Lower Bound}
@@ -50,7 +48,7 @@ $\mathcal{L}_{\text{reg}}$ is the negative \acrfull{kld} \cite{10.1214/aoms/1177
     D_{\text{KL}}(q_\phi(z|x) \| p(z)) = \mathbb{E}_{q_\phi(z|x)}\left[\log \frac{q_\phi(z|x)}{p(z)}\right]
 \end{equation}
 $D_{\text{KL}}$ is always non-negative $(\geq 0)$ and is a statistical method used to quantify the proximity between two probability distributions \cite{shlens2014notes}. 
-The reconstruction likelihood $\mathcal{L}_{\text{rec}}$ can be computed in different ways depending on the nature of the input data. For binary data, it is typically computed as a binary cross-entropy loss:
+The reconstruction likelihood $\mathcal{L}_{\text{rec}}$ can be computed in different ways depending on the nature of the input data. For binary data, it is typically computed as a negative binary cross-entropy loss:
 \begin{equation}
 \mathcal{L_\text{rec}}(\theta, \phi; x) = - \mathbb{E}_{q_\phi(z|x)}[\mathcal{L}_{\text{BCE}}(x, z)]
 \end{equation}
@@ -67,9 +65,13 @@ The two losses combined aims at providing a total loss that balances reconstruct
 
 \subsubsection{Minimizing the ELBO Loss}
 The objective in training a \acrshort{vae} is to minimize the negative \acrshort{elbo}, which is equivalent to maximizing the \acrshort{elbo} itself. This optimization problem can be formulated as:
-
 \begin{equation}
     \theta^*, \phi^* = \argmin_{\theta, \phi} \mathbb{E}_{x \sim p_{\text{data}}(x)}[-\mathcal{L}_{\text{ELBO}}(\theta, \phi; x)]
 \end{equation}
 
 where $\theta^*$ and $\phi^*$ are the optimal parameters for the decoder and encoder, respectively. By minimizing the negative \acrshort{elbo}, we simultaneously optimize for better reconstruction of the input data (through $\mathcal{L}_{\text{rec}}$) and a latent space distribution that closely matches the prior (through $\mathcal{L}_{\text{reg}}$). This process encourages the \acrshort{vae} to learn a meaningful and structured latent representation of the input data while maintaining the ability to generate new samples \cite{kingma2022autoencodingvariationalbayes}.
+
+\subsubsection{$\beta$-\acrshort{vaa})
+
+In the standard \acrshort{elbo} loss function, \mathcal{L}_{\text{Reg}} and \mathcal{L}_{\text{Rec}} are weighted equally. The $\beta$-\acrshort{vae} \cite{higgins2017betavae} adds a $\beta$ parameter to the model, which 
+

@@ -1,23 +1,25 @@
-\section{FORESEE}
+\section{Case: FORESEE}
 \label{disc:foresee}
 
 \subsection{Experiment \rnum{1}: Model Training and Reconstruction}
 
-As seen in Table \ref{tab:modelresinfo}, the two convolutional models drastically reduce memory requirements. These models only require . 
-Reducing model parameters, as discussed by \cite{s23021009} . 
+As seen in Table \ref{tab:modelresinfo}, the two convolutional models drastically reduce memory requirements, as expected. Our CAE model only needs 47k parameters, but still not close to the proposed solution by Tan et. al \cite{tan2023improving} using only 1.34k parameters. However, only needing 97kb of memory is a great result, especially for real-time environments. The $\beta$-CVAE model requires some dense layers to represent the latent layer, which accounts for most parameters. Unlike these models, the other models are quite large, requiring more than 5GB of memory. The best losses are on the same scale for the variational and non-variational models due to the \acrshort{elbo} loss accounting for the \acrshort{kld}, making the loss higher. Additionally, the AE and CAE converge fast, as displayed in Figure \ref{fig:losses} and highlighted in Table \ref{tab:modelresinfo}. 
+
+One of the choices for using Tinygrad was due to the \acrshort{jit}-compilation. Due to this, we observed a great dropoff between the first and consecutive epochs as seen in Figure \ref{fig:traintimes} for the non-variational models. However, the smaller difference between max and mean times for the variational autoencoders can be attributed to bot implementation error of the \acrshort{elbo} loss, or other minute details. Furthermore, using half-precision for inference, we can drastically reduce the amount of time it takes to reconstruct a \acrshort{das} frame of 5 seconds, which is crucial for real-time scenarios. The inference times are close to the 3.3ms achieved by Liu et al. \cite{photonics9100677} per sample. The improvements in training times, accompanied by fast convergence, low memory requirements, and fast inference combined, are significant findings of several of the models. Although the highlighted statistics presented by Table \ref{tab:modelresinfo} and Figure \ref{fig:traintimes} present positive results, the models must capture finer details to locate anomalies in these dense-sampled data effectively. 
+
+The reconstruction capabilities of the different models differ drastically, as shown in Figure \ref{fig:aereconstruct}. Out of the 4 models, the variational models produce seemingly random noise, while the AE model cannot capture finer details or, in layman's terms, ''only gets the average color of the picture''. As per the theory discussed in Section \ref{back:linear}, dense layers' limited feature extraction capabilities compared to convolutional differ greatly. Even though regular AE models have been proven to reconstruct smaller images CITE, the existence of potential anomalous data in the trainset, combined with our approach of drastically reducing dimensionality (as seen in Table \ref{tab:ae} in the appendix), the AE model is unable to reconstruct anything but the average signals across the window. The results might have been better if we had increased the number of hidden parameters by adding layers and allowing for a more gradual reduction in dimensionality. However, at the cost of increasing parameters, and effectively model size, we only use this model as a baseline to see how a relatively smaller and simpler model impacts anomaly detection.
+
+As for the variational ones, the relatively $\mu$ and $\sigma$ layers as seen in Table \ref{tab:vae} and Table \ref{tab:cvae}, could indicate that the latent layers cannot even capture details. The $\beta$ parameters are neither downplaying the importance of the \acrshort{kld}, further indicating how we needed larger models. The validation losses seen in Figure \ref{fig:losses} indicate that this is not due to underfitting. We do notice a certain difference between the two variational models, where the $\beta$-VAE
+
+, especially for \acrshort{das} data. This is highlighted by how the AE model is able to capture the average values across the signal but fails to capture essential features. The inclusion of the AE model in our comparison was not to try to outperform networks of greater capabilities, but rather underscore the importance of context when constructing \acrshort{das}. We do not 
+
+Reducing model parameters, as discussed by \cite{s23021009}. 
 
 To further reduce memory consumption, half-precision or even mixed-precision training could be introduced to reduce the overall model and batch data size, and speed up training. Distributed dataparallel training could also be introduced, to distribute \acrshort{cpu} requirements, where each \acrshort{gpu} is owned by a \acrshort{cpu}.
-
-The highest epoch durations, as displayed in Figure \ref{fig:traintimes} always happen on the first epoch due to \texttt{Tinygrad}s \textit{just-in-time} compilation, as discussed in Section \ref{meth:tinyoverview}. 
-
-
-asd \ref{fig:losses}. 
-      
-The reconstruction capabilities of the different models differ drastically as per Figure \ref{fig:aereconstruct}). As per the theory discussed in Section \ref{back:linear}, the limited feature extraction capabilities of dense layers compared to convolutional proves big, especially for \acrshort{das} data. This is highlighted by how the AE model is able to capture the average values across the signal but fails to capture essential features. The inclusion of the AE model in our comparison was not to try to outperform networks of greater capabilities, but rather underscore the importance of context when constructing \acrshort{das}. We do not 
-
-The $\beta-VAE$ mo
-
+ 
 Even though we have highlighted the \textit{spatio-temporal} aspects of \acrshort{das} data, the selected models for comparisons try to underscore  \acrshort{das} data. 
+
+Even though only one of our four models yields positive reconstructive capabilities, analyzing and studying the importance of careful model design has been insightful. From our research, we have further proved the point of f, especially for larger dense-sampled \acrshort{das} heatmaps. We
 
 \subsection{Experiment \rnum{2}: Anomaly detection}
 

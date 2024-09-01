@@ -17,6 +17,7 @@ function load_DAS_files(
 
     m = Dict()
 
+    # FIRST FILE 
     df = DictFile(filepaths[begin])
     n_channels, n_samples = size(df.file["data"])
 
@@ -28,6 +29,7 @@ function load_DAS_files(
     end
 
     channels_max = length(ch_index)
+
     sensitivity_unit::String = ""
     unit_out::String = ""
     sensitivity_out::String = ""
@@ -46,14 +48,13 @@ function load_DAS_files(
                 throw(CanonicalIndexError)
             end
         end
-
         unit_out = _combine_units([m["header"]["unit"], sensitivity_unit]; operator="/")
         sensitivities_out = ones(Float32, 1, 1)
         sensitivities_units_out = [""]
 
     elseif sensitivity_select == -1
-        unit_out = m["header"]["unit"] # rad / m
-        sensitivity = 9362208.90109403f0
+        unit_out = m["header"]["unit"] # rad / m / s
+        sensitivity = 9362208.90109403f0 # Necessary
         sensitivities_out = m["header"]["sensitivities"]
         sensitivities_units_out = m["header"]["sensitivityUnits"]
 
@@ -82,6 +83,7 @@ function load_DAS_files(
 
     scale::Float32 = m["header"]["dataScale"] / sensitivity
 
+    # Write first file serially
     loc_data_path = get_datapath(1)
     initial_data = transpose(df.file["data"][ch_index, :]) * scale
     write_matrix(initial_data, loc_data_path)
@@ -89,13 +91,10 @@ function load_DAS_files(
     if length(filepaths) > 1 && nworkers() > 1
         chunks = begin
             tot_size = length(filepaths[2:end])
-
-            chunk_size = tot_size / nworkers()
+            chunk_size = tot_size ÷ nworkers()
             carry = tot_size % nworkers()
-
             chunks = Vector{UnitRange{Int64}}(undef, nworkers())
             current_index = 2
-
             for i in workers()
                 extra = i - 1 <= carry ? 1 : 0
                 elements_per_thread = chunk_size + extra
@@ -103,10 +102,8 @@ function load_DAS_files(
                 @inbounds chunks[i - 1] = current_index:end_index
                 current_index = end_index + 1
             end
-
             chunks
         end
-
         @sync begin
             for (i, (pid, chunk)) in enumerate(zip(workers(), chunks))
                 @async begin
@@ -128,7 +125,7 @@ function load_DAS_files(
             end
         end
 
-    elseif length(filepaths) > 1 
+    elseif length(filepaths) > 1
         loc_data = zeros(Float32, n_samples, channels_max)
         idx = 2
         for filepath in filepaths[2:end]
@@ -139,41 +136,34 @@ function load_DAS_files(
             idx += 1
         end
     end
-
     (unwrap || spike_thr !== nothing || integrate !== nothing) &&
         m["header"]["dataType"] < 3 &&
         error("Options unwrap, spikeThr or integrate can only 
                 be used wih time differentiaded phase data.")
-
+                
     if unwrap || (spike_thr !== nothing)
-        # TODO: Does not work as is due to us writing to several files
         signal_nd = get_matrix(data_path)
         if m["header"]["dataType"] !== nothing
             signal_nd = unwrap(
                 signal_nd, m["header"]["spatialUnwrRange"] * sensitivity; axis=2
             )
         end
-
         if m["header"]["spatialUnwrRange"] !== nothing
             signal_nd = unwrap(
                 signal_nd, m["header"]["spatialUnwrRange"] * sensitivity; axis=2
             )
         end
-
         if spike_thr !== nothing
             signal_nd[abs(signal_nd) > spike_thr * sensitivity] = zero(eltype(signal_nd))
         end
     end
-
     if integrate
         unit_new = _combine_units([unit_out, "s"])
         if !any(u -> u == 's', split(replace(unit_new, r"[\w']+" => "")))
             prev = undef_init(channels_max)
-
             for i in ProgressBar(eachindex(filepaths))
                 ccds!(prev, Float32(m["header"]["dt"]), i)
             end
-
             unit_out = unit_new
         else
             @warn "Data unit $unit_out is not differentiable. Integration skipped."
@@ -181,7 +171,6 @@ function load_DAS_files(
     end
 
     tstart = unix2datetime(m["header"]["time"] + samples.start * m["header"]["dt"])
-
     meta::Dict{String,Any} = Dict(
         key => m["header"][key] for key in [
             "dt",
@@ -195,7 +184,6 @@ function load_DAS_files(
             "name"
         ]
     )
-
     meta["fileVersion"] = m["fileVersion"]
     meta["time"] = tstart
     meta["unit"] = unit_out
@@ -206,7 +194,6 @@ function load_DAS_files(
         m["header"]["dx"] * hex_to_int(m["demodSpec"]["roiDec"][1])[1] * ch_index.step;
         digits=4
     )
-
     signal = DASDataFrame(TEMPDIR(), n_samples, length(filepaths), tstart, ch_index, meta)
     println("Loaded $nfiles in $(timer(load_start))")
     return signal

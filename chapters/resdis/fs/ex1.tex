@@ -2,170 +2,223 @@
 
 \begin{table}[!htbp]
     \centering
-    \small
     \setlength{\tabcolsep}{10pt}
-    \begin{tabular}{l S[table-format=1.3e-2] S[table-format=2.1] S[table-format=1.3e-2] S[table-format=1.1e-3]}
+    \begin{tabular}{l cccc}
         \toprule
         \rowcolor{gray!20}
-        \textbf{Metric} & {\textbf{AE}} & {\textbf{$\beta$-VAE}} & {\textbf{CAE}} & {\textbf{$\beta$-CVAE}} \\
+        \textbf{Metric} & \textbf{AE} & \textbf{$\beta$-VAE} & \textbf{CAE} & \textbf{$\beta$-CVAE} \\
         \midrule
-        Best Train loss & 1.300e-6 & 21.3 & 1.370e-4 & 4.5e-3 \\
-        \rowcolor{gray!10} Best Validation loss & 1.300e-6 & 21.3 & 5.400e-5 & 4.4e-3 \\
-        Epochs before stop & 6 & 20 & 15 & 15 \\
-        \rowcolor{gray!10} Model Sizes & {\SI{10.240}{\giga\byte}} & {\SI{11.200}{\giga\byte}} & {\textbf{\SI{0.18}{\mega\byte}}} & {\textbf{\SI{47.06}{\mega\byte}}} \\
-        Inference speed F32 (\si{\milli\second}) & 1.658 & 654.14 & 267.31 & 979.52 \\
-        \rowcolor{gray!10} Inference speed F16 (\si{\milli\second}) & 1.875 & 6.31 & 5.671 & 1.857 \\
+        Best Train loss & 3.075e-4 & 4.592e-3 & \textbf{1.428e-4} & 4.712e-3 \\
+        \rowcolor{gray!10} Best Validation loss & 2.941e-4 & 4.592e-3 & \textbf{4.669e-5} & 4.592e-3 \\
+        Epochs before best loss & \textbf{3} & 33 & 10 & 33 \\
+        \rowcolor{gray!10} Model Sizes (F16) & 5.12 GB & 5.13 GB & \textbf{91.4 KB} & 126.53 MB \\
+        F32 Inference speed (ms) & \textbf{1.658} & 654.14 & 267.31 & 979.52 \\
+        \rowcolor{gray!10} F16 Inference speed (ms) & \textbf{1.875} & 6.31 & 5.671 & \textbf{1.857} \\
         \bottomrule
     \end{tabular}
-    \caption{Comparison of Autoencoder Performance}
+    \caption{Training comparison between the model.}
     \label{tab:modelresinfo}
     \smallskip
     \small{*The reconstruction error is the sum of all reconstruction errors across all batches.}
 \end{table}
+%\begin{figure}[!h]
+%    \centering
+%    \includegraphics[scale=0.35]{figures/time.png}
+%    \caption{Comparison between Maximum and mediant amount of time spent per epoch for training and validation combined. The maximum only happens on first epoch, while the median times stay within a 3\% margin for the other epochs.}
+%    \label{fig:traintimes}
+%\end{figure}
 
+Figure \ref{fig:traintimes} compares training times, training, and validation steps combined across all models. The max time only happens on the first epoch, while every subsequent epoch lasts within a 5\% range of the median time. We notice a considerable speedup between the first and consecutive epochs for the non-variational autoencoders. However, the variational models achieve a lower initial training time. 
 
-\begin{figure}[!h]
-    \centering
-    \includegraphics[scale=0.35]{figures/time.png}
-    \caption{Comparison between Maximum and mediant amount of time spent per epoch}
-    \label{fig:traintimes}
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    ybar,
+    bar width=15pt,
+    width=\textwidth,
+    height=0.6\textwidth,
+    legend style={at={(0.5,-0.15)},
+                  anchor=north,legend columns=-1},
+    ylabel={Time (minutes)},
+    symbolic x coords={AE,$\beta$-VAE,CAE,$\beta$-CVAE},
+    xtick=data,
+    nodes near coords,
+    nodes near coords align={vertical},
+    ymin=0,ymax=60,
+    xlabel={Models},
+    enlarge x limits=0.2,
+]
+\addplot[fill=lightgreen!80] coordinates {(AE,41.6) ($\beta$-VAE,18.95) (CAE,45.73) ($\beta$-CVAE,18.95)}; 
+\addplot[fill=red!80] coordinates {(AE,3.60) ($\beta$-VAE,15.42) (CAE,10.45) ($\beta$-CVAE,15.42)}; 
+\legend{Max Time, Mean Time}
+% Add text above each group of bars
+\node [above] at (axis cs:AE,60) {41m 36s};
+\node [above] at (axis cs:$\beta$-VAE,60) {18m 57s};
+\node [above] at (axis cs:CAE,60) {45m 44s};
+\node [above] at (axis cs:$\beta$-CVAE,60) {18m 57s};
+\end{axis}
+\end{tikzpicture}
+\caption{Comparison of Max and Mean Time (Train + Validation) per epoch}
+\label{fig:traintimes}
 \end{figure}
-
 \clearpage
-
 \subsubsection{Train and Validation Losses}
-
-\begin{figure}[!h]
+\begin{figure}[!htbp]
   \centering
-  \begin{subfigure}[t]{.6\textwidth}
+  \begin{subfigure}{\textwidth}
     \centering
-    \includegraphics[width=\linewidth]{figures/losses/ae.png}
-    \caption{AE}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{.6\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{figures/losses/ae.png}
-    \caption{$\beta$-VAE}
+    \includegraphics[width=0.7\textwidth]{figures/losses/ae.png}
+    \caption{AE: We observe a rapid loss, followed by no big change in either train or validation loss, indicating that the model has learned, but is unable to }
   \end{subfigure}
   
-  \vspace{1cm}
+  \vspace{0.5cm}
   
-  \begin{subfigure}[t]{.6\textwidth}
+  \begin{subfigure}{\textwidth}
     \centering
-    \includegraphics[width=\linewidth]{figures/losses/ae.png}
-    \caption{CAE}
+    \includegraphics[width=0.7\textwidth]{figures/losses/vae.png}
+    \caption{$\beta$-VAE: The loss rapidly declines before flattening out. Around epoch 15, a sudden drop is observed, indicating a shift in learning rate, which allows the loss to further decline}
   \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{.6\textwidth}
+  
+  \vspace{0.5cm}
+  
+  \begin{subfigure}{\textwidth}
     \centering
-    \includegraphics[width=\linewidth]{figures/losses/ae.png}
-    \caption{$\beta$-CVAE}
+    \includegraphics[width=0.7\textwidth]{figures/losses/cae.png}
+    \caption{CAE: Initially, a more gradual decline is observed. After epoch 4, the validation loss starts to shift, before stabilizing around epoch 12}
   \end{subfigure}
+  
+  \vspace{0.5cm}
+  
+  \begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/losses/cvae.png}
+    \caption{$\beta$-CVAE. A linear decrease is observed, with the validation loss expected to be lower than the training loss.}
+  \end{subfigure}
+  
+  \caption{Train and Validation Loss over Time. Train loss is blue, and validation loss is orange}
   \label{fig:losses}
-  \caption{Train and Validation Loss over Time}
 \end{figure}
 
 \clearpage
 
-\subsubsection{Heatmap Reconstruction Comparison}
-
-\begin{figure}[!h]
+\subsubsection{Half-precision Reconstruction Heatmaps}
+% Page 1: Original Heatmaps
+\begin{figure}[!p]
 \centering
-% Row 0 (Image Names)
-\begin{subfigure}{0.33\textwidth}
-\centering
-2019-04-15 03:17:35
-\end{subfigure}%
-\hfill
-\begin{subfigure}{0.33\textwidth}
-\centering
-2019-04-15 03:17:50
-\end{subfigure}%
-\hfill
-\begin{subfigure}{0.33\textwidth}
-\centering
-2019-04-15 03:17:55
+\begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=0.65\textwidth]{figures/anomalies/before/20190415_031735.png}
+    \caption{2019-04-15 03:17:35}
 \end{subfigure}
-
-    \vspace{1em}
-    
-    % Row 1 (Original)
-    \begin{subfigure}{0.33\textwidth}
-        \includegraphics[width=\textwidth]{figures/anomalies/before/20190415_031735.png}
-    \end{subfigure}%
-    \hfill
-    \begin{subfigure}{0.33\textwidth}
-        \includegraphics[width=\textwidth]{figures/anomalies/before/20190415_031750.png}
-    \end{subfigure}%
-    \hfill
-    \begin{subfigure}{0.33\textwidth}
-        \includegraphics[width=\textwidth]{figures/anomalies/before/20190415_031755.png}
-    \end{subfigure}
-    
-    \vspace{1em}
-    
-    % Row 2 (Model 1)
-    \begin{subfigure}{0.33\textwidth}
-        \includegraphics[width=\textwidth]{figures/anomalies/ae/20190415_031735.png}
-    \end{subfigure}%
-    \hfill
-    \begin{subfigure}{0.33\textwidth}
-        \includegraphics[width=\textwidth]{figures/anomalies/ae/20190415_031750.png}
-    \end{subfigure}%
-    \hfill
-    \begin{subfigure}{0.33\textwidth}
-        \includegraphics[width=\textwidth]{figures/anomalies/ae/20190415_031755.png}
-    \end{subfigure}
-    
-    \vspace{1em}
-    
-    
-    % Row 4 (Model 3)
-    \begin{subfigure}{0.33\textwidth}
-        \includegraphics[width=\textwidth]{figures/test.png}
-    \end{subfigure}%
-    \hfill
-    \begin{subfigure}{0.33\textwidth}
-        \includegraphics[width=\textwidth]{figures/test.png}
-    \end{subfigure}%
-    \hfill
-    \begin{subfigure}{0.33\textwidth}
-        \includegraphics[width=\textwidth]{figures/test.png}
-    \end{subfigure}
-
-
-    \vspace{1em}
-    
-    % Row 3 (Model 2)
-    \begin{subfigure}{0.33\textwidth}
-        \includegraphics[width=\textwidth]{figures/anomalies/cae/20190415_031735.png}
-    \end{subfigure}%
-    \hfill
-    \begin{subfigure}{0.33\textwidth}
-        \includegraphics[width=\textwidth]{figures/anomalies/cae/20190415_031750.png}
-    \end{subfigure}%
-    \hfill
-    \begin{subfigure}{0.33\textwidth}
-        \includegraphics[width=\textwidth]{figures/anomalies/cae/20190415_031755.png}
-    \end{subfigure}
-    
-    
-    \vspace{1em}
-    
-    % Row 5 (Model 4)
-    \begin{subfigure}{0.33\textwidth}
-        \includegraphics[width=\textwidth]{figures/test.png}
-    \end{subfigure}%
-    \hfill
-    \begin{subfigure}{0.33\textwidth}
-        \includegraphics[width=\textwidth]{figures/test.png}
-    \end{subfigure}%
-    \hfill
-    \begin{subfigure}{0.33\textwidth}
-        \includegraphics[width=\textwidth]{figures/test.png}
-    \end{subfigure}
-    
-    \caption{Comparison of original heatmaps and their reconstructions by different mdoels. The top row consist of original \acrshort{das} heatmaps, followed by reconstructions produced by: AE, $\beta$-VAE, CAE and $\beta$-CVAE}
-    \label{fig:aereconstruct}
+\vspace{1em}
+\begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=0.65\textwidth]{figures/anomalies/before/20190415_031750.png}
+    \caption{2019-04-15 03:17:50}
+\end{subfigure}
+\vspace{1em}
+\begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=0.65\textwidth]{figures/anomalies/before/20190415_031755.png}
+    \caption{2019-04-15 03:17:55}
+\end{subfigure}
+\caption{Original DAS heatmaps at 3 different timestamps}
+\label{fig:original_heatmaps}
+\end{figure}
+\clearpage
+% Page 2: AE Reconstructions
+\begin{figure}[p]
+\centering
+\begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/anomalies/ae/20190415_031735.png}
+    \caption{2019-04-15 03:17:35}
+\end{subfigure}
+\vspace{1em}
+\begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/anomalies/ae/20190415_031750.png}
+    \caption{2019-04-15 03:17:50}
+\end{subfigure}
+\vspace{1em}
+\begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/anomalies/ae/20190415_031755.png}
+    \caption{2019-04-15 03:17:55}
+\end{subfigure}
+\caption{AE reconstructions}
+\label{fig:ae_reconstructions}
+\end{figure}
+\clearpage
+% Page 3: β-VAE Reconstructions
+\begin{figure}[p]
+\centering
+\begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/anomalies/vae/20190415_031735.png}
+    \caption{2019-04-15 03:17:35}
+\end{subfigure}
+\vspace{1em}
+\begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/anomalies/vae/20190415_031750.png}
+    \caption{2019-04-15 03:17:50}
+\end{subfigure}
+\vspace{1em}
+\begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/anomalies/vae/20190415_031755.png}
+    \caption{2019-04-15 03:17:55}
+\end{subfigure}
+\caption{$\beta$-VAE reconstructions}
+\label{fig:beta_vae_reconstructions}
+\end{figure}
+\clearpage
+% Page 4: CAE Reconstructions
+\begin{figure}[p]
+\centering
+\begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/anomalies/cae/20190415_031735.png}
+    \caption{2019-04-15 03:17:35}
+\end{subfigure}
+\vspace{1em}
+\begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/anomalies/cae/20190415_031750.png}
+    \caption{2019-04-15 03:17:50}
+\end{subfigure}
+\vspace{1em}
+\begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/anomalies/cae/20190415_031755.png}
+    \caption{2019-04-15 03:17:55}
+\end{subfigure}
+\caption{CAE reconstructions}
+\label{fig:cae_reconstructions}
+\end{figure}
+\clearpage
+% Page 5: β-CVAE Reconstructions
+\begin{figure}[p]
+\centering
+\begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/anomalies/cvae/20190415_031735.png}
+    \caption{2019-04-15 03:17:35}
+\end{subfigure}
+\vspace{1em}
+\begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/anomalies/cvae/20190415_031750.png}
+    \caption{2019-04-15 03:17:50}
+\end{subfigure}
+\vspace{1em}
+\begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/anomalies/cvae/20190415_031755.png}
+    \caption{2019-04-15 03:17:55}
+\end{subfigure}
+\caption{$\beta$-CVAE reconstructions}
+\label{fig:beta_cvae_reconstructions}
 \end{figure}

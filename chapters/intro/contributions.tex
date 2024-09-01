@@ -1,11 +1,12 @@
 \section{Research Questions and Contributions}
 \label{intro:contribs}
 
-The following list provides the research questions of this thesis: 
+The following list provides the research questions prompted by this thesis: 
 
 \begin{enumerate}
+    \item How can we make the entire data processing pipeline, from loading DAS data to detecting anomalies, as fast and efficient as possible?
     \item How do the spatial characteristics of \acrshort{das} data impact the performance of autoencoders for anomaly detection?
-    \item What autoencoder architectures are most effective for anomaly detection in \acrshort{das} data when computational resources can be limited?
+    \item How does half-precision inference affect anomaly detection in \acrshort{das} data?
     \item What preprocessing techniques can optimize the efficiency-accuracy trade-off in anomaly detection of \acrshort{das} data?
 \end{enumerate}
 
@@ -16,9 +17,8 @@ In this thesis, we study processing and autoencoder-based anomaly detection usin
     \item \textbf{Julia for data science and \acrshort{ai}}: We evaluate Julia as a programming language for developing high-performance applications and \acrshort{ai} programming.
     \item \textbf{Software}: The following software has been produced as a part of this thesis:
     \begin{itemize}
-        \item \textbf{Judas}: A software package developed in Julia for processing \acrshort{das} data. Initially introduced in our project thesis \cite{projthesis}, Judas is now fully operational but only available for members of \acrshort{cgf}. 
+        \item \textbf{Judas}: A software package developed in Julia for processing \acrshort{das} data. Initially introduced in our project thesis \cite{projthesis}, Judas is now further extended, improved, fully operational, and open for members of \acrshort{cgf}. 
         \item \textbf{TinyDAS}: An open-source program written in Python, specifically designed for training and evaluation of autoencoder models, as well as performing anomaly detection on \acrshort{das} data \footnote{\url{github.com/Jafagervik/TinyDAS}}. This program contains code and hyperparameters for 4 different autoencoders.  We establish how Tinygrad \cite{tinygrad} as a software package can be used to create hardware agnostic \acrshort{ai} programs that are scalable across multiple accelerators without changing source code. 
-        \item \textbf{JudasNET}: An open-source repository with examples of autoencoders written in Julia \footnote{\url{github.com/Jafagervik/JudasNET}}.
     \end{itemize}
 \end{itemize}
 

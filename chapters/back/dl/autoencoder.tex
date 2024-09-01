@@ -1,6 +1,6 @@
 \subsection{Autoencoder}
 
-The autoencoder is a specific type of neural networks used to learn efficient encodings of unlabeled data, and then decode it back to reconstruct the original data \cite{bank2021autoencoders}. Autoencoders consist of two models, the encoder $E_\phi$, and the decoder $D_\theta$. The relationship between these can be formulated as such: 
+Autoencoders are specific types of neural networks used to learn efficient encodings of unlabeled data and then decode them to reconstruct the original data \cite{bank2021autoencoders}. Autoencoders consist of two models, the encoder $E_\phi$ and the decoder $D_\theta$. The relationship between these can be formulated as such: 
 
 \begin{equation}\label{eq:enc}
 E_\phi: X \rightarrow Z 
@@ -24,9 +24,9 @@ The optima for any kind of autoencoder becomes that of lossless encoding, which 
     X' = D_\theta(E_\phi(X))
 \end{equation}
 
-As mentioned in Section \ref{back:linear}, dense networks can struggle with feature extraction. This is also the case for dense autoencoders. By introducing convolutional layers, the autoencoder becomes more adept at image recognition tasks [CITE], signal analysis, and anomaly detection on these data types. These networks are called convolutional autoencoders (\acrshort{cae}).  \\
+As mentioned in Section \ref{back:linear}, dense networks can struggle with feature extraction. This is also the case for dense autoencoders. By introducing convolutional layers, the autoencoder becomes more adept at image reconstruction and denoising \cite{zhang2018better}. These networks are called convolutional autoencoders (\acrshort{cae}).  \\
 
-When the model is sufficiently trained for a specific task, $D$ \textit{may} become unnecessary for certain applications such as data reconstruction or denoising [CITE]. If the primary goal is feature extraction or dimensionality reduction, $E$ alone can be used to map input data to the lower-dimensional latent space. By utilizing only $E$, the overall complexity and size of the model $M$ can be reduced, which may be beneficial in scenarios with computational or memory constraints. For other tasks, such as autoencoders, include image reconstruction \cite{7797236}, signal analysis \cite{andrysiak2016machine}, and anomaly detection \cite{bank2021autoencoders}, the whole model is often needed.
+When the model is sufficiently trained for a specific task, $D$ \textit{may} become unnecessary for certain applications such as data reconstruction and denoising \cite{vincent2010stacked}. If the primary goal is feature extraction or dimensionality reduction, $E$ alone can be used to map input data to the lower-dimensional latent space. By utilizing only $E$, the overall complexity and size of the model $M$ can be reduced, which may be beneficial in scenarios with computational or memory constraints. For other tasks, such as autoencoders, include image reconstruction \cite{7797236}, signal analysis \cite{andrysiak2016machine}, and anomaly detection \cite{bank2021autoencoders}, the whole model is often needed.
 \subsubsection{Latent Space}
 
 The latent space $Z$ in autoencoders aims to capture essential features of the input data $X$ in a lower-dimensional representation. However, traditional autoencoders face limitations in their generative capabilities [CITE]. While they are trained to reconstruct original data accurately, they typically lack the ability to generate new, diverse samples from $Z$.
@@ -48,21 +48,7 @@ The optimization problem can then be formulated as:
 where $\theta^*$ are the optimal parameters for the network. Some of the more common loss functions used for autoencoders includes: \\
 
 \clearpage
-\textbf{\acrfull{mse}}
 
-\begin{equation}\label{eq:mse}
-    \mathcal{L}_{\text{MSE}}(x, \hat{x}) = \dfrac{1}{N}  \sum_{i=1}^{N}(x_i-\hat{x}_i)^2
-\end{equation}
-
-The \acrshort{mse} loss function is a commonly used loss function. It punishes bigger differences by squaring the difference between two elements in the prior $x$ and the posterior $\hat{x}$. It then outputs the mean of all the squarred errors computed. \\
-
-\textbf{\acrfull{mae}}
-
-\begin{equation}\label{eq:mae}
-    \mathcal{L}_{\text{MAE}}(x, \hat{x}) = \dfrac{1}{N}  \sum_{i=1}^{N}|x_i-\hat{x}_i|
-\end{equation}
-
-The \acrshort{mae} loss function is quite similar to the \acrshort{mse} function. The difference is that the \acrshort{mae} function returns the absolute value of the distance between two distributions $x$ and $\hat{x}$, thus equally punishing all errors. \\
 
 In addition to the issues with regular autoencoders in regards to decoding the latent space, these autoencoders have several disadvantages, including:
 

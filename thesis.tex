@@ -1,7 +1,7 @@
 \documentclass[british]{ntnuthesis}
 
 \title{Parallel Processing and Anomaly Detection of DAS Data using Autoencoders: Enhancing Efficiency in Large-Scale Sensor Data Analysis}
-\shorttitle{Parallel Processing and Anomaly Detection on DAS data}
+\shorttitle{Enhancing Efficiency in DAS Processing and Anomaly Detection}
 \author{Jørgen Aleksander Fagervik \\
         Supervisor: Ole Jakob Mengshoel \\
         Co-supervisor: Anne Cathrine Elster}
@@ -31,6 +31,8 @@
 \definecolor{captionbg}{RGB}{240,240,240}
 \definecolor{captiontext}{RGB}{0,0,0}
 \definecolor{captionframe}{RGB}{100,100,100}
+\definecolor{darkgreen}{RGB}{0,100,0}  
+\definecolor{lightgreen}{RGB}{144,238,144}  
 \newcommand{\mycomment}[1]{}
 
 % Define a custom caption style with reduced width
@@ -112,7 +114,6 @@
   escapeinside={(*@}{@*)},
 }
 
-% Use \lstset to make myStyle the global default
 \lstset{style=dasstyle}
 
 \newcommand{\rnum}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
@@ -176,7 +177,7 @@ Department of Computer Science (IDI) \\
 \printbibliography[heading=none]
 
 \appendix
-\input{appendices/a-julia}
+%\input{appendices/a-julia}
 \input{appendices/a-judas}
 \input{appendices/a-pubdas}
 \input{appendices/a-tinydas}

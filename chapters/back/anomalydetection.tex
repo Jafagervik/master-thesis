@@ -16,7 +16,7 @@ While point anomalies target single instances that differ from the rest of the d
 
 \subsection{Autoencoder-based Anomaly Detection}
 
-Autoencoders are commonly used models for anomaly detection \cite{an2015variational, zhou2017anomaly}. Compared to other models such as \acrfull{pca} \cite{wold1987principal}, autoencoders have been found ''to detect subtle anomalies which linear PCA fails''\cite{sakurada2014anomaly}. By training an autoencoder to reconstruct normal data, any input of anomalous data would yield a higher reconstruction error. If we can find a threshold, we can effectively mark the data as anomalous. 
+Autoencoders are commonly used models for anomaly detection \cite{an2015variational, zhou2017anomaly}. Compared to other models such as \acrfull{pca} \cite{wold1987principal}, autoencoders have been found ''to detect subtle anomalies which linear PCA fails''\cite{sakurada2014anomaly}. By training an autoencoder to reconstruct normal data, any input of anomalous data would yield a higher reconstruction error. If we can find a threshold value $\epsilon$, we can use this to . 
 
 \begin{algorithm}[!h]
 \caption{Autoencoder-based Anomaly Detection}
@@ -28,8 +28,8 @@ Autoencoders are commonly used models for anomaly detection \cite{an2015variatio
 \State $A \gets \emptyset$
 \State $D_\phi, E_\theta \gets \text{Train autoencoder on } X$
 \For{each $x_i$ in $\{x^{(i)}\}$}
-    \State $\text{reconstruction\_error} \gets \|x_i - D_\phi(E_\theta(x_i))\|$
-    \If{$\text{reconstruction\_error} > \epsilon$}
+    \State $\text{reconstruction error} \gets \|x_i - D_\phi(E_\theta(x_i))\|$
+    \If{$\text{reconstruction error} > \epsilon$}
         \State $A \gets A \cup \{x_i\}$
     \EndIf
 \EndFor
@@ -54,6 +54,58 @@ Time series data from diverse domains, including \acrshort{das}, offer opportuni
 
 \subsubsection{Anomalies in images}
 
-Anomaly detection can also be applied to images \cite{beggel2020robust}. In the context of \acrshort{das} data, the data matrix can be viewed as a one-channel image, where the time-domain and frequency-domain can be studied. Architectures like \acrshort{cnn} are especially suited for this task due to their enhanced feature extraction capabilities, as discussed in section \ref{back:cnn}.
+Anomaly detection can also be applied to images \cite{beggel2020robust}. In the context of \acrshort{das} data, the data matrix can be viewed as a one-channel image, where the time-domain and frequency-domain can be studied. Architectures like \acrshort{cnn} are especially suited for this task due to their enhanced feature extraction capabilities, as discussed in Section \ref{back:cnn}.
 
 
+\subsubsection{Semisupervised anomaly detection}
+\begin{itemize}
+    \item Precision: The percentage of correct anomalies out of all predicted anomalies.
+    \begin{equation}
+        Precision = \frac{TP}{TP + FP}
+    \end{equation}
+
+    \item True Positive Rate (TPR), also known as recall: The percentage of correctly identified anomalies out of all actual anomalies.
+    \begin{equation}
+        TPR = Recall = \frac{TP}{TP + FN}
+    \end{equation}
+
+    \item Accuracy: The proportion of correct predictions (both true positives and true negatives) among the total number of cases examined. While commonly used to measure models' capabilities, accuracy can be misleading for imbalanced datasets.
+    \begin{equation}
+        Accuracy = \frac{TP + TN}{TP + TN + FP + FN}
+    \end{equation}
+
+    \item F1-score: Used to evaluate the balance between precision and recall; the higher the score, the better. 
+    \begin{equation}
+        F1_{score} = 2 \times \frac{Precision \cdot Recall}{Precision + Recall}
+    \end{equation}
+
+    \item False Positive Rate (FPR), also known as specificity: The percentage of normal windows incorrectly identified as anomalous. FPR is highly relevant for \acrshort{das} and other signal systems, where false alarms may be costly. A low FPR indicates that normal data is not misclassified as anomalous; thus, the lower the score, the better.
+    \begin{equation}
+        FPR = \frac{FP}{FP + TN}
+    \end{equation}
+\end{itemize}
+
+Additionally, we compute the \acrfull{pr} curve as well as the \acrshort{pr} \acrfull{auc}. The PR curve is particularly useful for imbalanced datasets, which are common in anomaly detection tasks.
+
+As seen in Figure~\ref{fig:dataflow}, we ultimately want to find our models' optimal threshold score $\epsilon^*$. To find $\epsilon^*$, we analyze how precision, recall, and F1-score change across different threshold values, identifying the best anomaly score threshold. This operation is described in Algorithm \ref{alg:thresh}. After $\epsilon^*$ is found it can be used to flag incoming data as normal or anomalous, as per Figure \ref{meth:tinyoverview}.
+
+\begin{algorithm}[!h]
+\caption{$\epsilon^*$ Selection}
+\label{alg:thresh}
+\begin{algorithmic}[1]
+\Require Model $\mathcal{M}$, Dataset $\mathcal{Y} = \{y_1, \ldots, y_N\}$, Anomaly Indices $\mathcal{I} = \{i : y_i \text{ is anomalous}\}$
+\Ensure Optimal Threshold $\epsilon^*$
+\State $\mathbf{e} \gets \mathcal{L}_{\text{Rec}}(\mathcal{Y}, \mathcal{M}(\mathcal{Y}))$ \Comment{Reconstruction errors}
+\State $\mathbf{a} \gets \mathbf{0}_N$ \Comment{Initialize true anomaly bitvector}
+\For{$i \in \mathcal{I}$}
+    \State $a_i \gets 1$
+\EndFor
+\State $\mathbf{p}, \mathbf{r}, \boldsymbol{\theta} \gets \text{PRC}(\mathbf{a}, \mathbf{e})$ \Comment{PR-Curve}
+\State $\mathbf{f} \gets 2 \cdot \frac{\mathbf{p} \odot \mathbf{r}}{\mathbf{p} + \mathbf{r}}$ \Comment{Element-wise operations}
+\State $\epsilon^* \gets \theta_{\argmax(\mathbf{f})}$
+\State \Return $\epsilon^*$
+\end{algorithmic}
+\end{algorithm}
+
+
+\subsubsection{Unsupervised anomaly detection}
