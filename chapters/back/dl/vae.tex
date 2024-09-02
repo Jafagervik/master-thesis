@@ -21,7 +21,7 @@ The idea is to express the sampling of $z$ from the approximate posterior $q_\ph
     z = \mu + \sigma \odot \epsilon, \quad \epsilon \sim \mathcal{N}(0, I)
 \end{equation}
 
-Here, $\odot$ denotes element-wise multiplication. This formulation allows gradients to flow through the sampling process, enabling end-to-end training of the model.
+Here, $\odot$ denotes element-wise multiplication and $\mathcal{N}(0,1)$ a normal distribution. This formulation allows gradients to flow through the sampling process, enabling end-to-end training of the model.
 
 The reparameterization trick transforms the optimization problem from one involving expectations over $q_\phi(z|x)$ to one involving expectations over $p(\epsilon)$, which is fixed and independent of the model parameters ($\phi$ and $\theta$):
 
@@ -34,7 +34,7 @@ This formulation makes training of \acrshort{vae} models feasible, even for grad
 
 \subsubsection{Evidence Lower Bound}
 \label{back:elbo}
-In the context of \acrshort{vae}s, \acrshort{elbo} is commonly used as a loss function. \cite{lygerakis2024edvaeentropydecompositionelbo}. It consists of two parts, the reconstruction likelihood $\mathcal{L}_{\text{rec}}$ and the prior constraint $\mathcal{L}_{\text{reg}}$:
+In the context of \acrshort{vae}s, \acrshort{elbo} is commonly used as a loss function \cite{lygerakis2024edvaeentropydecompositionelbo}. It consists of two parts, the reconstruction likelihood $\mathcal{L}_{\text{rec}}$ and the prior constraint $\mathcal{L}_{\text{reg}}$:
 \begin{align}
 \mathcal{L}_{\text{ELBO}}(\theta, \phi; x) &= \mathcal{L}_{\text{rec}}(\theta, \phi; x) + \mathcal{L}_{\text{reg}}(\phi; x)  
 \end{align}
@@ -61,17 +61,13 @@ For continuous data, more novel adaptations \cite{lygerakis2024edvaeentropydecom
     \mathcal{L}_{\text{rec}}(\theta, \phi; x) = \mathbb{E}_{q_\phi(z|x)}[\|x - \hat{x}\|^2]
 \end{equation}
 where $\hat{x} = p_\theta(x|z)$ is the reconstructed input.
-The two losses combined aims at providing a total loss that balances reconstruction quality and the prior regularization \cite{lin2019balancingreconstructionqualityregularisation}.
+The two losses combined aim at providing a single loss that balances reconstruction quality and the prior regularization \cite{lin2019balancingreconstructionqualityregularisation}.
 
 \subsubsection{Minimizing the ELBO Loss}
 The objective in training a \acrshort{vae} is to minimize the negative \acrshort{elbo}, which is equivalent to maximizing the \acrshort{elbo} itself. This optimization problem can be formulated as:
 \begin{equation}
     \theta^*, \phi^* = \argmin_{\theta, \phi} \mathbb{E}_{x \sim p_{\text{data}}(x)}[-\mathcal{L}_{\text{ELBO}}(\theta, \phi; x)]
 \end{equation}
-
 where $\theta^*$ and $\phi^*$ are the optimal parameters for the decoder and encoder, respectively. By minimizing the negative \acrshort{elbo}, we simultaneously optimize for better reconstruction of the input data (through $\mathcal{L}_{\text{rec}}$) and a latent space distribution that closely matches the prior (through $\mathcal{L}_{\text{reg}}$). This process encourages the \acrshort{vae} to learn a meaningful and structured latent representation of the input data while maintaining the ability to generate new samples \cite{kingma2022autoencodingvariationalbayes}.
-
-\subsubsection{$\beta$-\acrshort{vaa})
-
-In the standard \acrshort{elbo} loss function, \mathcal{L}_{\text{Reg}} and \mathcal{L}_{\text{Rec}} are weighted equally. The $\beta$-\acrshort{vae} \cite{higgins2017betavae} adds a $\beta$ parameter to the model, which 
-
+\subsubsection{$\beta$-\acrshort{vae}}
+In the standard \acrshort{elbo} loss function, $\mathcal{L}_{\text{Reg}}$ and $\mathcal{L}_{\text{Rec}}$ are weighted equally. The $\beta$-\acrshort{vae} \cite{higgins2017betavae} adds a $\beta$ parameter to the model, which allows for different weighting of the two models. This outperformed similar variational models when $\beta > 1$, which is the default weighting in regular \acrshort{vae} models.

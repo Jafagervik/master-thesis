@@ -4,7 +4,7 @@
 \subsection{Tools}
 \label{met:Julia}
 
-Created in 2009, first released in 2012 as part of a master thesis \cite{juliaMs} and further a doctoral thesis \cite{juliaPHD}, Julia is a high-performance, dynamically typed programming language with the goal of being a language ''fast and performant language like C, with syntax as simple as Python's, linear algebra extensions like Matlab, and statistics like R'' \cite{julia}. Like Python, Julia can be used in a script-like fashion through its \acrfull{repl}. Notebook-style programming has been a standard way for data analysts to write their code, and Jupyter notebooks also support Julia through the \texttt{IJulia.jl} package. Julia's fluent type system, accompanied by easy syntax, high performance, and \acrshort{repl} tools, makes it a viable language for data science. We've previously discussed Julia and parallelization in preliminary studies \cite{projthesis}, and the reader will benefit from reading this work. A full list of packages is detailed in Table in Appendix \ref{app:jupacks}.
+Created in 2009, first released in 2012 as part of a master thesis \cite{juliaMs} and further a doctoral thesis \cite{juliaPHD}, Julia is a high-performance, dynamically typed programming language with the goal of being a language ''fast and performant language like C, with syntax as simple as Python's, linear algebra extensions like Matlab, and statistics like R'' \cite{julia}. Like Python, Julia can be used in a script-like fashion through its \acrfull{repl}. Notebook-style programming has been a standard way for data analysts to write their code, and Jupyter notebooks also support Julia through the \texttt{IJulia.jl} package. Julia's fluent type system, accompanied by easy syntax, high performance, and \acrshort{repl} tools, makes it a viable language for data science. We've previously discussed Julia and parallelization in preliminary studies \cite{projthesis}, and the reader will benefit from reading this work. The Appendix details a full list of packages in Table \ref{tab:judas-packages}.
 
 \subsection{Overview}
 \label{met:judasoverview}
@@ -16,7 +16,7 @@ We split our program into 4 parts: loading \acrshort{das} data from \acrshort{hd
 \begin{figure}[!h]
     \centering
     \includegraphics[scale=.5]{figures/judas_overview.png}
-    \caption{File hierarchy in \texttt{Judas}}
+    \caption{File hierarchy in \texttt{Judas}. Most of the core work is done in the modules, while all files are included together in the Judas package.}
     \label{fig:judasoverview}
 \end{figure}
 
@@ -34,10 +34,10 @@ Figure \ref{fig:apiflow} shows which core functions have been changed or added t
 
 The \texttt{find\_DAS\_files} function now allows for modifying the \acrfull{roi}, which determines which channels are included when loading the data. We introduced a \texttt{step} parameter for channel selection to enhance flexibility. As shown in Table \ref{tab:experiment_data}, every 4th sensor is stored in the original data. The \texttt{step} parameter allows users to adjust the interval between selected channels, effectively controlling the scale of \acrshort{das} data analysis. For instance, if the original channel distance was approximately \qty{4}{\meter}, setting \texttt{step} to 25 would result in loading data every \qty{100}{\meter}. This feature enables users to easily adapt the spatial resolution of their analysis to suit their specific needs.
 The function returns the file paths of the \acrshort{hdf5} files, a list of channel indices to be loaded, and alternatively, which samples to load.
-
+%
 \subsubsection{Loading \acrshort{das} data}
 The \texttt{load\_DAS\_files} function serves as the core component of Judas, managing data loading, metadata processing, and numeric integration. Table \ref{tab:das-comparison} details distinctions between current code, our old approach, and similar existent programs at \acrshort{cgf}:
-
+%
 \begin{table}[htbp]
 \centering
 \begin{tabular}{p{0.3\textwidth}|p{0.3\textwidth}|p{0.3\textwidth}}
@@ -59,7 +59,7 @@ The \texttt{load\_DAS\_files} function serves as the core component of Judas, ma
 \end{itemize}
 &
 \begin{itemize}[leftmargin=*]
-    \item Returns entire dataset as a pandas DataFrame
+    \item Loads entire data in memory
     \item Higher memory requirements for large datasets
 \end{itemize} \\
 \hline
@@ -79,7 +79,7 @@ The \texttt{load\_DAS\_files} function serves as the core component of Judas, ma
 \If{single HDF5 filepath}
     \State Process and Memory map \acrs{DAS} signal matrix $M$ to a binary file
 \Else
-    \If{multple processes}
+    \If{multiple processes are available}
         \State Distribute HDF5 file paths among available processes
         \For{each process}
             \State Call \texttt{process\_DAS\_chunk} function
@@ -100,13 +100,13 @@ The \texttt{load\_DAS\_files} function serves as the core component of Judas, ma
 \label{alg:loaddas}
 \end{algorithm}
 The return type of the \texttt{load\_DAS\_files} function has also been modified. Previously, a \texttt{DASDataFrame} stored a vector of timestamps, which proved to be redundant. This revised approach leverages the inherent regularity of the sampling process. By storing only the initial timestamp $t_{\text{start}}$ and the sampling rate $F$, subsequent timestamps can be efficiently calculated using the following equation:
-\begin{equation}
-    t_{\text{now}} = t_{\text{start}} + \text{MilliSecond}(\text{row index} \times F \times 1000)
-\end{equation}
+$$
+    t_{\text{now}} = t_{\text{start}} + \text{MilliSecond}(\text{local row index} \times F \times 1000)
+$$
 %
 This in-place calculation can be vectorized and broadcasted, improving computational efficiency. This modification reduces memory usage and maintains all essential temporal information required for subsequent data processing. 
 \clearpage
-\lstinputlisting[label={code:parproc},caption=Parallel processing of \acrshort{das} signal matrices. This is called upon by the processes as shown in Algorithm \ref{alg:loaddas}. Note that matrices are transposed, allowing Julia to vectorize calculations as seen in Figure \ref{fig:rowcol}, language=Julia]{code/load_das_files.jl}
+\lstinputlisting[label={code:parproc},caption=Parallel processing of \acrshort{das} signal matrices. This is called upon by the processes as shown in Algorithm \ref{alg:loaddas}. Note that matrices are transposed which allows Julia to vectorize calculations as seen in Figure \ref{fig:rowcol}, language=Julia]{code/load_das_files.jl}
 
 Code Listing \ref{code:parproc} and Algorithm \ref{alg:loaddas} detail our new approach to \acrshort{das} data processing. By synchronizing the processes and distributing files in a load-balanced manner, we avoid problems of \acrshort{das} files not being processed before further subsequent processing. Instead of letting all threads write to one large binary file, we utilize memory mapping \cite{mmap_article} to processed data before synchronizing the processed matrix with the file loaded in memory.
 %
@@ -133,13 +133,13 @@ Additionally, we store the number of rows in a single file, the number of files 
 \clearpage
 \textbf{Columnwise Cumulative Summation}
 
-The decision to distribute the selected \acrshort{das} data across multiple files necessitated modifying a crucial function. Specifically, when the integrated parameter is enabled, as shown in Algorithm \ref{alg:loaddas}, a cumulative sum operation along the channel axis may be required. To address this requirement, we implemented a sequential operation denoted as \texttt{ccds!}, as illustrated in Code Listing \ref{code:ccds}:
+The decision to distribute the selected \acrshort{das} data across multiple files necessitated modifying a crucial function. Specifically, when the integrated parameter is enabled, as shown in Algorithm \ref{alg:loaddas}, a cumulative sum operation along the channel axis may be required. To address this issue, we implement a sequential operation denoted as \texttt{ccds!}, as illustrated in Code Listing \ref{code:ccds}:
 
 \lstinputlisting[label={code:ccds},caption=Columnwise Cumsum Delta Scaling, language=Julia]{code/ccds.jl}
 
-The process begins with memory mapping of the submatrix $M_i$ from its respective file, where $i$ denotes the iteration index. Subsequently, the final row of the preceding matrix, represented as $prev_{i-1}$, is added to the initial row of the current submatrix: $M_i[1,:] \leftarrow M_i[1,:] + prev_{i-1}$. Following this, a column-wise cumulative sum operation is executed on $M_i$, such that $M_i[j,:] \leftarrow \sum_{k=1}^j M_i[k,:]$ for each column. The entire submatrix is then multiplied by the scaling factor $\Delta t$: $M_i \leftarrow \Delta t \cdot M_i$. Finally, the $\text{prev}_i$ variable is updated with the final row of the current submatrix to ensure continuity: $\text{prev}_i \leftarrow M_i[end,:]$. This $\text{prev}_i$ will be utilized in the subsequent iteration $i+1$, maintaining the cumulative nature of the operation across all submatrices. It is worth noting that $M_1$ has no previous row to add and thus only computes the column-wise cumulative sum and gets scaled by $\Delta$t.
+The function begins with memory mapping of the submatrix $M_i$ from its respective file, where $i$ denotes the iteration index. Subsequently, the final row of the previous matrix, represented as $prev_{i-1}$, is added to the initial row of the current submatrix: $M_i[1,:] \leftarrow M_i[1,:] + prev_{i-1}$. Following this, a column-wise cumulative sum operation is executed on $M_i$, such that $M_i[j,:] \leftarrow \sum_{k=1}^j M_i[k,:]$ for each column. The entire submatrix is then multiplied by the scaling factor $\Delta t$: $M_i \leftarrow \Delta t \cdot M_i$. Finally, the $\text{prev}_i$ variable is updated with the final row of the current submatrix: $\text{prev}_i \leftarrow M_i[end,:]$. This $\text{prev}_i$ will be utilized in the subsequent iteration $i+1$, maintaining the cumulative nature of the operation across all submatrices. It is worth noting that $M_1$ has no previous row to add and thus only computes the column-wise cumulative sum and gets scaled by $\Delta$t.
 
-Our methodology enables the implementation of a column-wise cumulative sum operation across the entirety of the \acrshort{das} data, despite its distribution across multiple files. The iterative nature of this approach leverages Julia's compilation process; the initial function call triggers compilation, while subsequent calls utilize the compiled version, thereby enhancing computational efficiency \footnote{As mentioned in project thesis  \cite{projthesis}}. The entire \lstinline{load_DAS_files} function is detailed in the Appendix in Code Listing \ref{loaddas}.
+Our methodology enables the implementation of a column-wise cumulative sum operation across the entirety of the \acrshort{das} data, despite its distribution across multiple files. The iterative nature of this approach leverages Julia's compilation process; the initial function call triggers compilation, while subsequent calls utilize the compiled version, thereby enhancing computational efficiency \footnote{As mentioned in project thesis  \cite{projthesis}}. The entire \lstinline{load_DAS_files} function is detailed in the Appendix in Code Listing \ref{code:loaddas}.
 
 \subsubsection{Parallel Resampling}
 

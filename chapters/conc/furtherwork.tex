@@ -5,30 +5,24 @@ While our work has addressed several key challenges, both Judas and TinyDAS are 
 
 \subsection{Judas and \acrshort{das} processing}
 
-While Judas serves task of loading and processing \acrshort{das} data, the following list provides an overview over further advancements that can enhance its computational effectiveness, specifically targeting file loading:
+While Judas serves the task of loading and processing \acrshort{das} data, the following list provides an overview of further advancements that can enhance its computational effectiveness, specifically targeting file loading:
 
 \begin{itemize}
+    \item Design and implement a more course-grained approach to our current solutions for finding and loading \acrshort{das} files. 
     \item Designing a parallel version of the column-wise cumulative sum function, potentially using algorithms like parallel prefix sum \cite{harris2007parallel}, where \acrshort{gpu} acceleration could be introduced. 
     \item Implementing a more flexible metadata handling system to accommodate datasets from other sources besides BANENOR.
-    \item Extending support for multiple file formats besides \acrshort{hdf5} and binary files, such as TDMS.
-    \item Implementing more advanced denoising and signal processing techniques, potentially utilizing \acrshort{gpu} acceleration and denoising autoencoders as done by \cite{denoise}.
+    \item Implementing more advanced denoising and signal processing techniques, potentially utilizing denoising autoencoders \cite{eage:/content/journals/10.1111/1365-2478.13355}.
 \end{itemize}
 
 \subsection{TinyDAS and Autoencoder-based Anomaly Detection}
 
-As discussed in Section \ref{disc:tinydas}, we have succeeded in many of our goals with TinyDAS. However, as seen by the poor results from the variational autoencoders, there is still much room left for tuning current models. The following list presents multiple avenues for further development and research, both for current models, and TinyDAS as an extension of the TinyGrad \acrshort{ai} framework:
+As discussed in Section \ref{disc:tinydas}, we have succeeded in many of our goals with TinyDAS. However, as the poor results from the variational autoencoders show, there is still much room left for tuning current models. The following list presents multiple avenues for further development and research:
 
 \begin{itemize}
-    \item  Half-precision training has been a heavy area of attention. For now, TinyDAS supports half-precision training, inference, loss-scaling, and gradient clipping. Further improving on these to ensure gradients are within range is an important aspect of reducing runtime and memory consumption. 
-    \item Extend support for $\mathcal{L}_1$ and $\mathcal{L}_2$ regularization.
-    \item Implementing support for mixed precision training.
-    \item Expanding support for other \acrshort{das} datasets, both from PubDAS and other public sources. This could be achieved through a more customizable format of our DataLoader class. Furthermore, implementing functionality for downloading DAS datasets directly from Globus would lower the user entry barrier.
-    \item Extending the collection of models for broader comparisons between different types of models.
-    \item Implementation of test datasets for supervised learning.
-    \item Implementing support for distributed parallel training, enabling large-scale model training. 
-    \item Expanding beyond autoencoder architectures to support other model types such as \acrshort{cnn}s and transformers.
-    \item Support for recurrent layers such as LSTM, RNN, and GRU. These exist in the Tinygrad official repository but do not currently support data- or model-parallel training.
-    \item Developing hybrid models that combine the temporal and spatial aspects of \acrshort{das} signals, such as CNN-LSTM architectures, or even transformer-based ones, to process and analyze \acrshort{das} data more effectively.
+    \item Expand support for more different architecture and compare simpler models with hybrid models that combine both the temporal and spatial aspects of \acrshort{das} signals, such as CNN-LSTM architectures, or even transformer-based ones, to capture finer details.
+    \item  Half-precision training has been a heavy area of attention. For now, TinyDAS supports half-precision training, inference, loss-scaling, and gradient clipping. Further improving on these to ensure gradients are within range is an important aspect of reducing runtime and memory consumption. Comparing this approach to mixed-precision could prove beneficial.
+    \item Expanding support for other \acrshort{das} datasets, both from PubDAS and other public sources. This could be achieved through a more customizable format of our DataLoader class. Furthermore, implementing functionality for downloading \acrshort{das} datasets directly from the internet would lower the user entry barrier.
+    \item Implement support for reading real-time datastreams, to further analyze how different models perform in real-world scenarios
 \end{itemize}
 
 \subsection{Final Remarks}

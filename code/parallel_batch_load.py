@@ -1,17 +1,5 @@
 class DataLoader:
-    def __init__(self, dataset: Dataset, batch_size: int, devices: List[str],
-        num_workers: int = 1,
-        shuffle: bool = False):
-        self.indices = list(range(len(dataset)))
-        self.current_index = 0
-
-    def __iter__(self):
-        self.current_index = 0
-        if self.shuffle: rnd.shuffle(self.indices)
-        return self
-
-    def __len__(self) -> int: return len(self.dataset)
-
+    ...
     def __next__(self) -> Tensor:
         if self.current_index >= len(self.indices): raise StopIteration
         end_index = min(self.current_index + self.batch_size, len(self.indices))

@@ -3,21 +3,13 @@
 
 The improvements to Judas have proved meaningful. The added channel selection lets the user choose which channels to analyze, while the \texttt{load\_DAS\_files} function now utilizes memory mapping, and the processing is done in parallel. The added functionalities of parallel channel decimation, denoising, and other utilities let users further process and analyze \acrshort{das} data. Judas can thus be incorporated into other Julia programs to allow for further analysis. \\
 
-From experiment \rnum{2}, we can clearly see that the current bottleneck of \texttt{Judas} is the first part of the program, more specifically, the \texttt{load\_DAS\_files} function discussed in Section \ref{disc:ex1}. Even though we successfully avoid loading large arrays into memory by utilizing memory mapping and temporary file storage, only a small part of the function is parallelizable. Nor does it take advantage of Julia's \textit{just-ahead-of-time} compilations, besides the cumulative sum calculation and the parallelized section, which are being called multiple times. A further improved version of loading the files may be needed. This program is also limited to \acrshort{hdf5} files as of now, and metadata for BANENOR datasets. Certain hardcoded values may need modification to make Judas usable for other experiments, but users can make changes themselves wherever necessary. \\
+From experiment \rnum{2}, we can clearly see that the current bottleneck of \texttt{Judas} is the first part of the program, more specifically, the \texttt{load\_DAS\_files} function. Even though we successfully avoid loading large arrays into memory by utilizing memory mapping and temporary file storage, only a small part of the function is parallelizable. Nor does it take advantage of Julia's \textit{just-ahead-of-time} compilations, besides the cumulative sum calculation and the parallelized section, which are being called multiple times. A further improved version of loading the files may be needed. This program is also limited to \acrshort{hdf5} files as of now, and metadata for BANENOR datasets. Certain hardcoded values may need modification to make Judas usable for other experiments, but users can make changes themselves wherever necessary. \\
 
-This, of course, limits the effectiveness and scalability of the program. Still, compared to similar programs at \acrshort{cgf}, users can now find and load several \acrshort{das} files over larger durations and utilize multiple processes to speed up the loading of larger matrices. For shorter windows, existent programs prove more effective. \\
+This, of course, limits the effectiveness and scalability of the program. Still, compared to similar programs at \acrshort{cgf}, users can now find and load several \acrshort{das} files over larger durations and utilize multiple processes to speed up the loading of larger matrices. For shorter windows, existing programs prove more effective. \\
 
 Additionally, this first part of the program could be run before resampling and denoising, thus circumventing the need to wait for pre-processing data. An alternative to our fine-grained approach at parallelization would be to parallelize both the \texttt{find\_DAS\_files} and the \texttt{load\_DAS\_files} function. This more coarse-grained approach distributes the files found by \texttt{find\_DAS\_files} across several processes and decreases the overall run time of \texttt{load\_DAS\_files}.\\
 
 Not much effort is necessary to load and analyze \acrshort{das} data. In approximately 30 lines, users can find, load, and process their data and visualize the results. This simplicity and efficiency make Judas a powerful tool for members at \acrshort{cgf} working with \acrshort{das} data.
-
-\begin{itemize}
-    \item Optimizing the cumulative sum calculation to make it parallel, potentially using algorithms like parallel prefix sum [CITE], where GPU acceleration could be introduced.
-    \item Implementing a more flexible metadata handling system to accommodate datasets from other sources besides BANENOR.
-    \item Extending support for multiple file formats besides \acrshort{hdf5}, such as TDMS.
-    \item Developing a user-friendly interface for adjusting hardcoded values, making the program more adaptable to different experimental setups without requiring direct code modifications.
-    \item Implementing more advanced denoising and signal processing techniques.
-\end{itemize}
 
 
 %There are still plenty of undiscovered methods on this kind of data. As mentioned in \cite{MALEKI2021107443}, "Anomaly detection in unlabelled Big Data is difficult and costly". We've seen this occur even after multiple different rounds of resampling, channel decimation, and so on. 

@@ -1,6 +1,6 @@
 \subsection{Experiment \rnum{2}: Anomaly Detection}
 
-Table \ref{tab:confusion-matrix-results} presents a comparative analysis of all four models and data types. Except for the $\beta$-VAE model, all scores are equal between all metrics. The variational models have the highest values for the positives and the lowest of the negatives. The CAE model has a higher rate of falsely predicted values, yet still close to the variational ones.
+Table \ref{tab:confusion-matrix-results} presents a comparative analysis of all four models and data types. Except for the $\beta$-VAE model, all scores are equal between all metrics. The variational models have the highest values for the positives and the lowest for the negatives. The CAE model has a higher rate of falsely predicted values yet is still close to the variational ones. Note that the AE scores in subsequent tables will be lower due to the fact that no true anomalies have been predicted.
 
 \begin{table}[!htbp]
 \centering
@@ -34,19 +34,19 @@ Table \ref{tab:performance-metrics-float32} highlights the key metrics when we u
     S[table-format=1.3]
 }
 \toprule
-\textbf{Model} & {\textbf{Accuracy}} & {\textbf{Precision}} & {\textbf{Recall}} & {\textbf{F1-Score}} & {\textbf{FPR}} & {\textbf{ROC AUC}} & {\textbf{PR AUC}} \\
+\textbf{Model} & {\textbf{Accuracy}} & {\textbf{Precision}} & {\textbf{Recall}} & {\textbf{F1-Score}} & {\textbf{FPR}} \\
 \midrule
-\rowcolor{gray!10} AE   & 0.697 & 0.000 & 0.000 & 0.000 & 0.091 & 0.292 & 0 \\
-$\beta$-VAE  & 0.927 & 0.893 & 0.779 & 0.832 & 0.028 & 0.968 & 0 \\
-\rowcolor{gray!10} CAE  & 0.910 & 0.906 & 0.686 & 0.780 & 0.022 & 0.843 & 0 \\
-$\beta$-CVAE & 0.928 & 0.922 & 0.757 & 0.831 & 0.020 & 0.967 & 0 \\
+\rowcolor{gray!10} AE   & 0.697 & 0.000 & 0.000 & 0.000 & 0.091 \\
+$\beta$-VAE  & 0.927 & 0.893 & 0.779 & 0.832 & 0.028\\
+\rowcolor{gray!10} CAE  & 0.910 & 0.906 & 0.686 & 0.780 & 0.022  \\
+$\beta$-CVAE & 0.928 & 0.922 & 0.757 & 0.831 & 0.020  \\
 \bottomrule
 \end{tabular}
 \caption{Anomaly Detection Performance Metrics Comparison (Float32)}
 \label{tab:performance-metrics-float32}
 \end{table}
 
-Like Table \ref{tab:performance-metrics-float32}, Table \ref{tab:performance-metrics-float16} scores high on the same metrics. Only the $\beta$-VAE scores differ between single-precision and half-precision metrics.
+Like Table \ref{tab:performance-metrics-float32}, Table \ref{tab:performance-metrics-float16} displays key anomaly metrics. We only notice a small change between the results from single-precision, contrary to that of half-precision in the $\beta$-VAE model. 
 \begin{table}[!htbp]
 \centering
 \begin{tabular}{l
@@ -63,14 +63,13 @@ Like Table \ref{tab:performance-metrics-float32}, Table \ref{tab:performance-met
 \midrule
 \rowcolor{gray!10} AE   & 0.697 & 0.000 & 0.000 & 0.000 & 0.091 & 0.293 & 0.233 \\
 $\beta$-VAE  & \textbf{0.930} & \textbf{0.938} & 0.750 & \textbf{0.833} & \textbf{0.015} & \textbf{0.969} & 0.910 \\
-\rowcolor{gray!10} CAE  & 0.910 & 0.906 & 0.686 & 0.780 & 0.022 & 0.844 & 0.690 \\
+\rowcolor{gray!10} CAE  & 0.910 & 0.906 & 0.686 & 0.780 & 0.022 & 0.820 & 0.690 \\
 $\beta$-CVAE & 0.928 & 0.922 & \textbf{0.757} & 0.831 & 0.020 & 0.967 & \textbf{0.900} \\
 \bottomrule
 \end{tabular}
 \caption{Anomaly Detection Performance Metrics Comparison (Float16)}
 \label{tab:performance-metrics-float16}
 \end{table}
-
 \subsubsection{Combined ROC- and PR-Curve using half-precision}
 \begin{figure}[!htbp]
     \centering
@@ -84,7 +83,7 @@ $\beta$-CVAE & 0.928 & 0.922 & \textbf{0.757} & 0.831 & 0.020 & 0.967 & \textbf{
     \begin{subfigure}[b]{\textwidth}
         \centering
         \includegraphics[width=0.7\textwidth]{figures/anomalies/combined_pr_curve.png}
-        \caption{Combined PR Curve for all models using half-precision. AE is Blue, $\beta$-VAE is yellow, CAE is green, and $\beta$-CVAE is red. Similar to the ROC curve, The AE model yields the lowest AUC. We also notice }
+        \caption{Combined PR Curve for all models using half-precision. AE is Blue, $\beta$-VAE is yellow, CAE is green, and $\beta$-CVAE is red. Similar to the ROC curve, The AE model yields the lowest AUC. The variational models scores higher overall, while the \acrshort{cae} model scores in between.}
         \label{fig:prcurve}
     \end{subfigure}
     \label{fig:combined_curves}

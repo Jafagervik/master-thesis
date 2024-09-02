@@ -16,7 +16,7 @@ The \textit{spatio-temporal} aspects of \acrshort{das} come from how the data is
 \begin{figure}[!h]
     \centering
     \includegraphics[width=0.7\linewidth]{figures/das_example.png}
-    \caption{\textbf{Visualization} of normalized \acrshort{das} data as a heatmap. The vertical axis represents time (increasing downwards), while the horizontal axis shows a little more than 2000 spatial channels along the fiber. Color intensity indicates the strain rate, with reds representing higher rates and blues lower rates. The diagonal patterns in the middle likely represent propagating seismic waves or other dynamic strain events detected.}
+    \caption{Visualization of normalized \acrshort{das} data as a heatmap. The vertical axis represents time (increasing downwards), while the horizontal axis shows a little more than 2000 spatial channels along the fiber. Color intensity indicates the strain rate, with reds representing higher rates and blues lower rates. The diagonal patterns in the middle likely represent propagating seismic waves or other dynamic strain events detected.}
     \label{fig:dasframe-ex}
 \end{figure}
 %
@@ -27,20 +27,21 @@ When working with large matrices, such as \acrshort{das} data, the order of the 
 \begin{figure}[!h]
     \centering
     \includegraphics[width=0.5\linewidth]{figures/rowcol.png}
-    \caption{Row-major (Left) and column-major (Right) memory ordering}
+    \caption{Row-major (Left) and column-major (Right) memory alignment}
     \label{fig:rowcol}
 \end{figure}
+\clearpage
 %
-In the case of \acrshort{das} data, where calculations are often performed on a per-channel level, a language like Julia, MatLab, or Fortran would benefit from storing each channel in a column. This alignment can lead to several advantages, including:
+In the case of \acrshort{das} data, where calculations are often performed on a per-channel level, a programming language like Julia, MatLab, or Fortran would benefit from storing each channel in a column. This alignment can lead to several advantages, including:
 \begin{enumerate}
 \item \textbf{Improved cache utilization:} When processing data channel by channel, column-major storage ensures that the data for each channel is contiguous in memory, reducing cache misses.
 \item \textbf{Reduced memory fragmentation:} Storing long time series for each channel in columns can lead to better memory allocation and less fragmentation.
-\item \textbf{Vectorization opportunities:} Many modern processors support \acrfull{simd} operations, which can be more efficiently applied to contiguous data \cite{ren2006optimizing}.
+\item \textbf{Vectorization opportunities:} Many modern processors support \acrfull{simd} \cite{ren2006optimizing} operations, which can be more efficiently applied to contiguous data.
 \end{enumerate}
 %
 \subsection{Radio Frequency Filtering}
 %
-\acrfull{rf} filtering is of paramount importance in \acrshort{das} and \acrfull{dsp}. The signal quality can be improved by removing unnecessary noise from the data, and can decrease the overall of signal loss. In general, there are four types of filters, and can be defined as follows:
+\acrfull{rf} filtering is of paramount importance in \acrshort{das} and \acrfull{dsp}. The signal quality can be improved by removing unnecessary noise from the data and can decrease the overall signal loss. In general, there are four types of filters, and can be defined as follows \cite{cdt21_filters}:
 %
 \begin{itemize}
     \item \textit{Band-pass filters} only allows frequencies between two cutoff frequencies $F_{low}$ and $F_{high}$
@@ -49,7 +50,7 @@ In the case of \acrshort{das} data, where calculations are often performed on a 
     \item \textit{High-pass filters} only allows frequencies above the selected frequency $F_{high}$
 \end{itemize}
 %
-A common approach to preprocessing \acrshort{das} data usually involves applying a bandpass to the signal matrix. Due to \acrshort{das} data being sensitive and capturing a broad range of frequencies, limiting the signals to a range of interest, depending on domain and application is beneficial.
+A common approach to preprocessing \acrshort{das} data usually involves applying a bandpass to the signal matrix. Due to \acrshort{das} data being sensitive and capturing a broad range of frequencies, limiting the signals to a range of interest, depending on domain and application, is beneficial.
 
 \vspace{0.5cm}
 
@@ -64,7 +65,6 @@ A common approach to preprocessing \acrshort{das} data usually involves applying
 \label{dsp:tukey}
 
 Window functions are functions often used in \acrshort{dsp} to avoid artifacts. This is done by setting values outside a pre-defined interval to zero and applying a taper from the passband to the first zero value. The Tukey window \cite{tukey1967introduction}, also known as the \textit{cosine-tapered window}, is a common approach to reducing edge effects, and can be formulated as such:
-
 \[
     w(x)= 
 \begin{cases}
@@ -73,7 +73,7 @@ Window functions are functions often used in \acrshort{dsp} to avoid artifacts. 
     \frac{1 + \cos{2 \pi \alpha (x - \frac{1-\alpha}{2})}}{2}, & \text{if } x > \frac{1-\alpha}{2}
 \end{cases}
 \]
-where a higher $\alpha$ leads to a smoother cutoff in the output.
+where a higher $\alpha$ leads to a smoother cutoff in the output. If $\alpha = 0$, the window becomes a square.
 %\begin{figure}[!h]
 %    \centering
 %    \includegraphics[width=0.6\linewidth]{figures/tukey_windows_high_res.jpg}
@@ -82,7 +82,7 @@ where a higher $\alpha$ leads to a smoother cutoff in the output.
 %\end{figure}
 \subsection{Resampling}
 %
-''Resampling methods are statistical procedures that reuse the sample data for the purpose of statistical inference''\cite{https://doi.org/10.1002/widm.1054}. In many applications, data is often initially collected at a very high sampling rate to capture fine details. However, this high sampling rate is not computationally efficient or even necessary for all analytical purposes. Down-sampling, also referred to as decimation within the \acrshort{dsp} field, is a form of resampling where the sampling rate is reduced, can be applied to:
+''Resampling methods are statistical procedures that reuse the sample data for the purpose of statistical inference''\cite{https://doi.org/10.1002/widm.1054}. In many applications, data is often initially collected at a very high sampling rate to capture fine details. However, this high sampling rate is not computationally efficient or even necessary for all analytical purposes. Down-sampling also referred to as decimation within the \acrshort{dsp} field, is a form of resampling where the sampling rate is reduced, it can be applied to:
 %
 \begin{itemize}
     \item Decrease memory consumption for data storage

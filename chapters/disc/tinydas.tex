@@ -4,41 +4,40 @@
 As stated in Section \ref{meth:tinyoverview}, we designed TinyDAS around a set of guiding principles. After using TinyDAS for training and anomaly detection, we evaluate its design against these principles.
 
 \textbf{Support for memory-efficient training techniques, specifically half-precision:}
-By setting the \lstinline|half_prec| variable in the configuration file to \lstinline|True|, all weights, biases, and data are computed using Float16. This significantly reduces memory usage and potentially speeds up training. However, we opted for single-precision training with half-precision inference due to some instability in training for the \acrshort{vae} models. Further assessment of current gradient clipping and loss function is needed.
+By setting the \lstinline|half_prec| variable in the configuration file to \lstinline|True|, all weights, biases, and data are computed using half-precision. This significantly reduces memory usage and potentially speeds up training. However, we opted for single-precision training with half-precision inference due to some instability in training for the \acrshort{vae} models. Further assessment of current gradient clipping and loss function is needed.
 
 \textbf{Scalability from single-device computation to multi-GPU systems:}
-We are easily able to scale our training by enabling data parallelism as described in Section \ref{meth:dataloader} and shown in Code Listing \ref{code:dataloader}. Models can be efficiently copied to multiple devices, as seen in Code Listing \ref{code:main}, demonstrating TinyDAS's capability to utilize multi-GPU systems effectively in a simple manner.
+We can easily scale our training by enabling data parallelism as shown in Code Listing \ref{lst:parbatchload}. Models can be efficiently copied to multiple devices, as seen in Code Listing \ref{code:tinyusage}, demonstrating TinyDAS's capability to utilize multi-GPU systems effectively in a simple manner.
 
 \textbf{Hardware agnostic to ensure wide usability:}
-The hardware agnosticism and clear separation of user-code and hardware-specific accelerator code is one of the main benefits inherited from Tinygrad \cite{tinygrad}. In our system, the \lstinline|get_gpus| function uses \lstinline|DEVICE.default| and a specified amount to choose the number of \acrshort{gpu}s to be utilized for training, ensuring flexibility across different hardware configurations. This makes 
+The hardware agnosticism and clear separation of user-code and hardware-specific accelerator code is one of the main benefits inherited from Tinygrad \cite{tinygrad}. In our system, the \lstinline|get_gpus| function uses \lstinline|DEVICE.default| and a specified amount to choose the number of \acrshort{gpu}s to be utilized for training, ensuring flexibility across different hardware accelerators and configurations.
 
 \textbf{Modular architecture, easily extendable with new models:}
 By inheriting from the \lstinline|BaseAE| class, new models can easily be added to TinyDAS. This is demonstrated in the available code, where adding a model and a configuration file is sufficient to train a new model. One limitation is supporting other architectures, such as \acrshort{gan}s, which would require adjusting the trainer class and the \lstinline|BaseAE| model class to accommodate custom requirements. However, extending the model with other custom trainer classes remains feasible.
 
 \textbf{Separation of core logic from data workflow for improved maintainability:}
-As shown in the example usage in Listing \ref{code:tinyusage}, a simple training workflow can be implemented in approximately 20 lines of code. This conciseness is achieved through the clear separation of core logic and data workflow, enhancing the system's maintainability and ease of use. Additionally, the file hierarchy allows TinyDAS to easily be used in jupyter notebooks. 
+As shown in the example usage in Code Listing \ref{code:tinyusage}, a simple training workflow can be implemented in approximately 20 lines of code. This conciseness is achieved through the clear separation of core logic and data workflow, enhancing the system's maintainability and ease of use. Additionally, the file hierarchy allows TinyDAS to be used easily in jupyter notebooks. 
 
 \textbf{Collection of different algorithms for anomaly detection:}
-TinyDAS currently includes functionality for semi-supervised anomaly detection through functionality for finding the optimal threshold through F1-scores and other metrics used in this thesis. Furthermore, functionality for unsupervised anomaly detection is also supported, as seen in Code Listing \ref{code:ad}. However, in many cases, and even in our, performing analysis in jupyter notebooks provides for a more efficient workflow.
+TinyDAS currently includes functionality for semi-supervised anomaly detection through functionality for finding the optimal threshold through F1-scores and other relevant metrics. However, these can also be implemented as needed by users.
 
 \textbf{Future potential for online anomaly detection in a live environment:}
-TinyDAS has the potential to be adapted for online anomaly detection by leveraging the \lstinline|predict| and \lstinline|loss| methods provided by each model. By extending its functionality to continuously read from a datastream and identify anomalies within the desired timeframe, TinyDAS could be enhanced to support real-time anomaly detection in live environments. As of August 2024, TinyDAS can technically load 5-second \acrshort{das} frames consecutively from the \acrshort{foresee} and identify potential anomalies in near real-time, as shown in Table \ref{tab:modelresinfo}. However, this capability has yet to be tested in an actual real-time feed environment due to current limitations in data availability. Further development and support for other datasets could 
+TinyDAS has the potential to be adapted for online anomaly detection by leveraging the \lstinline|predict| and \lstinline|loss| methods provided by each model. By extending its functionality to continuously read from a datastream and identify anomalies within the desired timeframe, TinyDAS could be enhanced to support real-time anomaly detection in live environments. As of August 2024, TinyDAS can technically load \acrshort{das} frames consecutively from the \acrshort{foresee} and identify potential anomalies in near real-time, as shown in Table \ref{tab:modelresinfo}. However, this capability has yet to be tested in an actual real-time feed environment due to current limitations in data availability. Further development and support for other datasets could 
 
 \textbf{Model-agnostic approach to anomaly detection for broader applicability:}
-The anomaly detection functions in TinyDAS are designed to work with any model that inherits from the base class. This model-agnostic approach allows users to apply all anomaly detection functionality without having to rewrite code for each specific model, as highlighted in Listing \ref{code:anomaly}. This design choice significantly enhances the system's flexibility and broader applicability across different types of models and anomaly detection scenarios.
+The anomaly detection functions in TinyDAS are designed to work with any model that inherits from the base class. This model-agnostic approach allows users to apply all anomaly detection functionality without having to rewrite code for each specific model, as highlighted in Code Listing \ref{lst:baseae}. This design choice significantly enhances the system's flexibility and broader applicability across different types of models and anomaly detection scenarios.
 
-In general, we find satisfactory results with TinyDAS, serving as 
-
+In general, we find satisfactory results with TinyDAS, serving as a simple yet effective framework to compare the performance of different autoencoders and, subsequently, compare different models' performance with regard to anomaly detection.
 
 \subsection{Sustainability within \acrshort{ai}}
-\acrshort{ai} training is becoming an increasingly resource-intensive task on a yearly basis, as stated by Google \cite{9499913}. TinyDAS incorporates two features that contribute to several of the \acrfull{un} \acrfull{sdg} \cite{UNSDGs}:
+TinyDAS incorporates two features that contribute to several of the \acrfull{un} \acrfull{sdg} \cite{UNSDGs}:
 \begin{enumerate}
-\item \textbf{Support for half-precision training}: Computing elements with 16 bits instead of 32 bits reduces overall training time and energy consumption.
+\item \textbf{Support for half-precision training}: Computing elements with 16 bits instead of 32 bits reduces overall training- and inference time and energy consumption.
 \item \textbf{Early-stopping mechanism}: By stopping training when no significant improvements are observed, unnecessary resource usage is avoided.
 \end{enumerate}
 These features contribute to the following \acrshort{un} \acrshort{sdg} targets:
 \begin{itemize}
-\item Target 12.2: ''Achieve sustainable management and efficient use of natural resources.'' TinyDAS optimizes computational resource use, promoting sustainable management in AI development.
+\item Target 12.2: ''Achieve sustainable management and efficient use of natural resources.'' TinyDAS optimizes computational resource use, promoting sustainable management in \acrshort{ai} development.
 \item Target 9.4: ''Upgrade infrastructure and retrofit industries to make them sustainable, with increased resource-use efficiency.'' These features represent an upgrade in AI infrastructure, enhancing sustainability and efficiency.
 \item Target 7.3: ''Double the global energy efficiency improvement rate.'' By reducing energy requirements for \acrshort{ai} training, TinyDAS contributes to overall energy efficiency in the tech sector.
 \end{itemize}

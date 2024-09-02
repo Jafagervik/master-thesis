@@ -1,26 +1,50 @@
 \section{Conclusion}
 \label{conc:conc}
 
-\acrshort{das} processing is a complex task requiring many precise calculations. The massive amounts of stored data have also highlighted the need for more efficient algorithms for file loading, processing, and analysis. In this thesis, we provide tools for improved efficiency in processing and analyzing \acrshort{das} data and a comparative analysis of different autoencoder architectures. By developing
-Judas and TinyDAS, we bridge the gap between \acrshort{das} pre-processing and detection by providing a direct pipeline between the two as shown in Figure \ref{fig:ove}.' Furthermore, we provide tools that can be used for further research, both by members at \acrshort{cgf} and other researchers.
+\acrshort{das} processing is a complex task requiring many precise calculations. The massive amounts of stored data have also highlighted the need for more efficient file loading, processing, and analysis algorithms. In this thesis, we provide tools for improved efficiency in processing and analyzing \acrshort{das} data and a comparative analysis of different autoencoder architectures. By developing
+Judas and TinyDAS, we bridge the gap between pre-processing \acrshort{das} data and anomaly detection by providing a direct pipeline between the two as shown in Figure \ref{fig:judasnet_overview}. Furthermore, these tools can be used for future research by members at \acrshort{cgf} and other researchers.
 
-For Judas, we argue the case for looking at recent advancements in programming language design and parallel techniques further to enhance efficiency in \acrshort{das} processing. Although our current file loading is still slow, the reduced memory requirements and temporary file storage allow for more efficient use by members at \acrshort{cgf}.
+For Judas, we argue the case for looking at recent advancements in programming language design and parallel techniques further to enhance efficiency in \acrshort{das} processing. Although our current file loading is still slow, the reduced memory requirements, temporary file storage, and on-demand loading allow for more efficient handling of large-scale dense-sampled \acrshort{das} data.
 
-As for TinyDAS, we reached our goals in terms of providing software for comparative analysis of autoencoder-based anomaly detection and hardware-agnostic model training, as discussed in Section \ref{disc:tinydas}. Our comparisons demonstrate the need for more complex network architectures for enhanced accuracy in anomaly detection of \acrshort{das}. Furthermore, we stress the usefulness of smaller architectures as viable options compared to larger ones.
+As for TinyDAS, we reached our goals in terms of providing software for comparative analysis of autoencoder-based anomaly detection and hardware-agnostic model training, as discussed in Section \ref{disc:tinydas}. Our comparisons demonstrate the usefulness of smaller convolutional architectures as viable options, even in large-scale spatial data.
 
-Even though the topic of this thesis has been broad and contains several aspects, we were able to condense our research into three main questions. Following are the answers to these questions, as mentioned in Section \ref{intro:contribs}:
+Even though the topic of this thesis has been broad and contains several aspects, we were able to condense our research into three main questions. Following are the answers to these research questions:
 
-\textbf{RQ1: How do the spatial characteristics of \acrshort{das} data impact the anomaly detection performance using autoencoders?}
-The distinct difference in especially reconstruction capabilities, as well as anomaly metrics (e.g., F1 score and precision) between the linear and convolutional models, further indicates the importance of capturing spatial characteristics within \acrshort{das} data for enhanced performance in anomaly detection. Our results show that convolutional autoencoders consistently outperform the dense autoencoders, highlighting the critical role of spatial characteristics in \acrshort{das} anomaly detection.
+\textbf{RQ1: How do the spatial characteristics of large-scale dense-sampled \acrshort{das} data impact the anomaly detection performance using autoencoders?}
+The distinct difference in especially reconstruction capabilities, as well as anomaly metrics (e.g., F1 score, specificity, and precision) between the linear and convolutional models, further indicates the importance of capturing spatial characteristics within \acrshort{das} data for enhanced performance in anomaly detection. Our results show that simple convolutional autoencoders outperform the dense autoencoders, highlighting the critical role of extracting spatial characteristics in \acrshort{das} anomaly detection.
 
-\textbf{RQ2: What autoencoder architectures are most effective for anomaly detection in \acrshort{das} data when computational resources can be limited?}
+\textbf{RQ2: How does half-precision inference affect anomaly detection in \acrshort{das} data?}:
+ We effectively reduce inference time cost by a mean factor of \textit{170} across our models by using half-precision inference. Furthermore, our research does not indicate any significant shortcomings by utilizing half-precision for anomaly detection in \acrshort{das} data, but this may vary case-by-case. These points present a vital point about testing out half-precision, especially for real-time environments.
 
-Although the convolutional models require a smaller batch size as of now, thus leading to higher training, based on median epoch duration and the epoch count seen in Table \ref{tab:modelresinfo}, combined with the significantly smaller model sizes, improved anomaly scores, and overall reconstruction capabilities, we find simpler convolutional models, such as our CAE model, to be sufficiently effective. These models balance computational efficiency and detection performance, making them well-suited for scenarios where computational resources are scarce.
+\textbf{RQ3: How can we make the entire data processing pipeline, from loading \acrshort{das} data to detecting anomalies, as fast and efficient as possible?} The pipeline from finding and loading \acrshort{das} data to detecting anomalies may seem long and tedious. Still, our research discusses and provides several different techniques for efficient handling of \acrshort{das} data, including:
 
-\textbf{RQ3: What preprocessing techniques can optimize the efficiency-accuracy trade-off in \acrshort{das} data processing for anomaly detection?}
+\begin{enumerate}
+    \item Memory Management and Parallel Processing
+    \begin{itemize}
+        \item Utilize parallel file loading
+        \item Divide \acrshort{das} data into smaller matrices for distributed processing
+        \item Leverage temporary file storage
+        \item Implement parallel channel decimation
+    \end{itemize}
+    \item Model Optimization and Training
+    \begin{itemize}
+        \item Design models with the spatial characteristics in mind
+        \item Test out simpler architectures before larger and more complex architectures
+        \item Store weights and biases in single-precision to capture the minute details of \acrshort{das} data
+    \end{itemize}
+    \item Anomaly detection
+    \begin{itemize}
+        \item Utilize half-precision for faster prediction
+        \item Allow for some non-anomalous data to make the model more robust to noise and minimize manual intervention
+        \item Focus on detecting anomalies in smaller windows
+        \item Compare and test several models on a case-by-case scenario
+    \end{itemize}
+\end{enumerate}
 
-Dividing \acrshort{das} data into smaller matrices, followed by normalization, allows for faster processing, model training, and improved inference speed, which is crucial in real-time environments. Furthermore, by not manually selecting non-anomalous datasets for model training, we achieve good results with more diverse data, enhancing the model's ability to detect a wider range of anomalies. Additionally, using half-precision floating point numbers for inference, we effectively reduce inference time cost by a mean factor of \textit{170} across our models. These techniques collectively optimize the efficiency-accuracy trade-off, significantly improving processing speed while maintaining robust anomaly detection capabilities.
-
-In conclusion, our research has contributed to the field of \acrshort{das} data analysis by developing efficient tools and identifying effective strategies for anomaly detection. We've demonstrated the importance of considering spatial characteristics, compact convolutional architectures' potential, and the benefits of strategic preprocessing techniques. As the field continues to evolve, the tools and insights provided by this thesis offer a solid foundation for ongoing advancements in \acrshort{das} data processing and analysis.
+In conclusion, our research has contributed to the field of \acrshort{das} data analysis by developing efficient tools and identifying effective strategies for anomaly detection. We've demonstrated the importance of considering spatial characteristics, compact convolutional architectures' potential, and the benefits of strategic preprocessing techniques. Even though not all methods proved positive, this work has proven both meaningful and productive. As the field continues to evolve, the tools and insights provided by this thesis offer a solid foundation for ongoing advancements in \acrshort{das} data processing and analysis.
 
 
+%\textbf{RQ2: What autoencoder architectures are most effective for anomaly detection in \acrshort{das} data when computational resources can be limited?}
+%
+%Although the convolutional models require a smaller batch size as of now, thus leading to higher training, based on median epoch duration and the epoch count seen in Table \ref{tab:modelresinfo}, combined with the significantly smaller model sizes, improved anomaly scores, and overall reconstruction capabilities, we find simpler convolutional models, such as our CAE model, to be sufficiently effective. These models balance computational efficiency and detection performance, making them well-suited for scenarios where computational resources are scarce.
+%

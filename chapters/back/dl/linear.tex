@@ -1,7 +1,7 @@
 \subsection{Fully Connected Neural Networks}
 \label{back:linear}
 
-\acrfull{fcnn} are fundamental networks used in many \acrshort{dl} models. Also called dense or linear networks, they are characterized by all neurons being connected between two layers (see Figure \ref{fig:densenn}). 
+\acrfull{fcnn} are fundamental networks used in many \acrshort{dl} models. Also called dense or linear networks, they are characterized by all neurons being connected between two layers, as seen in Figure \ref{fig:densenn}. 
 
 In the forward pass, linear layers transform the input data, mapping an input vector to an output vector using learnable parameters. The operation can be defined as follows:
 \begin{equation}\label{f:wxb}
@@ -49,7 +49,7 @@ After the forward pass is performed, the network will update its weights. This i
     \mathcal{L}_{\text{MSE}}(x, \hat{x}) = \dfrac{1}{N}  \sum_{i=1}^{N}(x_i-\hat{x}_i)^2
 \end{equation}
 
-The \acrshort{mse} loss function is a commonly used loss function. It punishes bigger differences by squaring the difference between two elements in the prior $x$ and the posterior $\hat{x}$. It then outputs the mean of all the squarred errors computed. \\
+The \acrshort{mse} loss function is a commonly used loss function. It punishes bigger differences by squaring the difference between two elements in the prior $x$ and the posterior $\hat{x}$. It then outputs the mean of all the squared errors computed. \\
 
 \textbf{\acrfull{mae}}
 
@@ -57,20 +57,16 @@ The \acrshort{mse} loss function is a commonly used loss function. It punishes b
     \mathcal{L}_{\text{MAE}}(x, \hat{x}) = \dfrac{1}{N}  \sum_{i=1}^{N}|x_i-\hat{x}_i|
 \end{equation}
 
-The \acrshort{mae} loss function is similar to the \acrshort{mse} function. The difference is that the \acrshort{mae} function returns the absolute value of the distance between two distributions $x$ and $\hat{x}$, thus equally punishing all errors. \\
+The \acrshort{mae} loss function is similar to the \acrshort{mse} function. The difference is that the \acrshort{mae} function returns the absolute value of the distance between two distributions $x$ and $\hat{x}$, thus equally punishing all errors.
 
-The major bottleneck of all kinds of machine learning techniques is data. The more diverse and varied a . \\
-
-Linear layers have several advantages, such as computational efficiency, flexibility as well as intrerprebility, where the weight and bias vectors can be interpreted as learned parameters. They also serve as building blocks for other components, such as \acrshort{rnn}s \cite{schmidt2019recurrent}, \acrshort{lstm}s \cite{lstm} or even more novel architectures such as the transformer\cite{vaswani2017attention}. \\ 
+Linear layers have several advantages, such as computational efficiency, flexibility, and interpretability, where the weight and bias vectors can be interpreted as learned parameters. They also serve as building blocks for other components, such as \acrshort{rnn}s \cite{schmidt2019recurrent}, \acrshort{lstm}s \cite{lstm} or even more novel architectures such as the transformer\cite{vaswani2017attention}. 
 
 However, linear layers have several limitations. Due to their inherent linearity, they are prone to \textit{overfitting} and struggle to capture complex relationships in data. This can limit their ability to extract more complex features, potentially reducing some of the model's discriminative power. Furthermore, the size of linear layers can become problematic, especially in \acrshort{fcnn}s. Each neuron connection between layers requires storing weights and biases, which increases the overall model size. For a smaller dense network where the layers are of size $[10, 5, 1]$, the total amount of parameters becomes:
-$$\begin{aligned}
-S &= (10 \times 5 + 5) + (5 \times 1 + 1) \
-&= 50 + 5 + 5 + 1 \
-&= 61 \text{ parameters}
-\end{aligned}$$
+$$
+S = (10 \times 5 + 5) + (5 \times 1 + 1) = 50 + 5 + 5 + 1 = 61 \text{ parameters}
+$$
 Assuming each parameter is stored as a single-precision floating-point number (\texttt{Float32}, 4 bytes), the total memory size is:
-$$\begin{aligned}
-\text{Memory size} &= 61 \text{ parameters} \times 4 \text{ bytes/parameter} \
-&= 244 \text{ bytes}
-\end{aligned}$$ While 244 bytes is small, larger dense networks can quickly consume gigabytes of memory. This can create bottlenecks for hardware accelerators like \acrshort{gpu}s, which typically have less VRAM compared to the \acrshort{ram} available to \acrshort{cpu}s.
+$$
+\text{Memory size} &= 61 \text{ parameters} \times 4 \text{ bytes/parameter} = 244 \text{ bytes}
+$$ 
+While 244 bytes is small, larger dense networks can quickly consume gigabytes of memory. This can create bottlenecks for hardware accelerators like \acrshort{gpu}s, which typically have less VRAM compared to the \acrshort{ram} available to \acrshort{cpu}s.

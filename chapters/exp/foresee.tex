@@ -2,7 +2,7 @@
 
 \subsection{Dataset}
 
-For our second case, we use the \acrshort{foresee} dataset from the the PubDAS \cite{spica2023pubdas} collection. PubDAS ("A PUBlic Distributed Acoustic Sensing Datasets Repository for Geosciences") contains \acrshort{das} data from numerous locations worldwide. We will specifically be dealing with the \acrshort{foresee} \cite{zhu2019penn, se-12-219-2021} array, a \acrshort{das} dataset from an area around Pennsylvania in the Valley and Ridge Appalachians region as seen in figure \ref{fig:foresee}. \\
+For our second case, we use the \acrshort{foresee} dataset from the the PubDAS collections, as mentioned in Section \ref{back:relwork}. This dataset contains signals from an area around Pennsylvania in the Valley and Ridge Appalachians region, as seen in Figure \ref{fig:foresee} \cite{se-12-219-2021}. \\
 
 \begin{figure}[!h]
     \centering
@@ -22,7 +22,6 @@ For our second case, we use the \acrshort{foresee} dataset from the the PubDAS \
         \textbf{Parameter} & \multicolumn{2}{l}{\textbf{Value}} \\
         \midrule
         Experiment & \multicolumn{2}{l}{Foresee}  \\
-        Interrogator Unit (IU) & \multicolumn{2}{l}{Silixa iDAS-v2}  \\
         Gauge length & \multicolumn{2}{l}{\qty{10}{\si{\meter}}} \\
         Cable length & \multicolumn{2}{l}{\qty{23300}{\si{\meter}}} \\
         Channel spacing & \multicolumn{2}{l}{\qty{2}{\si{\meter}}} \\
@@ -47,12 +46,12 @@ For our second case, we use the \acrshort{foresee} dataset from the the PubDAS \
     \label{tab:foresee_experiment_data}
 \end{table}
 
-Preprocessing of the dataset has already been performed, as detailed in Appendix \ref{app:pubdas}. The files have been converted to the \acrshort{hdf5} format and the data resampled. Due to memory constraints of most consumer-grade \acrshort{gpu}s, which typically have around 8-32 GB of VRAM, the number of 10-minute data batches that can be processed simultaneously is limited. This constraint is worsened by the need to further store the model's weights, biases, and computed losses in VRAM.
-To address these limitations and enhance the system's responsiveness, we chose to split the files into 5-second segments instead of the original 10-minute recordings. This approach offers two major advantages:
+Preprocessing of the dataset has already been performed, as detailed in the Appendix in Code Listing \ref{code:pubdas}. The files have been converted to the \acrshort{hdf5} format, and the data resampled. Due to memory constraints of most consumer-grade \acrshort{gpu}s, which typically have around 8-32GB of \acrshort{vram}, the number of 10-minute data batches that can be processed simultaneously is limited. This constraint is worsened by the need to further store the model's weights, biases, and computed losses in \acrshort{vram}. To address these limitations and enhance the system's responsiveness, we chose to split the files into 5-second segments instead of the original 10-minute recordings. This approach offers several major advantages, including:
 
 \begin{itemize}
-    \item It allows for training across various GPU architectures, accommodating different memory capacities.
-    \item It enables more frequent updates in online anomaly detection, potentially identifying anomalous events every 5 seconds, dramatically improving the system's real-time response capability.
+    \item It allows for training across various hardware architectures, accommodating different memory capacities.
+    \item It enables and promotes more frequent updates in online anomaly detection, potentially identifying anomalous events every 5 seconds, dramatically improving the system's real-time response capability.
+    \item For dense autoencoders, it dramatically reduces the number of parameters required.
 \end{itemize}
 
 
@@ -69,11 +68,8 @@ It's important to note that while data quality and quantity are paramount in dee
 
 
 \subsection{Experiment \rnum{1}: Model training and Reconstruction}
-
-
-In this first experiment, we train four different autoencoders and examine their reconstruction capabilities, focusing on reconstruction loss, median- and overall training time. These four models consist of a dense regular autoencoder (\acrshort{ae}), a $\beta$-variational autoencoder ($\beta$-VAE), a convolutional autoencoder (\acrshort{cae}) and finally a $\beta$-variational convolutional model ($\beta$-CVAE). Appendix \ref{app:archs} details all the layers and parameter numbers.
-
-As seen in Table \ref{tab:foresee_experiment_data}, the memory required for a single \acrshort{hdf5} file is still quite large compared to regular image- and video-based tasks, where the dimensions typically. For the dense autoencoders, this poses a challenge when deciding on the dimensions of the hidden layers. Our approach is to drastically reduce the dimension from the input- to the first hidden layers. This 
+In this first experiment, we train four different autoencoders and examine their reconstruction capabilities, focusing on reconstruction loss, median- and overall training time. These four models consist of a dense regular autoencoder (AE), a $\beta$-variational autoencoder ($\beta$-VAE), a convolutional autoencoder (\acrshort{cae}) and finally a $\beta$-variational convolutional model ($\beta$-CVAE). Appendix \ref{app:archs} details all the layers and parameter numbers. The AE model serves as a baseline to see if we can drastically reduce dimensionality between the input layer and the first hidden layer while still achieving satisfying reconstructions and anomaly detection metrics. Likewise, the $\beta$-\acrshort{vae} lets us compare a dense autoencoder with a \acrshort{vae} model.
+Furthermore, we use two convolutional variants to compare and evaluate against their prior variants. These four models allow us to compare dense and convolutional models and regular autoencoders with variational alternatives. We use $\beta$ values to help stabilize our losses, as mentioned in Section \ref{back:vae}. The objective is to compare and see if any of these relatively smaller models can effectively be used for anomaly detection in large-scale dense-sampled \acrshort{das} data. Furthermore, we seek to understand how much of the spatial characteristics we can extract.
 
 \begin{table}[!h]
 \centering
@@ -87,6 +83,7 @@ As seen in Table \ref{tab:foresee_experiment_data}, the memory required for a si
 Files & 25600 & 25600 & 25600 & 25600 \\
 Input Shape & [BS, 625 × 2137] & [BS, 625 × 2137] & [BS, 1, 625, 2137] & [BS, 1, 625, 2137] \\
 Batch Size & 256 & 256 & 32 & 32 \\
+Model Sizes (Float16) & 5.12 GB & 5.13 GB & 91.4 KB & 126.53 MB \\
 Validation Split & 0.2 & 0.2 & 0.2 & 0.2 \\
 Epochs & 200 & 200 & 200 & 200 \\
 Seed & 1337 & 1337 & 42069 & 1337 \\
@@ -94,8 +91,6 @@ Loss Function & \acrshort{mse} & \acrshort{elbo} ($\beta=0.8$) & \acrshort{mse} 
 Optimizer & ADAM & ADAM & ADAM & ADAM \\
 Learning Rate & 0.001 & 0.001 & 0.002 & 0.001 \\
 LR Scheduler & ReduceOnPlateau & ReduceOnPlateau & ReduceOnPlateau & ReduceOnPlateau \\
-LR Scheduler Patience & 5 & 5 & 5 & 5 \\
-LR Scheduler Factor & 0.5 & 0.5 & 0.5 & 0.5 \\
 Early Stopping Patience & 10 & 10 & 10 & 10 \\
 Early Stopping Min $\Delta$ & 0.0001 & 0.0001 & 0.0001 & 0.001 \\
 \bottomrule
@@ -103,19 +98,16 @@ Early Stopping Min $\Delta$ & 0.0001 & 0.0001 & 0.0001 & 0.001 \\
 \caption{Hyperparameters for all models}
 \label{tab:hyperparameters}
 \end{table}
-As shown in Table \ref{tab:hyperparameters}, the model sizes differ quite drastically, which aligns with our expectations based on their architectures. Convolutional layers typically require fewer parameters than linear layers, resulting in convolutional autoencoders needing less memory. However, we need to decrease the batch size for convolutional models since each convolutional layer operates on higher-dimensional data, increasing GPU memory usage during training. Additionally, the \acrshort{vae} models require extra parameters since the latent layer is represented by both $\mu$ and $\sigma$ layers, slightly increasing their size compared to their non-variational counterparts. Detailed descriptions of all the models and their layer structures can be found in Appendix \ref{app:archs}. 
+As shown in Table \ref{tab:hyperparameters}, we need to decrease the batch size for convolutional models since each convolutional layer operates on higher-dimensional data, increasing \acrshort{gpu} memory usage during training. Additionally, the \acrshort{vae} models require extra parameters since the latent layer is represented by both $\mu$ and $\sigma$ layers, slightly increasing their size compared to their non-variational counterparts. The convolutional models are significantly smaller overall, which is great for real-world scenarios due to possible hardware constraints. Detailed descriptions of all the models and their layer structures can be found in Appendix \ref{app:archs}. 
 
- The relatively large batch sizes (256 for linear models, 32 for convolutional) allow for stable gradient updates. At the same time, the learning rate of 0.001 is a common starting point for the \acrshort{adam} optimizer \cite{kingma2017adam}. To optimize the training process, we introduce a learning rate scheduler that reduces the learning rate by half if the validation loss does not decrease over 5 epochs. Combined with an early-stop mechanism, we can attempt escaping local minima and stop unnecessary training whenever the validation loss does not decrease by at least $\Delta$ (0.0001) by 10 consecutive epochs.  
+ The relatively large batch sizes (256 for linear models and 32 for convolutional) allow for stable gradient updates. At the same time, the learning rate of 0.001 is a common starting point for the \acrshort{adam} optimizer \cite{kingma2017adam}. To optimize the training process, we introduce a learning rate scheduler that reduces the learning rate by half if the validation loss does not decrease over 5 epochs. Combined with an early-stop mechanism, we can attempt escaping local minima during gradient descent and stop unnecessary training whenever the validation loss does not decrease by at least min $\Delta$ by 10 consecutive epochs.  
 
-To evaluate and compare the reconstruction capabilities of these models, we will primarily use the \acrshort{mse} for the AE and CAE, and  \acrshort{elbo} loss with \acrshort{mse} for $\mathcal{L}_{rec}$ for the $\beta$-VAE and $\beta$-CVAE, as described in section \ref{back:elbo}. We will also visually inspect reconstructed samples to qualitatively assess the models' performance.
+To evaluate and compare the reconstruction capabilities of these models, we will primarily use the \acrshort{mse} for the AE and CAE, and  \acrshort{elbo} loss with \acrshort{mse} for $\mathcal{L}_{rec}$ for the $\beta$-VAE and $\beta$-CVAE, as described in section \ref{back:elbo}. Common metrics like loss, inference time, training times, and epochs before the best loss will be prioritized for this experiment. Finally, we also visually inspect three reconstructed samples to assess the models' performance qualitatively.
 
+\subsection{Experiment \rnum{2}: Anomaly Detection}
 
+For this experiment, we select a test dataset for labeling anomalies based on the findings of Zhu et al. \cite{zhu2023seismic}, who identified 18 thunder-induced seismic events between 03:20 and 03:50 on the 15th of April 2019. Based on this, we try to label heatmaps to allow for finding a higher $\epsilon^*$. As discussed in Section \ref{back:relwork}, several studies on \acrshort{das} data concern themselves with specific events they target, such as earthquakes. Researchers have identified certain characteristics of anomalous data for the \acrshort{foresee} dataset as mentioned in Section \ref{back:relwork}. Labeling some data allows for finding a potentially better threshold, which can be done by studying how F1-score changes iteratively, as mentioned in Section \ref{back:anomdet}; what we ultimately want in a real-world scenario is to detect anomalies with as high accuracy as possible while keeping a low FPR. Our approach can thus be described as unsupervised training with supervised evaluation. To assess model performance, we use evaluation metrics presented in Section \ref{back:anomdet} to measure our models. We use single- and half-precision inference for detection to compare the results. However, ROC and PR curves will only be shown at half-precision. This experiment generally aims to compare smaller autoencoders for detecting anomalous events using a labeled dataset and compare single- and half-precision results.
 
-\subsection{Experiment \rnum{2}: Semi-Supervised Anomaly Detection}
-
-For this experiment, we select a test dataset for labeling anomalies based on the findings of Zhu et al. \cite{zhu2023seismic}, who identified 18 thunder-induced seismic events between 03:20 and 03:50 on the 15th of April 2019. We manually label each heatmap as either anomalous or non-anomalous. As we discussed in \ref{back:relwork}, many of the different studies on \acrshort{das} data concern themselves with specific events they target, such as earthquakes. Researchers have identified certain characteristics of anomalous data for the \acrshort{foresee} dataset as mentioned in Section \ref{back:relwork}. Labeling some data allows for finding a potentially better threshold; what we ultimately want in a real-world scenario is to flag potential anomalies with as high accuracy as possible, as seen in Algorithm \ref{alg:ad}. Our approach can thus be described as unsupervised training with semi-supervised evaluation. To assess model performance, we will compare the following metrics for both Float32 and Float16 inference:
-
-\subsection{Experiment Setup}
-
+\subsubsection{Experiment Setup}
 Model training and anomaly detection are performed on \gls{idun}. Table \ref{tab:system-specs} in Appendix \ref{app:idun} shows details of the machines used. \\
 

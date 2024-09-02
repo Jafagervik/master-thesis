@@ -2,8 +2,7 @@
 
 \subsection{Dataset}
 
-Our first case study revolves around a \acrshort{das} dataset on a railroute between Trondheim and Storen, belonging to BANENOR. The dataset spans the entirety of the 31st of August 2021\footnote{Working with confidential data requires security clearance; see \ref{app:conf} for more details}. The full route between Trondheim and Storen can be seen in the appendix in Figure \ref{fig:trainmap} in the appendix. All data is stored in \acrshort{hdf5} files.
-
+Our first case study revolves around a \acrshort{das} dataset on a rail route between Trondheim and Støren, belonging to BANENOR. The dataset spans the entirety of the 31st of August 2021\footnote{Working with confidential data requires security clearance; see Appendix \ref{app:conf} for more details}. The full route between Trondheim and Støren can be seen in the appendix in the Appendix in Figure \ref{fig:trainmap}.
 \begin{table}[!h]
     \centering
     \small
@@ -31,16 +30,15 @@ Our first case study revolves around a \acrshort{das} dataset on a railroute bet
 
 Table \ref{tab:experiment_data} presents a summary of the experimental dataset, encompassing approximately \qty{50}{\kilo\meter} of fiber-optic cable. Data acquisition occurs regularly along the route, with every fourth sensor's data retained, resulting in an effective inter-channel distance of \qty{4.0852}{\meter}. Each \acrshort{hdf5} file contains \qty{10}{\second} of recordings, represented as a matrix of dimensions $20000 \times 12500$, accompanied by important metadata. The element type of the matrix is \texttt{Float32}, yielding a base file size of approximately \qty{0.93}{\giga\byte}.
 
-\subsection{Experiment \rnum{1}: Processing \acrshort{das} Files}
+\subsection{Experiment \rnum{1}: File Loading and Data Processing}
 A fundamental challenge for members at \acrshort{cgf} involves loading and processing \acrshort{das} data from disk for subsequent analysis. This experiment assesses the performance of loading varying data volumes into memory using multiple parallel processes. The complete experiment code is detailed in Appendix \ref{app:judas}.
 
 We set the step parameter to 48 to enhance processing efficiency, effectively modifying the \acrshort{roi} to $[1:192:49996]$ as discussed in Section \ref{met:finddasfiles}. While reducing spatial resolution, this adjustment facilitates faster processing and analysis of extensive datasets. We evaluate processing times for \acrshort{das} data spanning 5, 10, 30, and 60 minutes to assess scalability and performance across diverse data volumes. The experiment uses 1, 2, 4, and 8 parallel processes for comparative analysis. The experiment covers finding and loading files, downsampling the data to \qty{200}{\hertz}, and finally denoising the signal. We are particularly interested in comparing the ratio of the \lstinline{load_DAS_files} function to the total duration.
 
 \subsection{Experiment \rnum{2}: Parallel Resampling}
-Channel decimation represents another critical operation in \acrshort{das} data processing, as mentioned in Section \ref{back:dsp}. This experiment compares our parallel resampling method, shown in Code Listing \ref{code:parres}, with a serial approach shown in \ref{code:serialdas} in the appendix. The input dataset comprises \qty{30}{\minute} of \acrshort{das} data, maintaining consistent channel spacing with experiment \rnum{1}. We perform signal resampling from the original \qty{2000}{\hertz} to a series of lower frequencies: \qty{1000}{\hertz}, \qty{500}{\hertz}, \qty{250}{\hertz}, and \qty{100}{\hertz}. The experiment utilizes the same process configurations (1, 2, 4, and 8 parallel processes) described in Experiment \rnum{1}.
+Channel decimation represents another in \acrshort{das} data processing, as mentioned in Section \ref{back:dsp}. This experiment compares our parallel resampling method, shown in Code Listing \ref{code:parres}, with a serial approach shown in the Appendix in Code Listing \ref{code:serialdas}. The input dataset comprises 30 minutes of \acrshort{das} data, maintaining consistent channel spacing with experiment \rnum{1}. We downsample from the original \qty{2000}{\hertz} to a series of lower frequencies: \qty{1000}{\hertz}, \qty{500}{\hertz}, \qty{250}{\hertz}, and \qty{100}{\hertz}. The experiment utilizes the same process configurations (1, 2, 4, and 8 processes) described in Experiment \rnum{1}.
 
 \subsection{Evaluation Metrics and Setup}
-
 We use speedup and efficiency as evaluation metrics for both experiments. Speedup ($S_p$) is defined as the ratio between the serial execution time ($T_1$) and the parallel execution time ($T_p$) and can be formulated as:
 \begin{equation}
     S_p = \frac{T_1}{T_p}

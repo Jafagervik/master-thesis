@@ -4,7 +4,7 @@
 \section{Packages used}
 \label{app:tinypacks}
 
-\lstinputlisting[language=Python, label={code:trainer}]{code/trainer.py}
+%\lstinputlisting[language=Python, label={code:trainer}]{code/trainer.py}
 
 \begin{table}[!htbp]
 \centering
@@ -16,7 +16,6 @@
 \textbf{Package Name} & \textbf{Description} \\
 \midrule
 \rowcolor{gray!10} tinygrad 0.9 & AI library \\
-pytorch 2.4 & AI library \\
 \rowcolor{gray!10} sklearn & Scientific computing \\
 h5py & HDF5 File utilities \\
 \rowcolor{gray!10} pyyaml & YAML File parsing \\
@@ -26,7 +25,7 @@ matplotlib & Data visualization \\
 \bottomrule
 \end{tabular}
 \end{table}
-
+\clearpage
 \section{Experiment Hyperparameters}
 \label{app:hyper}
 \lstinputlisting[label={code:hypers},caption=Hyperparameters Example Config, language=Yaml]{code/hyper.yaml}
@@ -47,12 +46,6 @@ matplotlib & Data visualization \\
 Operating System & Ubuntu Linux 22.04 LTS & \multicolumn{2}{c}{1 machine} \\
 GPU Model & NVIDIA A100 PCIe & 4 x 80GB & 1 x 40GB \\
 GPU Memory & HBM2 & 80 GB & 40 GB \\
-CUDA Cores & & 6,912 & 6,912 \\
-Tensor Cores & & 432 & 432 \\
-GPU Clock Speed & Boost Clock & 1.41 GHz & 1.41 GHz \\
-GPU TDP & & 300 W & 250 W \\
-FP16 & & 312 TFLOPS & 77.97 TFLOPS \\
-FP32 & & 19.5 TFLOPS & 19.49 TFLOPS \\
 \midrule
 \multicolumn{4}{@{}l@{}}{\textit{Note:} Training uses 4 x A100 80GB GPUs, inference uses 1 x A100 40GB GPU.} \\
 \bottomrule
@@ -192,8 +185,8 @@ FP32 & & 19.5 TFLOPS & 19.49 TFLOPS \\
         BatchNorm2d & (1, 128, 20, 67) & 256 \\
         LeakyReLU & (1, 128, 20, 67) & 0 \\
         Flatten & (1, 171520) & 0 \\
-        Linear (fc\_mu) & (1, 128) & 21,954,688 \\
-        Linear (fc\_logvar) & (1, 128) & 21,954,688 \\
+        Linear  & (1, 128) & 21,954,688 \\
+        Linear & (1, 128) & 21,954,688 \\
         \multicolumn{3}{l}{\textbf{Decoder}} \\
         Linear & (1, 171520) & 21,954,816 \\
         Reshape & (1, 128, 20, 67) & 0 \\

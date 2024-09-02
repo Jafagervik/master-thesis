@@ -1,25 +1,24 @@
 \subsection{Experiment \rnum{1}: Model training and Reconstruction}
 
+Table \ref{tab:modelresinfo} highlights key metrics from training and inference when reconstructing the heatmaps. The AE model reaches 
 \begin{table}[!htbp]
     \centering
     \setlength{\tabcolsep}{10pt}
     \begin{tabular}{l cccc}
         \toprule
         \rowcolor{gray!20}
-        \textbf{Metric} & \textbf{AE} & \textbf{$\beta$-VAE} & \textbf{CAE} & \textbf{$\beta$-CVAE} \\
+        \textbf{Metric} & AE & $\beta$-VAE & CAE & $\beta$-CVAE \\
         \midrule
         Best Train loss & 3.075e-4 & 4.592e-3 & \textbf{1.428e-4} & 4.712e-3 \\
         \rowcolor{gray!10} Best Validation loss & 2.941e-4 & 4.592e-3 & \textbf{4.669e-5} & 4.592e-3 \\
-        Epochs before best loss & \textbf{3} & 33 & 10 & 33 \\
-        \rowcolor{gray!10} Model Sizes (F16) & 5.12 GB & 5.13 GB & \textbf{91.4 KB} & 126.53 MB \\
+        Epochs before best loss & \textbf{3} & 33 & 10 & 21 \\
         F32 Inference speed (ms) & \textbf{1.658} & 654.14 & 267.31 & 979.52 \\
         \rowcolor{gray!10} F16 Inference speed (ms) & \textbf{1.875} & 6.31 & 5.671 & \textbf{1.857} \\
         \bottomrule
     \end{tabular}
-    \caption{Training comparison between the model.}
+    \caption{Key training modelTraining comparison between the mode}
     \label{tab:modelresinfo}
     \smallskip
-    \small{*The reconstruction error is the sum of all reconstruction errors across all batches.}
 \end{table}
 %\begin{figure}[!h]
 %    \centering
@@ -28,7 +27,7 @@
 %    \label{fig:traintimes}
 %\end{figure}
 
-Figure \ref{fig:traintimes} compares training times, training, and validation steps combined across all models. The max time only happens on the first epoch, while every subsequent epoch lasts within a 5\% range of the median time. We notice a considerable speedup between the first and consecutive epochs for the non-variational autoencoders. However, the variational models achieve a lower initial training time. 
+Figure \ref{fig:traintimes} compares training times across all models. The max time only happens on the first epoch, while every subsequent epoch lasts within a 5\% range of the median time. We notice a considerable decrease in time between the first and consecutive epochs for the non-variational autoencoders. However, the variational models achieve a lower initial training time. 
 
 \begin{figure}[htbp]
 \centering
@@ -63,12 +62,11 @@ Figure \ref{fig:traintimes} compares training times, training, and validation st
 \label{fig:traintimes}
 \end{figure}
 \clearpage
-\subsubsection{Train and Validation Losses}
 \begin{figure}[!htbp]
   \centering
   \begin{subfigure}{\textwidth}
     \centering
-    \includegraphics[width=0.7\textwidth]{figures/losses/ae.png}
+    \includegraphics[width=0.65\textwidth]{figures/losses/ae.png}
     \caption{AE: We observe a rapid loss, followed by no big change in either train or validation loss, indicating that the model has learned, but is unable to }
   \end{subfigure}
   
@@ -76,7 +74,7 @@ Figure \ref{fig:traintimes} compares training times, training, and validation st
   
   \begin{subfigure}{\textwidth}
     \centering
-    \includegraphics[width=0.7\textwidth]{figures/losses/vae.png}
+    \includegraphics[width=0.65\textwidth]{figures/losses/vae.png}
     \caption{$\beta$-VAE: The loss rapidly declines before flattening out. Around epoch 15, a sudden drop is observed, indicating a shift in learning rate, which allows the loss to further decline}
   \end{subfigure}
   
@@ -84,7 +82,7 @@ Figure \ref{fig:traintimes} compares training times, training, and validation st
   
   \begin{subfigure}{\textwidth}
     \centering
-    \includegraphics[width=0.7\textwidth]{figures/losses/cae.png}
+    \includegraphics[width=0.65\textwidth]{figures/losses/cae.png}
     \caption{CAE: Initially, a more gradual decline is observed. After epoch 4, the validation loss starts to shift, before stabilizing around epoch 12}
   \end{subfigure}
   
@@ -92,19 +90,17 @@ Figure \ref{fig:traintimes} compares training times, training, and validation st
   
   \begin{subfigure}{\textwidth}
     \centering
-    \includegraphics[width=0.7\textwidth]{figures/losses/cvae.png}
+    \includegraphics[width=0.65\textwidth]{figures/losses/cvae.png}
     \caption{$\beta$-CVAE. A linear decrease is observed, with the validation loss expected to be lower than the training loss.}
   \end{subfigure}
   
   \caption{Train and Validation Loss over Time. Train loss is blue, and validation loss is orange}
   \label{fig:losses}
 \end{figure}
-
 \clearpage
-
-\subsubsection{Half-precision Reconstruction Heatmaps}
+\subsubsection{Reconstructed Heatmaps using half-precision inference}
 % Page 1: Original Heatmaps
-\begin{figure}[!p]
+\begin{figure}[!h]
 \centering
 \begin{subfigure}{\textwidth}
     \centering

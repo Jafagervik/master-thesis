@@ -1,31 +1,16 @@
 \subsection{Experiment \rnum{1}: File Loading and Data Processing}
 
-
-\subsubsection{\acrshort{das} signal heatmaps}
-
 \begin{figure}[!h]
     \centering
-    \begin{subfigure}{0.45\linewidth}
-        \centering
-        \includegraphics[width=\linewidth]{figures/heatmap_das_test.png}
-        \caption{Before}
-        \label{fig:dasoutput1}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}{0.45\linewidth}
-        \centering
-        \includegraphics[width=\linewidth]{figures/heatmap_das_test.png}
-        \caption{After}
-        \label{fig:dasoutput2}
-    \end{subfigure}
-    \caption{Heatmaps of the processed data before and after resampling}
+    \includegraphics[width=0.8\linewidth]{figures/heatmap_das_test.png}
+    \caption{Heatmap displaying 5 minutes of loaded \acrshort{das} data}
     \label{fig:dasoutput}
 \end{figure}
 
 \begin{figure}[!h]
     \centering
     \includegraphics[scale=0.50]{figures/judasex.png}
-    \caption{Loading and total processing execution times for different durations and processes. The red top indicates the total runtimes, while the other colors shows the duration of the \lstinline{load_DAS_files} function for the different durations. \footnote{Got help from Claude AI with spacing between bars}}
+    \caption{Loading and total processing execution times for different durations and processes. The red top indicates the total runtimes, while the other colors show the duration of the \lstinline{load_DAS_files} function for the different durations. \footnote{Claude AI was used to fix the spacing between bars}}
     \label{fig:judasextime}
 \end{figure}
 
@@ -59,10 +44,3 @@ Figure \ref{fig:judasextime} highlights the load section's portion. This is the 
 \caption{Efficiency for different problem sizes and process counts. $d$ is the loaded signal duration in minutes.}
 \label{fig:judasefficiency}
 \end{figure}
-
-%\begin{figure}[!h]
-%    \centering
-%    \includegraphics[scale=0.5]{figures/speedup_judas.png}
-%    \caption{Heatmap of speedups with Judas compared to serial execution}
-%    \label{fig:ex2judheat}
-%\end{figure}

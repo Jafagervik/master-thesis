@@ -16,11 +16,8 @@ While point anomalies target single instances that differ from the rest of the d
 
 \subsection{Autoencoder-based Anomaly Detection}
 
-Autoencoders are commonly used models for anomaly detection \cite{an2015variational, zhou2017anomaly}. Compared to other models such as \acrfull{pca} \cite{wold1987principal}, autoencoders have been found ''to detect subtle anomalies which linear PCA fails''\cite{sakurada2014anomaly}. By training an autoencoder to reconstruct normal data, any input of anomalous data would yield a higher reconstruction error. If we can find a threshold value $\epsilon$, we can use this to . 
-
+Autoencoders are commonly used models for anomaly detection \cite{an2015variational, zhou2017anomaly}. Compared to other models such as \acrfull{pca} \cite{wold1987principal}, autoencoders have been found ''to detect subtle anomalies which linear PCA fails''\cite{sakurada2014anomaly}. By training an autoencoder to reconstruct normal data, any input of anomalous data would yield a higher reconstruction error. If we can find a threshold value $\epsilon$, we can use this to mark regions of data as anomalous. 
 \begin{algorithm}[!h]
-\caption{Autoencoder-based Anomaly Detection}
-\label{alg:ad}
 \begin{algorithmic}[1]
 \small
 \Require Normal Data $X$, Anomalous Data $\{x^{(i)} : i = 1, \ldots, N\}$, Threshold $\epsilon$
@@ -35,29 +32,13 @@ Autoencoders are commonly used models for anomaly detection \cite{an2015variatio
 \EndFor
 \State \Return $A$
 \end{algorithmic}
+\caption{Autoencoder-based Anomaly Detection}
+\label{alg:ad}
 \end{algorithm}
+In Algorithm \ref{alg:ad}, the reconstruction error is calculated using the \acrshort{mae} loss. However, other common loss functions such as \acrshort{mse} can also be used. The important aspect of this approach lies in determining an optimal threshold $\epsilon$. One way is to simply use the highest percentiles of reconstruction errors as $\epsilon$. This is useful in scenarios where we have little to no data, which is often the case in real-world scenarios.
 
-In Algorithm \ref{alg:ad}, the reconstruction error is calculated using the \acrshort{mae} loss. However, other common loss functions such as \acrshort{mse} can also be used. The important aspect of this approach lies in determining an optimal threshold $\epsilon$. This threshold should be carefully chosen to maximize the amount of correctly identified anomalies and normal data (TP and TN) while minimizing missed anomalies (FN) or incorrectly flagging normal instances as anomalous (FP).
-
-
-\subsubsection{Anomalies in Time Series}
-
-Time series data from diverse domains, including \acrshort{das}, offer opportunities for anomaly detection. These datasets often contain subtle patterns and contextual anomalies that traditional statistical methods might overlook. Neural networks, particularly those designed for sequential data processing, have emerged as powerful tools for identifying such anomalies. Architectures like \acrfull{lstm} \cite{lstm} and \acrfull{rnn} \cite{medsker2001recurrent} are especially suited for this task \cite{wang2024deep, wei2022lstmautoencoder}. Their built-in memory mechanisms allow them to capture long-range dependencies and temporal context, which is crucial for understanding normal patterns in time series data. Training these networks on typical time series behavior can effectively flag deviations that may indicate anomalies. 
-
-\begin{figure}[!h]
-    \centering
-    \includegraphics[scale=0.4]{figures/anolay_line.png}
-    \caption{Example of anomalies in a time series}
-    \label{fig:anomaly_example}
-\end{figure}
-
-
-\subsubsection{Anomalies in images}
-
-Anomaly detection can also be applied to images \cite{beggel2020robust}. In the context of \acrshort{das} data, the data matrix can be viewed as a one-channel image, where the time-domain and frequency-domain can be studied. Architectures like \acrshort{cnn} are especially suited for this task due to their enhanced feature extraction capabilities, as discussed in Section \ref{back:cnn}.
-
-
-\subsubsection{Semisupervised anomaly detection}
+\subsubsection{Supervised anomaly detection}
+In supervised and semi-supervised anomaly detection, some or all metrics are labeled. Popular methrics include \cite{9439459}:
 \begin{itemize}
     \item Precision: The percentage of correct anomalies out of all predicted anomalies.
     \begin{equation}
@@ -66,10 +47,10 @@ Anomaly detection can also be applied to images \cite{beggel2020robust}. In the 
 
     \item True Positive Rate (TPR), also known as recall: The percentage of correctly identified anomalies out of all actual anomalies.
     \begin{equation}
-        TPR = Recall = \frac{TP}{TP + FN}
+        TPR = \frac{TP}{TP + FN}
     \end{equation}
 
-    \item Accuracy: The proportion of correct predictions (both true positives and true negatives) among the total number of cases examined. While commonly used to measure models' capabilities, accuracy can be misleading for imbalanced datasets.
+    \item Accuracy: The proportion of all correct prediction among the total number of cases examined.
     \begin{equation}
         Accuracy = \frac{TP + TN}{TP + TN + FP + FN}
     \end{equation}
@@ -85,27 +66,27 @@ Anomaly detection can also be applied to images \cite{beggel2020robust}. In the 
     \end{equation}
 \end{itemize}
 
-Additionally, we compute the \acrfull{pr} curve as well as the \acrshort{pr} \acrfull{auc}. The PR curve is particularly useful for imbalanced datasets, which are common in anomaly detection tasks.
+Additionally, the \acrfull{pr} curve and the Receiver Operating Characteristic (ROC)-curve are commonly used to evaluate performance.
 
-As seen in Figure~\ref{fig:dataflow}, we ultimately want to find our models' optimal threshold score $\epsilon^*$. To find $\epsilon^*$, we analyze how precision, recall, and F1-score change across different threshold values, identifying the best anomaly score threshold. This operation is described in Algorithm \ref{alg:thresh}. After $\epsilon^*$ is found it can be used to flag incoming data as normal or anomalous, as per Figure \ref{meth:tinyoverview}.
-
-\begin{algorithm}[!h]
-\caption{$\epsilon^*$ Selection}
-\label{alg:thresh}
-\begin{algorithmic}[1]
-\Require Model $\mathcal{M}$, Dataset $\mathcal{Y} = \{y_1, \ldots, y_N\}$, Anomaly Indices $\mathcal{I} = \{i : y_i \text{ is anomalous}\}$
-\Ensure Optimal Threshold $\epsilon^*$
-\State $\mathbf{e} \gets \mathcal{L}_{\text{Rec}}(\mathcal{Y}, \mathcal{M}(\mathcal{Y}))$ \Comment{Reconstruction errors}
-\State $\mathbf{a} \gets \mathbf{0}_N$ \Comment{Initialize true anomaly bitvector}
-\For{$i \in \mathcal{I}$}
-    \State $a_i \gets 1$
-\EndFor
-\State $\mathbf{p}, \mathbf{r}, \boldsymbol{\theta} \gets \text{PRC}(\mathbf{a}, \mathbf{e})$ \Comment{PR-Curve}
-\State $\mathbf{f} \gets 2 \cdot \frac{\mathbf{p} \odot \mathbf{r}}{\mathbf{p} + \mathbf{r}}$ \Comment{Element-wise operations}
-\State $\epsilon^* \gets \theta_{\argmax(\mathbf{f})}$
-\State \Return $\epsilon^*$
-\end{algorithmic}
-\end{algorithm}
+As seen in Algorithm~\ref{alg:ad}, we ultimately want to find our models' optimal threshold score $\epsilon^*$. To find $\epsilon^*$, we analyze how precision, recall, and F1-score change across different threshold values, identifying the best anomaly score threshold. This is known as threshold analysis. After $\epsilon^*$ is found, it can be used to flag incoming data as normal or anomalous.
 
 
-\subsubsection{Unsupervised anomaly detection}
+\mycomment{
+\subsubsection{Anomalies in Time Series}
+
+Time series data from diverse domains, including \acrshort{das}, offer opportunities for anomaly detection. These datasets often contain subtle patterns and contextual anomalies that traditional statistical methods might overlook. Neural networks, particularly those designed for sequential data processing, have emerged as powerful tools for identifying such anomalies. Architectures like \acrfull{lstm} \cite{lstm} and \acrfull{rnn} \cite{medsker2001recurrent} are especially suited for this task \cite{wang2024deep, wei2022lstmautoencoder}. Their built-in memory mechanisms allow them to capture long-range dependencies and temporal context, which is crucial for understanding normal patterns in time series data. Training these networks on typical time series behavior can effectively flag deviations that may indicate anomalies. 
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.4]{figures/anolay_line.png}
+    \caption{Example of anomalies in a time series}
+    \label{fig:anomaly_example}
+\end{figure}
+
+
+\subsubsection{Anomalies in images}
+
+Anomaly detection can also be applied to images \cite{beggel2020robust}. In the context of \acrshort{das} data, the data matrix can be viewed as a one-channel image, where the time-domain and frequency-domain can be studied. Architectures like \acrshort{cnn} are especially suited for this task due to their enhanced feature extraction capabilities, as discussed in Section \ref{back:cnn}.
+}
+
+
